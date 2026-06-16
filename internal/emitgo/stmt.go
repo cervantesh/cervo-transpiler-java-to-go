@@ -3,6 +3,7 @@ package emitgo
 import (
 	"go/ast"
 	"go/token"
+	"strings"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/ir"
 )
@@ -85,5 +86,13 @@ func typeExpr(t ir.Type) ast.Expr {
 	if t.Kind == ir.KindPointer && t.Elem != nil {
 		return &ast.StarExpr{X: typeExpr(*t.Elem)}
 	}
-	return ast.NewIdent(t.GoName())
+	return namedTypeExpr(t.GoName())
+}
+
+func namedTypeExpr(name string) ast.Expr {
+	parts := strings.Split(name, ".")
+	if len(parts) == 2 && parts[0] != "" && parts[1] != "" {
+		return &ast.SelectorExpr{X: ast.NewIdent(parts[0]), Sel: ast.NewIdent(parts[1])}
+	}
+	return ast.NewIdent(name)
 }
