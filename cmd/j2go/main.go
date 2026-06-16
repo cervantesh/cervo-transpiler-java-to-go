@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/aisidecar"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/javaproject"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/migrate"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/pipeline"
@@ -25,6 +26,17 @@ func (d diagnosticList) Error() string {
 		}
 	}
 	return strings.Join(parts, "\n")
+}
+
+type repeatableStrings []string
+
+func (r *repeatableStrings) String() string {
+	return strings.Join(*r, ",")
+}
+
+func (r *repeatableStrings) Set(value string) error {
+	*r = append(*r, value)
+	return nil
 }
 
 func main() {
@@ -45,6 +57,8 @@ func run(args []string, stdout io.Writer, stderr io.Writer) int {
 			return runTranspile(args[1:], stderr)
 		case "migrate":
 			return runMigrate(args[1:], stdout, stderr)
+		case "ai":
+			return runAI(args[1:], stdout, stderr)
 		}
 	}
 	return runTranspile(args, stderr)
@@ -194,6 +208,59 @@ func runMigrate(args []string, stdout io.Writer, stderr io.Writer) int {
 	if !result.Summary.DryRun {
 		fmt.Fprintf(stdout, "Output: %s\n", result.Summary.OutDir)
 	}
+	return 0
+}
+
+func runAI(args []string, stdout io.Writer, stderr io.Writer) int {
+	if len(args) == 0 {
+		fmt.Fprintln(stderr, "ai requires a subcommand: explain")
+		return 2
+	}
+	switch args[0] {
+	case "explain":
+		return runAIExplain(args[1:], stdout, stderr)
+	default:
+		fmt.Fprintf(stderr, "unsupported ai subcommand %q\n", args[0])
+		return 2
+	}
+}
+
+func runAIExplain(args []string, stdout io.Writer, stderr io.Writer) int {
+	fs := flag.NewFlagSet("j2go ai explain", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	reportPath := fs.String("report", "", "deterministic migration report file")
+	outPath := fs.String("out", "", "AI advisory output file")
+	provider := fs.String("provider", "", "AI provider: canned, offline, or external")
+	var snippets repeatableStrings
+	fs.Var(&snippets, "snippet", "generated code snippet file to include; repeatable")
+	if err := fs.Parse(reorderValueFlags(args, "report", "out", "provider", "snippet")); err != nil {
+		return 2
+	}
+	if len(fs.Args()) != 0 {
+		fmt.Fprintln(stderr, "ai explain does not accept positional arguments")
+		return 2
+	}
+	if *reportPath == "" {
+		fmt.Fprintln(stderr, "--report is required")
+		return 2
+	}
+	if *outPath == "" {
+		fmt.Fprintln(stderr, "--out is required")
+		return 2
+	}
+	result, err := aisidecar.Explain(aisidecar.Options{
+		ReportPath:   *reportPath,
+		OutPath:      *outPath,
+		Provider:     *provider,
+		SnippetPaths: []string(snippets),
+	})
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "AI advisory written: %s\n", *outPath)
+	fmt.Fprintf(stdout, "Provider: %s\n", result.Provider)
+	fmt.Fprintf(stdout, "Structured report parsed: %t\n", result.ParsedReport)
 	return 0
 }
 
