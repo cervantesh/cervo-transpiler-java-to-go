@@ -40,6 +40,8 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 | `JTG1016` | class fields | Add struct field lowering before transpiling Java fields. |
 | `JTG1017` | instance methods | Add Go receiver generation before transpiling instance methods. |
 | `JTG1018` | method overloading | Rename overloaded methods or add overload name mangling before generating Go. |
+| `JTG1019` | assignment expressions | Move the assignment to a standalone statement before transpiling. |
+| `JTG1020` | standalone blocks | Inline the block or add block-scope lowering before transpiling nested standalone blocks. |
 
 ## Test Coverage
 

@@ -117,11 +117,15 @@ func (l *Lowerer) localVar(ctx gen.ILocalVariableDeclContext) []ir.Stmt {
 }
 
 func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
-	text := ctx.GetText()
-	if ctx.Block() != nil && !strings.HasPrefix(text, "if") && !strings.HasPrefix(text, "while") && !strings.HasPrefix(text, "for") {
-		return ir.ExprStmt{Expr: ir.CallExpr{Name: "__unsupported_block"}}
+	start := ""
+	if ctx.GetStart() != nil {
+		start = ctx.GetStart().GetText()
 	}
-	if ctx.ParExpression() != nil && strings.HasPrefix(text, "if") {
+	if ctx.Block() != nil {
+		l.unsupported(ctx.GetStart(), "JTG1020", "standalone blocks", "Inline the block or add block-scope lowering before transpiling nested standalone blocks.")
+		return nil
+	}
+	if ctx.ParExpression() != nil && start == "if" {
 		children := ctx.AllStatement()
 		thenBody := []ir.Stmt{}
 		elseBody := []ir.Stmt{}
@@ -137,7 +141,7 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 			Else: elseBody,
 		}
 	}
-	if ctx.ParExpression() != nil && strings.HasPrefix(text, "while") {
+	if ctx.ParExpression() != nil && start == "while" {
 		children := ctx.AllStatement()
 		body := []ir.Stmt{}
 		if len(children) > 0 {
@@ -156,10 +160,10 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 		}
 		return l.forStmt(ctx.ForControl(), body)
 	}
-	if ctx.Expression() != nil && strings.HasPrefix(text, "return") {
+	if ctx.Expression() != nil && start == "return" {
 		return ir.ReturnStmt{Value: l.expression(ctx.Expression())}
 	}
-	if strings.HasPrefix(text, "return") {
+	if start == "return" {
 		return ir.ReturnStmt{}
 	}
 	if ctx.StatementExpression() != nil {
@@ -234,7 +238,8 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 	if ctx.GetOp() != nil {
 		if stmt := l.assignment(ctx); stmt != nil {
 			assign := stmt.(ir.AssignStmt)
-			return ir.CallExpr{Name: "__assign_" + assign.Op, Args: []ir.Expr{ir.NameExpr{Name: assign.Name}, assign.Value}}
+			l.unsupported(ctx.GetStart(), "JTG1019", "assignment expressions", "Move the assignment to a standalone statement before transpiling.")
+			return ir.NameExpr{Name: assign.Name}
 		}
 	}
 	if ctx.GetPrefix() != nil {
