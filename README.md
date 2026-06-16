@@ -16,6 +16,8 @@ The productive migration roadmap is tracked in [docs/productive-migration-roadma
 
 Operational usage is documented in [docs/operations.md](docs/operations.md), and supported toolchain versions are tracked in [docs/compatibility.md](docs/compatibility.md).
 
+Spring support is exploratory only; see [docs/spring-adapter-decision.md](docs/spring-adapter-decision.md).
+
 ## Project Objective
 
 The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.
@@ -91,6 +93,7 @@ A later production migration tool should move toward a richer Java frontend, typ
 |   |-- compatibility.md
 |   |-- diagnostics.md
 |   |-- operations.md
+|   |-- spring-adapter-decision.md
 |   `-- evidence/
 |       `-- verification-2026-06-16.md
 |-- grammar/
@@ -99,6 +102,8 @@ A later production migration tool should move toward a richer Java frontend, typ
 |-- modern-tests/              Modern golden fixtures
 |-- examples/
 |   `-- Main.java              Demo Java input
+|-- explorations/
+|   `-- spring/                Spring adapter decision fixtures
 |-- src/
 |   |-- lexer.l                Flex lexer
 |   |-- parser.y               Bison parser

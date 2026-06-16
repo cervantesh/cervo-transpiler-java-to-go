@@ -9,6 +9,8 @@ The product direction combines two goals:
 
 The first real corpus is **pure Java libraries**. Spring and framework-specific migration work is intentionally deferred until the Java language and project model are reliable.
 
+The current Spring decision is documented in [spring-adapter-decision.md](spring-adapter-decision.md). Spring remains exploratory and is not part of default `transpile` or `migrate`.
+
 ## Phase Issues
 
 | Phase | Issue | Result |
