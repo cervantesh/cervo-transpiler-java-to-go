@@ -6,6 +6,7 @@ import (
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/emitgo"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/lower"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/parser"
+	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/semantic"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/unsupported"
 )
 
@@ -33,10 +34,19 @@ func TranspileSource(fileName string, source string) Result {
 		return Result{Diagnostics: out}
 	}
 
-	irFile, semantic := lower.Lower(fileName, tree)
-	if len(semantic) != 0 {
-		out := make([]error, 0, len(semantic))
-		for _, diagnostic := range semantic {
+	irFile, lowerDiagnostics := lower.Lower(fileName, tree)
+	if len(lowerDiagnostics) != 0 {
+		out := make([]error, 0, len(lowerDiagnostics))
+		for _, diagnostic := range lowerDiagnostics {
+			out = append(out, diagnostic)
+		}
+		return Result{Diagnostics: out}
+	}
+
+	semanticDiagnostics := semantic.AnalyzeIR(irFile)
+	if len(semanticDiagnostics) != 0 {
+		out := make([]error, 0, len(semanticDiagnostics))
+		for _, diagnostic := range semanticDiagnostics {
 			out = append(out, diagnostic)
 		}
 		return Result{Diagnostics: out}

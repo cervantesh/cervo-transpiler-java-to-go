@@ -249,7 +249,7 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 		if stmt := l.assignment(ctx); stmt != nil {
 			assign := stmt.(ir.AssignStmt)
 			l.unsupported(ctx.GetStart(), "JTG1019", "assignment expressions", "Move the assignment to a standalone statement before transpiling.")
-			return ir.NameExpr{Name: assign.Name}
+			return ir.NameExpr{Name: assign.Name, Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 		}
 	}
 	if ctx.GetPrefix() != nil {
@@ -262,7 +262,7 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 		if ctx.Arguments() != nil {
 			return ir.CallExpr{Target: children[0].GetText(), Name: ctx.Identifier().GetText(), Args: l.arguments(ctx.Arguments()), Type: ir.Type{Kind: ir.KindInvalid}}
 		}
-		return ir.NameExpr{Name: ctx.GetText()}
+		return ir.NameExpr{Name: ctx.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 	}
 	if ctx.GetBop() != nil {
 		op := ctx.GetBop().GetText()
@@ -284,7 +284,7 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 			return ir.BinaryExpr{Left: left, Op: op, Right: right, Type: binaryType(op, left, right)}
 		}
 	}
-	return ir.NameExpr{Name: ctx.GetText()}
+	return ir.NameExpr{Name: ctx.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 }
 
 func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
@@ -302,7 +302,7 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 		}
 	}
 	if identifier := ctx.Identifier(); identifier != nil {
-		return ir.NameExpr{Name: identifier.GetText(), Type: ir.Type{Kind: ir.KindInvalid}}
+		return ir.NameExpr{Name: identifier.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 	}
 	if ctx.QualifiedName() != nil && ctx.Arguments() != nil {
 		name := ctx.QualifiedName().GetText()
@@ -318,7 +318,7 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 	if ctx.Expression() != nil {
 		return l.expression(ctx.Expression())
 	}
-	return ir.NameExpr{Name: ctx.GetText()}
+	return ir.NameExpr{Name: ctx.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 }
 
 func (l *Lowerer) span(token antlr.Token) ir.Span {
