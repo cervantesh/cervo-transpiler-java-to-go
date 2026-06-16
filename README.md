@@ -43,6 +43,7 @@ The modern MVP now implements:
 - Parse-tree lowering in `internal/lower`.
 - Go emission through `go/ast` and `go/format` in `internal/emitgo`.
 - End-to-end pipeline and CLI in `internal/pipeline` and `cmd/j2go`.
+- Project migration pipeline in `internal/migrate` for partial Java library migration.
 - Golden tests under `modern-tests`.
 
 ## Legacy Reference
@@ -142,7 +143,7 @@ The current version supports:
   - direct `new Class(...)` calls -> `NewClass(...)`
   - simple `interface` declarations -> Go interfaces
 
-Unsupported features still include inheritance, `implements` mapping, packages/imports in direct transpile mode, general arrays, exceptions, generics, lambdas, annotations, overloading, reflection, and broad Java standard-library translation.
+Unsupported features still include inheritance, `implements` mapping, packages/imports in direct transpile mode, general arrays, exceptions, generics, lambdas, annotations, overloading, reflection, and broad Java standard-library translation. Project migration mode can read package metadata and map Java packages to Go package directories, but it still skips files that need unsupported language features.
 
 Unsupported features are detected before parsing when possible and reported as structured `JTG` diagnostics with line, column, feature name, and recommendation. See [docs/diagnostics.md](docs/diagnostics.md).
 
@@ -254,6 +255,15 @@ Generate deterministic migration reports:
 
 The report mode scans packages, imports, classes, methods, fields, constructors, unsupported features, diagnostics, internal dependencies, per-file risk, and recommended migration order. It does not call AI.
 
+Run a partial project migration:
+
+```powershell
+.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md --dry-run
+.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md
+```
+
+The migration command creates a Go module, writes generated Go files under package-derived directories, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
+
 ## Legacy Build
 
 Windows PowerShell:
@@ -329,9 +339,9 @@ That file records the tool versions, build output, golden-test output, and negat
 
 ## Known Limitations
 
-This phase is still intentionally small. It does not perform full classpath resolution, method overload resolution, `implements` lowering, inheritance lowering, or broad library migration.
+This phase is still intentionally small. It does not perform full classpath resolution, method overload resolution, `implements` lowering, inheritance lowering, Java test translation, or broad library migration.
 
-Examples of unsupported input should fail with a structured diagnostic or parser error instead of producing misleading Go code. For example, interfaces are rejected before parsing with `JTG1003`.
+Examples of unsupported input should fail with a structured diagnostic or parser error instead of producing misleading Go code. For example, `implements` clauses are rejected with `JTG1005`.
 
 ## AI-Assisted Migration
 

@@ -11,8 +11,12 @@ import (
 
 func Emit(file ir.File) ([]byte, error) {
 	fset := token.NewFileSet()
+	packageName := file.PackageName
+	if packageName == "" {
+		packageName = "main"
+	}
 	out := &ast.File{
-		Name:  ast.NewIdent("main"),
+		Name:  ast.NewIdent(packageName),
 		Decls: declarations(file),
 	}
 	var buffer bytes.Buffer

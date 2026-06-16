@@ -198,6 +198,38 @@ func TestRunReportMarkdown(t *testing.T) {
 	}
 }
 
+func TestRunMigrateDryRunWritesReport(t *testing.T) {
+	projectRoot := writeMigratableCLIProject(t)
+	tmp := t.TempDir()
+	outDir := filepath.Join(tmp, "go-lib")
+	reportPath := filepath.Join(tmp, "migration-report.md")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := run([]string{"migrate", projectRoot, "--out", outDir, "--report", reportPath, "--dry-run"}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("expected migrate success, got %d; stderr=%s", code, stderr.String())
+	}
+	for _, want := range []string{"Migration summary:", "javaFiles=1", "generated=1", "dryRun=true", "Report: " + reportPath} {
+		if !strings.Contains(stdout.String(), want) {
+			t.Fatalf("expected %q in stdout:\n%s", want, stdout.String())
+		}
+	}
+	if stderr.Len() != 0 {
+		t.Fatalf("expected empty stderr, got %q", stderr.String())
+	}
+	if _, err := os.Stat(outDir); !os.IsNotExist(err) {
+		t.Fatalf("expected dry-run to skip generated output dir, stat err=%v", err)
+	}
+	data, err := os.ReadFile(reportPath)
+	if err != nil {
+		t.Fatalf("read report: %v", err)
+	}
+	if !strings.Contains(string(data), "## Migration Execution Summary") {
+		t.Fatalf("expected execution summary in report:\n%s", string(data))
+	}
+}
+
 func writePureJavaProject(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()
@@ -219,6 +251,24 @@ import com.example.Calculator;
 public class CalculatorTest {
     public static int smoke() {
         return Calculator.add(1, 2);
+    }
+}`)
+	return root
+}
+
+func writeMigratableCLIProject(t *testing.T) string {
+	t.Helper()
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "src", "main", "java", "com", "example", "simple", "NumberBox.java"), `package com.example.simple;
+
+public class NumberBox {
+    private int value;
+
+    public NumberBox(int value) {
+    }
+
+    public int Value() {
+        return value;
     }
 }`)
 	return root
