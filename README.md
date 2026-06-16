@@ -12,6 +12,8 @@ The detailed implementation plan is in [docs/superpowers/plans/2026-06-16-modern
 
 Current maturity is documented in [docs/maturity-analysis-2026-06-16.md](docs/maturity-analysis-2026-06-16.md).
 
+The productive migration roadmap is tracked in [docs/productive-migration-roadmap.md](docs/productive-migration-roadmap.md).
+
 ## Project Objective
 
 The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.

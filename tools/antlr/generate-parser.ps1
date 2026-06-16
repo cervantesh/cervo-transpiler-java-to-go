@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $JarPath = Join-Path $Root $Jar
 $GrammarPath = Join-Path $Root $Grammar
 $OutputPath = Join-Path $Root $OutputDir
@@ -38,7 +38,13 @@ if (-not $Java) {
 
 New-Item -ItemType Directory -Force $OutputPath | Out-Null
 
-& $Java -jar $JarPath -Dlanguage=Go -visitor -package gen -Xexact-output-dir -o $OutputPath $GrammarPath
-if ($LASTEXITCODE -ne 0) {
-    throw "ANTLR parser generation failed with exit code $LASTEXITCODE"
+Push-Location $Root
+try {
+    & $Java -jar $JarPath -Dlanguage=Go -visitor -package gen -Xexact-output-dir -o $OutputDir $Grammar
+    if ($LASTEXITCODE -ne 0) {
+        throw "ANTLR parser generation failed with exit code $LASTEXITCODE"
+    }
+}
+finally {
+    Pop-Location
 }

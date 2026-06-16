@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  modern:
+    name: Modern Go pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+          cache: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Download ANTLR
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force tools/antlr | Out-Null
+          Invoke-WebRequest -Uri https://www.antlr.org/download/antlr-4.13.1-complete.jar -OutFile tools/antlr/antlr-4.13.1-complete.jar
+
+      - name: Check generated parser drift
+        shell: pwsh
+        run: |
+          pwsh -NoProfile -ExecutionPolicy Bypass -File tools/antlr/generate-parser.ps1 -Jar tools/antlr/antlr-4.13.1-complete.jar -Grammar grammar/JavaSubset.g4 -OutputDir internal/parser/gen
+          git diff --exit-code -- internal/parser/gen
+
+      - name: Run Go tests
+        run: go test ./...
+
+      - name: Build modern CLI
+        run: |
+          mkdir -p build
+          go build -o build/j2go ./cmd/j2go
+
+      - name: Check modern CLI golden output
+        run: |
+          ./build/j2go -out modern-tests/generated modern-tests/fixtures/hello/Hello.java
+          gofmt -w modern-tests/generated/Hello.go
+          diff -u modern-tests/expected/hello/Hello.go modern-tests/generated/Hello.go
+
+  legacy:
+    name: Legacy reference suite
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+          cache: true
+
+      - name: Install legacy compiler dependencies
+        shell: powershell
+        run: |
+          choco install winflexbison3 mingw -y
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+
+      - name: Run legacy evidence suite
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\test.ps1

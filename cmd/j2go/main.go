@@ -3,40 +3,47 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/pipeline"
+	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/version"
 )
 
 func main() {
-	os.Exit(run(os.Args[1:]))
+	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
 }
 
-func run(args []string) int {
+func run(args []string, stdout io.Writer, stderr io.Writer) int {
 	fs := flag.NewFlagSet("j2go", flag.ContinueOnError)
+	fs.SetOutput(stderr)
 	outDir := fs.String("out", "", "directory for generated Go files")
+	showVersion := fs.Bool("version", false, "print version")
 	if err := fs.Parse(args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
 		return 2
 	}
+	if *showVersion {
+		fmt.Fprintf(stdout, "j2go %s\n", version.Version)
+		return 0
+	}
 	if *outDir == "" {
-		fmt.Fprintln(os.Stderr, "-out is required")
+		fmt.Fprintln(stderr, "-out is required")
 		return 2
 	}
 	inputs := fs.Args()
 	if len(inputs) == 0 {
-		fmt.Fprintln(os.Stderr, "at least one Java file or directory is required")
+		fmt.Fprintln(stderr, "at least one Java file or directory is required")
 		return 2
 	}
 	if err := os.MkdirAll(*outDir, 0755); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(stderr, err)
 		return 1
 	}
 	for _, input := range inputs {
 		if err := transpilePath(input, *outDir); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(stderr, err)
 			return 1
 		}
 	}
