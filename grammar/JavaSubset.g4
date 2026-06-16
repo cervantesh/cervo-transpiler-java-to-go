@@ -14,6 +14,7 @@ importDecl
 
 typeDecl
     : classDecl
+    | interfaceDecl
     | ';'
     ;
 
@@ -23,6 +24,23 @@ classDecl
 
 classBody
     : '{' classMember* '}'
+    ;
+
+interfaceDecl
+    : modifier* 'interface' Identifier interfaceBody
+    ;
+
+interfaceBody
+    : '{' interfaceMember* '}'
+    ;
+
+interfaceMember
+    : interfaceMethodDecl
+    | ';'
+    ;
+
+interfaceMethodDecl
+    : modifier* typeTypeOrVoid Identifier formalParameters ';'
     ;
 
 classMember

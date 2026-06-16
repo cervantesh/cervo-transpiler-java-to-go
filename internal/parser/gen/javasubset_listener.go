@@ -25,6 +25,18 @@ type JavaSubsetListener interface {
 	// EnterClassBody is called when entering the classBody production.
 	EnterClassBody(c *ClassBodyContext)
 
+	// EnterInterfaceDecl is called when entering the interfaceDecl production.
+	EnterInterfaceDecl(c *InterfaceDeclContext)
+
+	// EnterInterfaceBody is called when entering the interfaceBody production.
+	EnterInterfaceBody(c *InterfaceBodyContext)
+
+	// EnterInterfaceMember is called when entering the interfaceMember production.
+	EnterInterfaceMember(c *InterfaceMemberContext)
+
+	// EnterInterfaceMethodDecl is called when entering the interfaceMethodDecl production.
+	EnterInterfaceMethodDecl(c *InterfaceMethodDeclContext)
+
 	// EnterClassMember is called when entering the classMember production.
 	EnterClassMember(c *ClassMemberContext)
 
@@ -126,6 +138,18 @@ type JavaSubsetListener interface {
 
 	// ExitClassBody is called when exiting the classBody production.
 	ExitClassBody(c *ClassBodyContext)
+
+	// ExitInterfaceDecl is called when exiting the interfaceDecl production.
+	ExitInterfaceDecl(c *InterfaceDeclContext)
+
+	// ExitInterfaceBody is called when exiting the interfaceBody production.
+	ExitInterfaceBody(c *InterfaceBodyContext)
+
+	// ExitInterfaceMember is called when exiting the interfaceMember production.
+	ExitInterfaceMember(c *InterfaceMemberContext)
+
+	// ExitInterfaceMethodDecl is called when exiting the interfaceMethodDecl production.
+	ExitInterfaceMethodDecl(c *InterfaceMethodDeclContext)
 
 	// ExitClassMember is called when exiting the classMember production.
 	ExitClassMember(c *ClassMemberContext)

@@ -56,6 +56,30 @@ func (s *BaseJavaSubsetListener) EnterClassBody(ctx *ClassBodyContext) {}
 // ExitClassBody is called when production classBody is exited.
 func (s *BaseJavaSubsetListener) ExitClassBody(ctx *ClassBodyContext) {}
 
+// EnterInterfaceDecl is called when production interfaceDecl is entered.
+func (s *BaseJavaSubsetListener) EnterInterfaceDecl(ctx *InterfaceDeclContext) {}
+
+// ExitInterfaceDecl is called when production interfaceDecl is exited.
+func (s *BaseJavaSubsetListener) ExitInterfaceDecl(ctx *InterfaceDeclContext) {}
+
+// EnterInterfaceBody is called when production interfaceBody is entered.
+func (s *BaseJavaSubsetListener) EnterInterfaceBody(ctx *InterfaceBodyContext) {}
+
+// ExitInterfaceBody is called when production interfaceBody is exited.
+func (s *BaseJavaSubsetListener) ExitInterfaceBody(ctx *InterfaceBodyContext) {}
+
+// EnterInterfaceMember is called when production interfaceMember is entered.
+func (s *BaseJavaSubsetListener) EnterInterfaceMember(ctx *InterfaceMemberContext) {}
+
+// ExitInterfaceMember is called when production interfaceMember is exited.
+func (s *BaseJavaSubsetListener) ExitInterfaceMember(ctx *InterfaceMemberContext) {}
+
+// EnterInterfaceMethodDecl is called when production interfaceMethodDecl is entered.
+func (s *BaseJavaSubsetListener) EnterInterfaceMethodDecl(ctx *InterfaceMethodDeclContext) {}
+
+// ExitInterfaceMethodDecl is called when production interfaceMethodDecl is exited.
+func (s *BaseJavaSubsetListener) ExitInterfaceMethodDecl(ctx *InterfaceMethodDeclContext) {}
+
 // EnterClassMember is called when production classMember is entered.
 func (s *BaseJavaSubsetListener) EnterClassMember(ctx *ClassMemberContext) {}
 

@@ -13,7 +13,6 @@ func TestUnsupportedFixturesReturnStructuredDiagnostics(t *testing.T) {
 		"unsupported_package_import": "JTG1001",
 		"unsupported_exception":      "JTG1007",
 		"unsupported_overload":       "JTG1018",
-		"unsupported_interface":      "JTG1003",
 		"unsupported_inheritance":    "JTG1004",
 		"unsupported_generics":       "JTG1014",
 		"unsupported_array_indexing": "JTG1015",
@@ -83,6 +82,25 @@ public class Demo {
 		if !diagnosticsContain(result.Diagnostics, code) {
 			t.Fatalf("expected code %s in %#v", code, result.Diagnostics)
 		}
+	}
+}
+
+func TestImplementsClauseReturnsStructuredDiagnostic(t *testing.T) {
+	source := `public interface Runner {
+  void run();
+}
+
+public class Worker implements Runner {
+  public void run() {
+  }
+}`
+
+	result := TranspileSource("Worker.java", source)
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+	if !diagnosticsContain(result.Diagnostics, "JTG1005") {
+		t.Fatalf("expected implements diagnostic in %#v", result.Diagnostics)
 	}
 }
 

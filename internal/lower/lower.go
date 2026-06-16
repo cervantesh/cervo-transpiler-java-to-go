@@ -25,6 +25,10 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 	}
 
 	for _, typeDecl := range tree.AllTypeDecl() {
+		if interfaceDecl := typeDecl.InterfaceDecl(); interfaceDecl != nil {
+			out.Interfaces = append(out.Interfaces, l.interfaceDecl(interfaceDecl, out.PackageName))
+			continue
+		}
 		classDecl := typeDecl.ClassDecl()
 		if classDecl == nil {
 			continue
@@ -67,6 +71,43 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 	}
 
 	return out, l.diagnostics
+}
+
+func (l *Lowerer) interfaceDecl(ctx gen.IInterfaceDeclContext, packageName string) ir.Interface {
+	name := ctx.Identifier().GetText()
+	iface := ir.Interface{
+		Name:   name,
+		Symbol: qualifiedSymbol(packageName, name),
+		Span:   l.span(ctx.GetStart()),
+	}
+	for _, member := range ctx.InterfaceBody().AllInterfaceMember() {
+		method := member.InterfaceMethodDecl()
+		if method == nil {
+			continue
+		}
+		iface.Methods = append(iface.Methods, l.interfaceMethod(method, iface.Symbol))
+	}
+	return iface
+}
+
+func (l *Lowerer) interfaceMethod(ctx gen.IInterfaceMethodDeclContext, ownerSymbol string) ir.Func {
+	name := ctx.Identifier().GetText()
+	fn := ir.Func{
+		Name:       name,
+		Symbol:     qualifiedSymbol(ownerSymbol, name),
+		Span:       l.span(ctx.GetStart()),
+		ReturnType: MapJavaType(ctx.TypeTypeOrVoid().GetText()),
+	}
+	if params := ctx.FormalParameters().FormalParameterList(); params != nil {
+		for _, param := range params.AllFormalParameter() {
+			fn.Params = append(fn.Params, ir.Param{
+				Name: param.Identifier().GetText(),
+				Type: MapJavaType(param.TypeType().GetText()),
+				Span: l.span(param.GetStart()),
+			})
+		}
+	}
+	return fn
 }
 
 func (l *Lowerer) method(ctx gen.IMethodDeclContext, class ir.Class) ir.Func {

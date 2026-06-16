@@ -25,6 +25,18 @@ type JavaSubsetVisitor interface {
 	// Visit a parse tree produced by JavaSubsetParser#classBody.
 	VisitClassBody(ctx *ClassBodyContext) interface{}
 
+	// Visit a parse tree produced by JavaSubsetParser#interfaceDecl.
+	VisitInterfaceDecl(ctx *InterfaceDeclContext) interface{}
+
+	// Visit a parse tree produced by JavaSubsetParser#interfaceBody.
+	VisitInterfaceBody(ctx *InterfaceBodyContext) interface{}
+
+	// Visit a parse tree produced by JavaSubsetParser#interfaceMember.
+	VisitInterfaceMember(ctx *InterfaceMemberContext) interface{}
+
+	// Visit a parse tree produced by JavaSubsetParser#interfaceMethodDecl.
+	VisitInterfaceMethodDecl(ctx *InterfaceMethodDeclContext) interface{}
+
 	// Visit a parse tree produced by JavaSubsetParser#classMember.
 	VisitClassMember(ctx *ClassMemberContext) interface{}
 

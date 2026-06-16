@@ -23,7 +23,6 @@ type keywordRule struct {
 var keywordRules = []keywordRule{
 	{"package", "JTG1001", "package declarations", "Remove the package declaration for the current subset or add package-to-module mapping."},
 	{"import", "JTG1002", "import declarations", "Inline supported code or add import mapping before transpiling."},
-	{"interface", "JTG1003", "interfaces", "Add an interface-to-Go-interface lowering strategy before using Java interfaces."},
 	{"extends", "JTG1004", "inheritance", "Rewrite inheritance as composition or add an object model lowering pass."},
 	{"implements", "JTG1005", "interface implementation", "Add Java interface mapping before transpiling implements clauses."},
 	{"try", "JTG1007", "try/catch exceptions", "Design explicit Go error returns before transpiling exceptions."},
@@ -78,7 +77,7 @@ func Detect(fileName string, source string) []semantic.Diagnostic {
 			diagnostics = append(diagnostics, diagnostic(fileName, current.number, position, "JTG1015", "arrays and indexing", "Add array declarations, indexing, and length lowering before using arrays."))
 		}
 
-		if braceDepth == 1 && looksLikeMethodSignature(current.text) {
+		if braceDepth == 1 && looksLikeMethodSignature(current.text) && strings.Contains(current.text, "{") {
 			methodName := methodNameFromSignature(current.text)
 			if methodName != "" && methodName != className {
 				if _, exists := methodLines[methodName]; exists {

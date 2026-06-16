@@ -31,6 +31,22 @@ func (v *BaseJavaSubsetVisitor) VisitClassBody(ctx *ClassBodyContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseJavaSubsetVisitor) VisitInterfaceDecl(ctx *InterfaceDeclContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseJavaSubsetVisitor) VisitInterfaceBody(ctx *InterfaceBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseJavaSubsetVisitor) VisitInterfaceMember(ctx *InterfaceMemberContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseJavaSubsetVisitor) VisitInterfaceMethodDecl(ctx *InterfaceMethodDeclContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseJavaSubsetVisitor) VisitClassMember(ctx *ClassMemberContext) interface{} {
 	return v.VisitChildren(ctx)
 }

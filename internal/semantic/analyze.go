@@ -152,17 +152,29 @@ func (a *irAnalyzer) checkAssignable(span ir.Span, expected ir.Type, actual ir.T
 	if expected.Kind == ir.KindInvalid || actual.Kind == ir.KindInvalid {
 		return
 	}
-	if !isAssignable(expected, actual) {
+	if !a.isAssignable(expected, actual) {
 		a.add(span, CodeIncompatibleType, fmt.Sprintf("type incompatible: expected %s, got %s", expected.GoName(), actual.GoName()))
 	}
 }
 
-func isAssignable(expected ir.Type, actual ir.Type) bool {
+func (a *irAnalyzer) isAssignable(expected ir.Type, actual ir.Type) bool {
 	if typeEqual(expected, actual) {
 		return true
 	}
 	if expected.Kind == ir.KindObject && actual.Kind == ir.KindPointer && actual.Elem != nil {
+		if a.isInterface(expected.Name) {
+			return true
+		}
 		return typeEqual(expected, *actual.Elem)
+	}
+	return false
+}
+
+func (a *irAnalyzer) isInterface(name string) bool {
+	for _, iface := range a.file.Interfaces {
+		if iface.Name == name || iface.Symbol == name {
+			return true
+		}
 	}
 	return false
 }

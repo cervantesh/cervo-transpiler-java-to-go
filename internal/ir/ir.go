@@ -4,6 +4,7 @@ type File struct {
 	Path        string
 	PackageName string
 	Classes     []Class
+	Interfaces  []Interface
 	Funcs       []Func
 }
 
@@ -20,6 +21,13 @@ type Field struct {
 	Name string
 	Type Type
 	Span Span
+}
+
+type Interface struct {
+	Name    string
+	Symbol  string
+	Span    Span
+	Methods []Func
 }
 
 type Func struct {

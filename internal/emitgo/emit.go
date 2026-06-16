@@ -37,6 +37,9 @@ func declarations(file ir.File) []ast.Decl {
 			decls = append(decls, structDecl(class))
 		}
 	}
+	for _, iface := range file.Interfaces {
+		decls = append(decls, interfaceDecl(iface))
+	}
 	for _, fn := range file.Funcs {
 		decls = append(decls, funcDecl(fn))
 	}
@@ -61,6 +64,26 @@ func structDecl(class ir.Class) ast.Decl {
 		Specs: []ast.Spec{&ast.TypeSpec{
 			Name: ast.NewIdent(class.Name),
 			Type: &ast.StructType{Fields: &ast.FieldList{List: fields}},
+		}},
+	}
+}
+
+func interfaceDecl(iface ir.Interface) ast.Decl {
+	methods := make([]*ast.Field, 0, len(iface.Methods))
+	for _, method := range iface.Methods {
+		methods = append(methods, &ast.Field{
+			Names: []*ast.Ident{ast.NewIdent(method.Name)},
+			Type: &ast.FuncType{
+				Params:  &ast.FieldList{List: params(method.Params)},
+				Results: results(method.ReturnType),
+			},
+		})
+	}
+	return &ast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []ast.Spec{&ast.TypeSpec{
+			Name: ast.NewIdent(iface.Name),
+			Type: &ast.InterfaceType{Methods: &ast.FieldList{List: methods}},
 		}},
 	}
 }
