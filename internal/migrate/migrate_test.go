@@ -70,8 +70,9 @@ func TestRunDryRunWritesReportWithoutGeneratedOutput(t *testing.T) {
 	tmp := t.TempDir()
 	outDir := filepath.Join(tmp, "go-lib")
 	reportPath := filepath.Join(tmp, "migration-report.md")
+	logPath := filepath.Join(tmp, "j2go.log")
 
-	result, err := Run(projectRoot, Options{OutDir: outDir, ReportPath: reportPath, DryRun: true})
+	result, err := Run(projectRoot, Options{OutDir: outDir, ReportPath: reportPath, DryRun: true, LogPath: logPath})
 	if err != nil {
 		t.Fatalf("Run failed: %v", err)
 	}
@@ -87,6 +88,12 @@ func TestRunDryRunWritesReportWithoutGeneratedOutput(t *testing.T) {
 	}
 	if !strings.Contains(string(report), "| Dry run | true |") {
 		t.Fatalf("expected dry-run marker in report:\n%s", string(report))
+	}
+	log := readFile(t, logPath)
+	for _, want := range []string{"command=migrate", "dryRun=true", "generated=2", "diagnostics=0"} {
+		if !strings.Contains(log, want) {
+			t.Fatalf("expected %q in log:\n%s", want, log)
+		}
 	}
 }
 
@@ -169,6 +176,15 @@ func writeFile(t *testing.T, path string, body string) {
 	if err := os.WriteFile(path, []byte(body), 0644); err != nil {
 		t.Fatalf("write %s: %v", path, err)
 	}
+}
+
+func readFile(t *testing.T, path string) string {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	return string(data)
 }
 
 func runGoTest(t *testing.T, dir string) {

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/aisidecar"
+	migrationconfig "github.com/cervantesh/cervo-transpiler-java-to-go/internal/config"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/javaproject"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/migrate"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/pipeline"
@@ -39,6 +40,13 @@ func (r *repeatableStrings) Set(value string) error {
 	return nil
 }
 
+const (
+	exitOK      = 0
+	exitError   = 1
+	exitUsage   = 2
+	defaultConf = "cervo-migration.yaml"
+)
+
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
 }
@@ -59,6 +67,8 @@ func run(args []string, stdout io.Writer, stderr io.Writer) int {
 			return runMigrate(args[1:], stdout, stderr)
 		case "ai":
 			return runAI(args[1:], stdout, stderr)
+		case "config":
+			return runConfig(args[1:], stdout, stderr)
 		}
 	}
 	return runTranspile(args, stderr)
@@ -165,14 +175,38 @@ func runReport(args []string, stderr io.Writer) int {
 func runMigrate(args []string, stdout io.Writer, stderr io.Writer) int {
 	fs := flag.NewFlagSet("j2go migrate", flag.ContinueOnError)
 	fs.SetOutput(stderr)
+	configPath := fs.String("config", "", "cervo migration config file")
 	outDir := fs.String("out", "", "directory for generated Go module")
 	reportPath := fs.String("report", "", "migration report output file")
 	dryRun := fs.Bool("dry-run", false, "plan the migration without writing generated Go")
 	modulePath := fs.String("module", "migrated", "module path for generated go.mod")
-	if err := fs.Parse(reorderValueFlags(args, "out", "report", "module")); err != nil {
+	logPath := fs.String("log-file", "", "deterministic operation log file")
+	if err := fs.Parse(reorderValueFlags(args, "config", "out", "report", "module", "log-file")); err != nil {
 		return 2
 	}
 	inputs := fs.Args()
+	cfg, ok := loadOptionalConfig(*configPath, stderr)
+	if !ok {
+		return 1
+	}
+	if *outDir == "" {
+		*outDir = cfg.Migration.Out
+	}
+	if *reportPath == "" {
+		*reportPath = cfg.Migration.Report
+	}
+	if *modulePath == "migrated" && cfg.Project.Module != "" {
+		*modulePath = cfg.Project.Module
+	}
+	if !*dryRun && cfg.Migration.DryRun {
+		*dryRun = true
+	}
+	if *logPath == "" {
+		*logPath = cfg.Logs.File
+	}
+	if len(inputs) == 0 && cfg.Project.Source != "" {
+		inputs = []string{cfg.Project.Source}
+	}
 	if len(inputs) != 1 {
 		fmt.Fprintln(stderr, "migrate requires exactly one Java project path")
 		return 2
@@ -187,6 +221,7 @@ func runMigrate(args []string, stdout io.Writer, stderr io.Writer) int {
 		ReportPath: *reportPath,
 		DryRun:     *dryRun,
 		ModulePath: *modulePath,
+		LogPath:    *logPath,
 	})
 	if err != nil {
 		fmt.Fprintln(stderr, err)
@@ -208,6 +243,9 @@ func runMigrate(args []string, stdout io.Writer, stderr io.Writer) int {
 	if !result.Summary.DryRun {
 		fmt.Fprintf(stdout, "Output: %s\n", result.Summary.OutDir)
 	}
+	if *logPath != "" {
+		fmt.Fprintf(stdout, "Log: %s\n", *logPath)
+	}
 	return 0
 }
 
@@ -228,13 +266,21 @@ func runAI(args []string, stdout io.Writer, stderr io.Writer) int {
 func runAIExplain(args []string, stdout io.Writer, stderr io.Writer) int {
 	fs := flag.NewFlagSet("j2go ai explain", flag.ContinueOnError)
 	fs.SetOutput(stderr)
+	configPath := fs.String("config", "", "cervo migration config file")
 	reportPath := fs.String("report", "", "deterministic migration report file")
 	outPath := fs.String("out", "", "AI advisory output file")
 	provider := fs.String("provider", "", "AI provider: canned, offline, or external")
 	var snippets repeatableStrings
 	fs.Var(&snippets, "snippet", "generated code snippet file to include; repeatable")
-	if err := fs.Parse(reorderValueFlags(args, "report", "out", "provider", "snippet")); err != nil {
+	if err := fs.Parse(reorderValueFlags(args, "config", "report", "out", "provider", "snippet")); err != nil {
 		return 2
+	}
+	cfg, ok := loadOptionalConfig(*configPath, stderr)
+	if !ok {
+		return 1
+	}
+	if *provider == "" {
+		*provider = cfg.AI.Provider
 	}
 	if len(fs.Args()) != 0 {
 		fmt.Fprintln(stderr, "ai explain does not accept positional arguments")
@@ -262,6 +308,51 @@ func runAIExplain(args []string, stdout io.Writer, stderr io.Writer) int {
 	fmt.Fprintf(stdout, "Provider: %s\n", result.Provider)
 	fmt.Fprintf(stdout, "Structured report parsed: %t\n", result.ParsedReport)
 	return 0
+}
+
+func runConfig(args []string, stdout io.Writer, stderr io.Writer) int {
+	if len(args) == 0 {
+		fmt.Fprintln(stderr, "config requires a subcommand: validate")
+		return exitUsage
+	}
+	switch args[0] {
+	case "validate":
+		return runConfigValidate(args[1:], stdout, stderr)
+	default:
+		fmt.Fprintf(stderr, "unsupported config subcommand %q\n", args[0])
+		return exitUsage
+	}
+}
+
+func runConfigValidate(args []string, stdout io.Writer, stderr io.Writer) int {
+	fs := flag.NewFlagSet("j2go config validate", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	configPath := fs.String("config", defaultConf, "cervo migration config file")
+	if err := fs.Parse(reorderValueFlags(args, "config")); err != nil {
+		return exitUsage
+	}
+	if len(fs.Args()) != 0 {
+		fmt.Fprintln(stderr, "config validate does not accept positional arguments")
+		return exitUsage
+	}
+	if _, err := migrationconfig.Load(*configPath); err != nil {
+		fmt.Fprintln(stderr, err)
+		return exitError
+	}
+	fmt.Fprintf(stdout, "Config valid: %s\n", *configPath)
+	return exitOK
+}
+
+func loadOptionalConfig(path string, stderr io.Writer) (migrationconfig.Config, bool) {
+	if path == "" {
+		return migrationconfig.Config{}, true
+	}
+	cfg, err := migrationconfig.Load(path)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return migrationconfig.Config{}, false
+	}
+	return cfg, true
 }
 
 func reorderValueFlags(args []string, names ...string) []string {

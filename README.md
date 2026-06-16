@@ -14,6 +14,8 @@ Current maturity is documented in [docs/maturity-analysis-2026-06-16.md](docs/ma
 
 The productive migration roadmap is tracked in [docs/productive-migration-roadmap.md](docs/productive-migration-roadmap.md).
 
+Operational usage is documented in [docs/operations.md](docs/operations.md), and supported toolchain versions are tracked in [docs/compatibility.md](docs/compatibility.md).
+
 ## Project Objective
 
 The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.
@@ -77,6 +79,8 @@ A later production migration tool should move toward a richer Java frontend, typ
 ```text
 .
 |-- build.ps1                  Windows build script
+|-- cervo-migration.example.yaml Enterprise migration config example
+|-- CHANGELOG.md               Release notes
 |-- Makefile                   Make-style build for compatible environments
 |-- go.mod                     Modern Go module
 |-- README.md                  Project explanation and usage
@@ -84,7 +88,9 @@ A later production migration tool should move toward a richer Java frontend, typ
 |-- docs/
 |   |-- ai-assisted-migration.md
 |   |-- architecture-modern.md
+|   |-- compatibility.md
 |   |-- diagnostics.md
+|   |-- operations.md
 |   `-- evidence/
 |       `-- verification-2026-06-16.md
 |-- grammar/
@@ -247,6 +253,12 @@ Scan a pure Java library project:
 .\build\j2go.exe scan .\internal\javaproject\testdata\pure-java-lib
 ```
 
+Validate an enterprise config file:
+
+```powershell
+.\build\j2go.exe config validate --config .\cervo-migration.yaml
+```
+
 Generate deterministic migration reports:
 
 ```powershell
@@ -260,7 +272,8 @@ Run a partial project migration:
 
 ```powershell
 .\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md --dry-run
-.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md
+.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md --log-file build\j2go.log
+.\build\j2go.exe migrate --config .\cervo-migration.yaml
 ```
 
 The migration command creates a Go module, writes generated Go files under package-derived directories, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.

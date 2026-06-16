@@ -23,6 +23,7 @@ type Options struct {
 	ReportPath string
 	DryRun     bool
 	ModulePath string
+	LogPath    string
 }
 
 type Summary struct {
@@ -102,6 +103,11 @@ func Run(projectPath string, opts Options) (Result, error) {
 	}
 	if opts.ReportPath != "" {
 		if err := writeReport(opts.ReportPath, renderMigrationReport(project, result)); err != nil {
+			return Result{}, err
+		}
+	}
+	if opts.LogPath != "" {
+		if err := writeReport(opts.LogPath, renderOperationLog(result)); err != nil {
 			return Result{}, err
 		}
 	}
@@ -217,6 +223,22 @@ func renderMigrationReport(project javaproject.Project, result Result) []byte {
 	}
 	for _, diagnostic := range result.Diagnostics {
 		fmt.Fprintf(&buffer, "- `%s`\n", strings.ReplaceAll(diagnostic.Error(), "\n", " "))
+	}
+	return buffer.Bytes()
+}
+
+func renderOperationLog(result Result) []byte {
+	var buffer bytes.Buffer
+	fmt.Fprintf(&buffer, "command=migrate\n")
+	fmt.Fprintf(&buffer, "out=%s\n", result.Summary.OutDir)
+	fmt.Fprintf(&buffer, "report=%s\n", result.Summary.ReportPath)
+	fmt.Fprintf(&buffer, "dryRun=%t\n", result.Summary.DryRun)
+	fmt.Fprintf(&buffer, "javaFiles=%d\n", result.Summary.JavaFiles)
+	fmt.Fprintf(&buffer, "generated=%d\n", result.Summary.Generated)
+	fmt.Fprintf(&buffer, "skipped=%d\n", result.Summary.Skipped)
+	fmt.Fprintf(&buffer, "diagnostics=%d\n", result.Summary.Diagnostics)
+	for _, diagnostic := range result.Diagnostics {
+		fmt.Fprintf(&buffer, "diagnostic=%s\n", strings.ReplaceAll(diagnostic.Error(), "\n", " "))
 	}
 	return buffer.Bytes()
 }
