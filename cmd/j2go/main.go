@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/javaproject"
+	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/migrate"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/pipeline"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/report"
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/version"
@@ -42,6 +43,8 @@ func run(args []string, stdout io.Writer, stderr io.Writer) int {
 			return runReport(args[1:], stderr)
 		case "transpile":
 			return runTranspile(args[1:], stderr)
+		case "migrate":
+			return runMigrate(args[1:], stdout, stderr)
 		}
 	}
 	return runTranspile(args, stderr)
@@ -141,6 +144,55 @@ func runReport(args []string, stderr io.Writer) int {
 	if err := os.WriteFile(*outPath, rendered, 0644); err != nil {
 		fmt.Fprintln(stderr, err)
 		return 1
+	}
+	return 0
+}
+
+func runMigrate(args []string, stdout io.Writer, stderr io.Writer) int {
+	fs := flag.NewFlagSet("j2go migrate", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	outDir := fs.String("out", "", "directory for generated Go module")
+	reportPath := fs.String("report", "", "migration report output file")
+	dryRun := fs.Bool("dry-run", false, "plan the migration without writing generated Go")
+	modulePath := fs.String("module", "migrated", "module path for generated go.mod")
+	if err := fs.Parse(reorderValueFlags(args, "out", "report", "module")); err != nil {
+		return 2
+	}
+	inputs := fs.Args()
+	if len(inputs) != 1 {
+		fmt.Fprintln(stderr, "migrate requires exactly one Java project path")
+		return 2
+	}
+	if *outDir == "" {
+		fmt.Fprintln(stderr, "-out is required")
+		return 2
+	}
+
+	result, err := migrate.Run(inputs[0], migrate.Options{
+		OutDir:     *outDir,
+		ReportPath: *reportPath,
+		DryRun:     *dryRun,
+		ModulePath: *modulePath,
+	})
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+	for _, diagnostic := range result.Diagnostics {
+		fmt.Fprintln(stderr, diagnostic)
+	}
+	fmt.Fprintf(stdout, "Migration summary: javaFiles=%d generated=%d skipped=%d diagnostics=%d dryRun=%t\n",
+		result.Summary.JavaFiles,
+		result.Summary.Generated,
+		result.Summary.Skipped,
+		result.Summary.Diagnostics,
+		result.Summary.DryRun,
+	)
+	if result.Summary.ReportPath != "" {
+		fmt.Fprintf(stdout, "Report: %s\n", result.Summary.ReportPath)
+	}
+	if !result.Summary.DryRun {
+		fmt.Fprintf(stdout, "Output: %s\n", result.Summary.OutDir)
 	}
 	return 0
 }

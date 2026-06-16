@@ -37,3 +37,18 @@ func TestEmitNoFmtWhenUnused(t *testing.T) {
 		t.Fatalf("did not expect fmt import:\n%s", string(code))
 	}
 }
+
+func TestEmitUsesIRPackageName(t *testing.T) {
+	code, err := Emit(ir.File{PackageName: "sample", Funcs: []ir.Func{{Name: "Answer", ReturnType: ir.Type{Kind: ir.KindInt}, Body: []ir.Stmt{
+		ir.ReturnStmt{Value: ir.LiteralExpr{Value: "42", Type: ir.Type{Kind: ir.KindInt}}},
+	}}}})
+	if err != nil {
+		t.Fatalf("Emit failed: %v", err)
+	}
+	text := string(code)
+	for _, want := range []string{"package sample", "func Answer() int"} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("expected %q in output:\n%s", want, text)
+		}
+	}
+}
