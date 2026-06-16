@@ -49,6 +49,26 @@ func TestUnsupportedFixturesReturnStructuredDiagnostics(t *testing.T) {
 	}
 }
 
+func TestSyntaxErrorFixtureReturnsParserDiagnostic(t *testing.T) {
+	root := workspaceRoot(t)
+	path := filepath.Join(root, "tests", "fixtures", "syntax_error.java")
+	source, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	result := TranspileSource(path, string(source))
+	if len(result.Diagnostics) == 0 {
+		t.Fatal("expected syntax diagnostics")
+	}
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go for syntax error, got:\n%s", string(result.Code))
+	}
+	if !diagnosticsContain(result.Diagnostics, "syntax_error.java:") {
+		t.Fatalf("expected parser diagnostic with source position, got %#v", result.Diagnostics)
+	}
+}
+
 func TestUnsupportedPackageImportReturnsAllDiagnostics(t *testing.T) {
 	source := `package demo;
 
