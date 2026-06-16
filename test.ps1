@@ -18,6 +18,30 @@ function Invoke-Checked {
     }
 }
 
+function Invoke-ExpectedTranspilerFailure {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $InputPath,
+        [Parameter(Mandatory = $true)]
+        [string] $OutputPath,
+        [Parameter(Mandatory = $true)]
+        [string] $ErrorFile
+    )
+
+    Remove-Item -Force $ErrorFile -ErrorAction SilentlyContinue
+
+    $Args = @("`"$InputPath`"", "`"$OutputPath`"")
+    $Process = Start-Process `
+        -FilePath $Exe `
+        -ArgumentList $Args `
+        -RedirectStandardError $ErrorFile `
+        -Wait `
+        -PassThru `
+        -WindowStyle Hidden
+
+    return $Process.ExitCode
+}
+
 & (Join-Path $Root "build.ps1")
 New-Item -ItemType Directory -Force $GeneratedDir | Out-Null
 
@@ -66,8 +90,8 @@ $SyntaxInput = Join-Path $Root "tests\fixtures\syntax_error.java"
 $SyntaxOutput = Join-Path $GeneratedDir "syntax_error.go"
 $ErrorFile = Join-Path $GeneratedDir "syntax_error.stderr.txt"
 
-& $Exe $SyntaxInput $SyntaxOutput 2> $ErrorFile
-if ($LASTEXITCODE -eq 0) {
+$ExitCode = Invoke-ExpectedTranspilerFailure $SyntaxInput $SyntaxOutput $ErrorFile
+if ($ExitCode -eq 0) {
     Write-Error "syntax_error.java unexpectedly succeeded"
 }
 
@@ -97,8 +121,8 @@ foreach ($Case in $UnsupportedCases) {
 
     Remove-Item -Force $Actual, $ErrorFile -ErrorAction SilentlyContinue
 
-    & $Exe $InputPath $Actual 2> $ErrorFile
-    if ($LASTEXITCODE -eq 0) {
+    $ExitCode = Invoke-ExpectedTranspilerFailure $InputPath $Actual $ErrorFile
+    if ($ExitCode -eq 0) {
         Write-Error "$($Case.Name).java unexpectedly succeeded"
     }
     if (Test-Path $Actual) {
