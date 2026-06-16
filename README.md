@@ -233,6 +233,21 @@ Run the modern CLI:
 gofmt -w modern-tests\generated\Hello.go
 ```
 
+Scan a pure Java library project:
+
+```powershell
+.\build\j2go.exe scan .\internal\javaproject\testdata\pure-java-lib
+```
+
+Generate deterministic migration reports:
+
+```powershell
+.\build\j2go.exe report .\internal\javaproject\testdata\pure-java-lib --format json --out build\migration-report.json
+.\build\j2go.exe report .\internal\javaproject\testdata\pure-java-lib --format markdown --out build\migration-report.md
+```
+
+The report mode scans packages, imports, classes, methods, fields, constructors, unsupported features, diagnostics, internal dependencies, per-file risk, and recommended migration order. It does not call AI.
+
 ## Legacy Build
 
 Windows PowerShell:
