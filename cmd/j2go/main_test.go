@@ -235,11 +235,61 @@ func TestRunMigrateDryRunWritesReport(t *testing.T) {
 	}
 }
 
+func TestRunMigrateUsesConfigAndWritesLog(t *testing.T) {
+	projectRoot := writeMigratableCLIProject(t)
+	tmp := t.TempDir()
+	outDir := filepath.Join(tmp, "go-lib")
+	reportPath := filepath.Join(tmp, "migration-report.md")
+	logPath := filepath.Join(tmp, "j2go.log")
+	configPath := filepath.Join(tmp, "cervo-migration.yaml")
+	writeFile(t, configPath, "version: 1\nproject:\n  source: "+slashPath(projectRoot)+"\n  module: example.com/generated\nmigration:\n  out: "+slashPath(outDir)+"\n  report: "+slashPath(reportPath)+"\n  dryRun: true\nlogs:\n  file: "+slashPath(logPath)+"\n")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := run([]string{"migrate", "--config", configPath}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("expected migrate success, got %d; stderr=%s", code, stderr.String())
+	}
+	for _, want := range []string{"Migration summary:", "dryRun=true", "Report: " + slashPath(reportPath), "Log: " + slashPath(logPath)} {
+		if !strings.Contains(stdout.String(), want) {
+			t.Fatalf("expected %q in stdout:\n%s", want, stdout.String())
+		}
+	}
+	if _, err := os.Stat(outDir); !os.IsNotExist(err) {
+		t.Fatalf("expected config dry-run to skip generated output dir, stat err=%v", err)
+	}
+	log, err := os.ReadFile(logPath)
+	if err != nil {
+		t.Fatalf("read log: %v", err)
+	}
+	for _, want := range []string{"command=migrate", "dryRun=true", "generated=1"} {
+		if !strings.Contains(string(log), want) {
+			t.Fatalf("expected %q in log:\n%s", want, string(log))
+		}
+	}
+}
+
+func TestRunConfigValidate(t *testing.T) {
+	configPath := filepath.Join(t.TempDir(), "cervo-migration.yaml")
+	writeFile(t, configPath, "version: 1\nproject:\n  source: ./java-lib\nmigration:\n  out: ./go-lib\n")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := run([]string{"config", "validate", "--config", configPath}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("expected config validation success, got %d; stderr=%s", code, stderr.String())
+	}
+	if !strings.Contains(stdout.String(), "Config valid: "+configPath) {
+		t.Fatalf("unexpected stdout:\n%s", stdout.String())
+	}
+}
+
 func TestRunAIExplainWritesAdvisory(t *testing.T) {
 	tmp := t.TempDir()
 	reportPath := filepath.Join(tmp, "migration-report.json")
 	outPath := filepath.Join(tmp, "ai-review.md")
 	snippetPath := filepath.Join(tmp, "Generated.go")
+	configPath := filepath.Join(tmp, "cervo-migration.yaml")
 	project := javaproject.Project{
 		Root: "sample-project",
 		Files: []javaproject.File{{
@@ -254,10 +304,11 @@ func TestRunAIExplainWritesAdvisory(t *testing.T) {
 	}
 	writeFile(t, reportPath, string(data))
 	writeFile(t, snippetPath, "package example\n\nfunc Demo() {}\n")
+	writeFile(t, configPath, "version: 1\nai:\n  provider: canned\n")
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
-	code := run([]string{"ai", "explain", "--report", reportPath, "--out", outPath, "--provider", "canned", "--snippet", snippetPath}, &stdout, &stderr)
+	code := run([]string{"ai", "explain", "--config", configPath, "--report", reportPath, "--out", outPath, "--snippet", snippetPath}, &stdout, &stderr)
 	if code != 0 {
 		t.Fatalf("expected ai explain success, got %d; stderr=%s", code, stderr.String())
 	}
@@ -329,4 +380,8 @@ func writeFile(t *testing.T, path string, body string) {
 	if err := os.WriteFile(path, []byte(body), 0644); err != nil {
 		t.Fatalf("write %s: %v", path, err)
 	}
+}
+
+func slashPath(path string) string {
+	return filepath.ToSlash(path)
 }

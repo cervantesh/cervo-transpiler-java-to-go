@@ -1,0 +1,16 @@
+version: 1
+
+project:
+  source: ./java-lib
+  module: example.com/migrated
+
+migration:
+  out: ./go-lib
+  report: build/migration-report.md
+  dryRun: true
+
+logs:
+  file: build/j2go.log
+
+ai:
+  provider: canned
