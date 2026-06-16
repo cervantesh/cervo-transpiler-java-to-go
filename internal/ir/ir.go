@@ -24,9 +24,10 @@ type Class struct {
 }
 
 type Field struct {
-	Name string
-	Type Type
-	Span Span
+	Name   string
+	Symbol string
+	Type   Type
+	Span   Span
 }
 
 type Interface struct {

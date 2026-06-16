@@ -11,14 +11,17 @@ import (
 )
 
 type Lowerer struct {
-	file        string
-	diagnostics []semantic.Diagnostic
-	classFields map[string]ir.Type
-	receiver    string
+	file         string
+	diagnostics  []semantic.Diagnostic
+	classFields  map[string]ir.Type
+	classMethods map[string]map[string]ir.Type
+	currentClass string
+	receiver     string
+	scope        *semantic.Scope
 }
 
 func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semantic.Diagnostic) {
-	l := &Lowerer{file: fileName}
+	l := &Lowerer{file: fileName, classMethods: map[string]map[string]ir.Type{}}
 	out := ir.File{Path: fileName}
 	if tree.PackageDecl() != nil {
 		out.PackageName = tree.PackageDecl().QualifiedName().GetText()
@@ -40,10 +43,12 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 		}
 		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.FieldDecl() != nil {
-				class.Fields = append(class.Fields, l.lowerFields(member.FieldDecl())...)
+				fields := l.lowerFields(member.FieldDecl(), class.Symbol)
+				class.Fields = append(class.Fields, fields...)
 				class.NeedsStruct = true
 			}
 		}
+		l.collectMethodTypes(classDecl, class.Name)
 		hasConstructor := false
 		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.ConstructorDecl() != nil {
@@ -135,23 +140,48 @@ func (l *Lowerer) method(ctx gen.IMethodDeclContext, class ir.Class) ir.Func {
 	}
 	previousFields := l.classFields
 	previousReceiver := l.receiver
+	previousScope := l.scope
+	previousClass := l.currentClass
 	l.classFields = fieldMap(class.Fields)
+	l.scope = semantic.NewScope(nil)
+	l.currentClass = class.Name
 	if fn.Receiver != nil {
 		l.receiver = fn.Receiver.Name
+		_ = l.scope.Define(semantic.Symbol{Name: fn.Receiver.Name, Type: fn.Receiver.Type})
 	} else {
 		l.receiver = ""
+	}
+	for _, param := range fn.Params {
+		if err := l.scope.Define(semantic.Symbol{Name: param.Name, Type: param.Type}); err != nil {
+			l.duplicate(param.Span, "parameter "+param.Name)
+		}
 	}
 	fn.Body = l.block(ctx.Block())
 	l.classFields = previousFields
 	l.receiver = previousReceiver
+	l.scope = previousScope
+	l.currentClass = previousClass
 	return fn
 }
 
-func (l *Lowerer) lowerFields(ctx gen.IFieldDeclContext) []ir.Field {
+func (l *Lowerer) collectMethodTypes(ctx gen.IClassDeclContext, className string) {
+	methods := map[string]ir.Type{}
+	for _, member := range ctx.ClassBody().AllClassMember() {
+		method := member.MethodDecl()
+		if method == nil {
+			continue
+		}
+		methods[method.Identifier().GetText()] = MapJavaType(method.TypeTypeOrVoid().GetText())
+	}
+	l.classMethods[className] = methods
+}
+
+func (l *Lowerer) lowerFields(ctx gen.IFieldDeclContext, classSymbol string) []ir.Field {
 	typ := MapJavaType(ctx.TypeType().GetText())
 	out := []ir.Field{}
 	for _, decl := range ctx.VariableDeclarators().AllVariableDeclarator() {
-		out = append(out, ir.Field{Name: decl.Identifier().GetText(), Type: typ, Span: l.span(decl.GetStart())})
+		name := decl.Identifier().GetText()
+		out = append(out, ir.Field{Name: name, Symbol: qualifiedSymbol(classSymbol, name), Type: typ, Span: l.span(decl.GetStart())})
 	}
 	return out
 }
@@ -259,6 +289,11 @@ func (l *Lowerer) localVar(ctx gen.ILocalVariableDeclContext) []ir.Stmt {
 			Span:  l.span(decl.GetStart()),
 			Value: value,
 		})
+		if l.scope != nil {
+			if err := l.scope.Define(semantic.Symbol{Name: decl.Identifier().GetText(), Type: typ}); err != nil {
+				l.duplicate(l.span(decl.GetStart()), "local variable "+decl.Identifier().GetText())
+			}
+		}
 	}
 	return out
 }
@@ -327,7 +362,7 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 
 func (l *Lowerer) statementBody(ctx gen.IStatementContext) []ir.Stmt {
 	if ctx.Block() != nil {
-		return l.block(ctx.Block())
+		return l.scopedBlock(ctx.Block())
 	}
 	if stmt := l.statement(ctx); stmt != nil {
 		return []ir.Stmt{stmt}
@@ -370,8 +405,16 @@ func (l *Lowerer) assignment(ctx gen.IExpressionContext) ir.Stmt {
 	if len(children) != 1 {
 		return nil
 	}
+	name := ctx.Identifier().GetText()
+	if l.scope != nil {
+		if _, ok := l.scope.Lookup(name); !ok && l.receiver != "" {
+			if _, ok := l.classFields[name]; ok {
+				name = l.receiver + "." + name
+			}
+		}
+	}
 	return ir.AssignStmt{
-		Name:  ctx.Identifier().GetText(),
+		Name:  name,
 		Op:    ctx.GetOp().GetText(),
 		Span:  l.span(ctx.GetStart()),
 		Value: l.expression(children[0]),
@@ -400,7 +443,9 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 	if ctx.Identifier() != nil && len(ctx.AllExpression()) > 0 {
 		children := ctx.AllExpression()
 		if ctx.Arguments() != nil {
-			return ir.CallExpr{Target: children[0].GetText(), Name: ctx.Identifier().GetText(), Args: l.arguments(ctx.Arguments()), Type: ir.Type{Kind: ir.KindInvalid}}
+			target := children[0].GetText()
+			name := ctx.Identifier().GetText()
+			return ir.CallExpr{Target: target, Name: name, Args: l.arguments(ctx.Arguments()), Type: l.callType(target, name)}
 		}
 		return ir.NameExpr{Name: ctx.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 	}
@@ -416,7 +461,8 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 			if ctx.Arguments() != nil {
 				args = l.arguments(ctx.Arguments())
 			}
-			return ir.CallExpr{Target: target, Name: ctx.Identifier().GetText(), Args: args, Type: ir.Type{Kind: ir.KindInvalid}}
+			name := ctx.Identifier().GetText()
+			return ir.CallExpr{Target: target, Name: name, Args: args, Type: l.callType(target, name)}
 		}
 		if len(children) == 2 {
 			left := l.expression(children[0])
@@ -442,6 +488,11 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 		}
 	}
 	if identifier := ctx.Identifier(); identifier != nil {
+		if l.scope != nil {
+			if symbol, ok := l.scope.Lookup(identifier.GetText()); ok {
+				return ir.NameExpr{Name: identifier.GetText(), Type: symbol.Type, Span: l.span(ctx.GetStart())}
+			}
+		}
 		if l.receiver != "" {
 			if typ, ok := l.classFields[identifier.GetText()]; ok {
 				return ir.FieldExpr{Target: l.receiver, Field: identifier.GetText(), Type: typ}
@@ -465,7 +516,7 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 			target = name[:lastDot]
 			callName = name[lastDot+1:]
 		}
-		return ir.CallExpr{Target: target, Name: callName, Args: l.arguments(ctx.Arguments()), Type: ir.Type{Kind: ir.KindInvalid}}
+		return ir.CallExpr{Target: target, Name: callName, Args: l.arguments(ctx.Arguments()), Type: l.callType(target, callName)}
 	}
 	if ctx.Expression() != nil {
 		return l.expression(ctx.Expression())
@@ -543,6 +594,35 @@ func fieldMap(fields []ir.Field) map[string]ir.Type {
 	return out
 }
 
+func (l *Lowerer) scopedBlock(ctx gen.IBlockContext) []ir.Stmt {
+	previous := l.scope
+	if previous != nil {
+		l.scope = semantic.NewScope(previous)
+	}
+	body := l.block(ctx)
+	l.scope = previous
+	return body
+}
+
+func (l *Lowerer) callType(target string, name string) ir.Type {
+	if target == "System.out" && name == "println" {
+		return ir.Type{Kind: ir.KindVoid}
+	}
+	if target == "" {
+		if methods, ok := l.classMethods[l.currentClass]; ok {
+			if typ, ok := methods[name]; ok {
+				return typ
+			}
+		}
+	}
+	if methods, ok := l.classMethods[target]; ok {
+		if typ, ok := methods[name]; ok {
+			return typ
+		}
+	}
+	return ir.Type{Kind: ir.KindInvalid}
+}
+
 func pointerToObject(name string) ir.Type {
 	objectType := ir.Type{Kind: ir.KindObject, Name: name}
 	return ir.Type{Kind: ir.KindPointer, Elem: &objectType}
@@ -583,5 +663,15 @@ func (l *Lowerer) unsupported(token antlr.Token, code string, feature string, re
 		Code:           code,
 		Message:        message,
 		Recommendation: recommendation,
+	})
+}
+
+func (l *Lowerer) duplicate(span ir.Span, symbol string) {
+	l.diagnostics = append(l.diagnostics, semantic.Diagnostic{
+		File:    span.File,
+		Line:    span.Line,
+		Column:  span.Column,
+		Code:    semantic.CodeDuplicateSymbol,
+		Message: "duplicate symbol: " + symbol,
 	})
 }
