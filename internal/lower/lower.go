@@ -17,7 +17,7 @@ type Lowerer struct {
 
 func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semantic.Diagnostic) {
 	l := &Lowerer{file: fileName}
-	out := ir.File{}
+	out := ir.File{Path: fileName}
 	if tree.PackageDecl() != nil {
 		out.PackageName = tree.PackageDecl().QualifiedName().GetText()
 	}
@@ -27,7 +27,11 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 		if classDecl == nil {
 			continue
 		}
-		class := ir.Class{Name: classDecl.Identifier().GetText()}
+		class := ir.Class{
+			Name:   classDecl.Identifier().GetText(),
+			Symbol: qualifiedSymbol(out.PackageName, classDecl.Identifier().GetText()),
+			Span:   l.span(classDecl.GetStart()),
+		}
 		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.FieldDecl() != nil {
 				l.unsupported(member.FieldDecl().GetStart(), "JTG1016", "class fields", "Add struct field lowering before transpiling Java fields.")
@@ -41,24 +45,25 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 			if method == nil {
 				continue
 			}
-			fn := l.method(method)
+			fn := l.method(method, class.Symbol)
 			if fn.Static {
 				out.Funcs = append(out.Funcs, fn)
 			} else {
 				class.Methods = append(class.Methods, fn)
 			}
 		}
-		if len(class.Methods) > 0 {
-			out.Classes = append(out.Classes, class)
-		}
+		out.Classes = append(out.Classes, class)
 	}
 
 	return out, l.diagnostics
 }
 
-func (l *Lowerer) method(ctx gen.IMethodDeclContext) ir.Func {
+func (l *Lowerer) method(ctx gen.IMethodDeclContext, ownerSymbol string) ir.Func {
+	name := ctx.Identifier().GetText()
 	fn := ir.Func{
-		Name:       ctx.Identifier().GetText(),
+		Name:       name,
+		Symbol:     qualifiedSymbol(ownerSymbol, name),
+		Span:       l.span(ctx.GetStart()),
 		ReturnType: MapJavaType(ctx.TypeTypeOrVoid().GetText()),
 		Static:     hasModifier(ctx.AllModifier(), "static"),
 	}
@@ -67,6 +72,7 @@ func (l *Lowerer) method(ctx gen.IMethodDeclContext) ir.Func {
 			fn.Params = append(fn.Params, ir.Param{
 				Name: param.Identifier().GetText(),
 				Type: MapJavaType(param.TypeType().GetText()),
+				Span: l.span(param.GetStart()),
 			})
 		}
 	}
@@ -110,6 +116,7 @@ func (l *Lowerer) localVar(ctx gen.ILocalVariableDeclContext) []ir.Stmt {
 		out = append(out, ir.VarDeclStmt{
 			Name:  decl.Identifier().GetText(),
 			Type:  typ,
+			Span:  l.span(decl.GetStart()),
 			Value: value,
 		})
 	}
@@ -136,6 +143,7 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 			elseBody = l.statementBody(children[1])
 		}
 		return ir.IfStmt{
+			Span: l.span(ctx.GetStart()),
 			Cond: l.expression(ctx.ParExpression().Expression()),
 			Then: thenBody,
 			Else: elseBody,
@@ -148,6 +156,7 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 			body = l.statementBody(children[0])
 		}
 		return ir.WhileStmt{
+			Span: l.span(ctx.GetStart()),
 			Cond: l.expression(ctx.ParExpression().Expression()),
 			Body: body,
 		}
@@ -161,17 +170,17 @@ func (l *Lowerer) statement(ctx gen.IStatementContext) ir.Stmt {
 		return l.forStmt(ctx.ForControl(), body)
 	}
 	if ctx.Expression() != nil && start == "return" {
-		return ir.ReturnStmt{Value: l.expression(ctx.Expression())}
+		return ir.ReturnStmt{Span: l.span(ctx.GetStart()), Value: l.expression(ctx.Expression())}
 	}
 	if start == "return" {
-		return ir.ReturnStmt{}
+		return ir.ReturnStmt{Span: l.span(ctx.GetStart())}
 	}
 	if ctx.StatementExpression() != nil {
 		expression := ctx.StatementExpression().Expression()
 		if assign := l.assignment(expression); assign != nil {
 			return assign
 		}
-		return ir.ExprStmt{Expr: l.expression(expression)}
+		return ir.ExprStmt{Span: l.span(ctx.GetStart()), Expr: l.expression(expression)}
 	}
 	return nil
 }
@@ -210,7 +219,7 @@ func (l *Lowerer) forStmt(ctx gen.IForControlContext, body []ir.Stmt) ir.Stmt {
 			}
 		}
 	}
-	return ir.ForStmt{Init: init, Cond: cond, Post: post, Body: body}
+	return ir.ForStmt{Span: l.span(ctx.GetStart()), Init: init, Cond: cond, Post: post, Body: body}
 }
 
 func (l *Lowerer) assignment(ctx gen.IExpressionContext) ir.Stmt {
@@ -224,6 +233,7 @@ func (l *Lowerer) assignment(ctx gen.IExpressionContext) ir.Stmt {
 	return ir.AssignStmt{
 		Name:  ctx.Identifier().GetText(),
 		Op:    ctx.GetOp().GetText(),
+		Span:  l.span(ctx.GetStart()),
 		Value: l.expression(children[0]),
 	}
 }
@@ -243,12 +253,14 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 		}
 	}
 	if ctx.GetPrefix() != nil {
-		return ir.UnaryExpr{Op: ctx.GetPrefix().GetText(), Expr: l.expression(ctx.Expression(0))}
+		child := l.expression(ctx.Expression(0))
+		op := ctx.GetPrefix().GetText()
+		return ir.UnaryExpr{Op: op, Expr: child, Type: unaryType(op, child)}
 	}
 	if ctx.Identifier() != nil && len(ctx.AllExpression()) > 0 {
 		children := ctx.AllExpression()
 		if ctx.Arguments() != nil {
-			return ir.CallExpr{Target: children[0].GetText(), Name: ctx.Identifier().GetText(), Args: l.arguments(ctx.Arguments())}
+			return ir.CallExpr{Target: children[0].GetText(), Name: ctx.Identifier().GetText(), Args: l.arguments(ctx.Arguments()), Type: ir.Type{Kind: ir.KindInvalid}}
 		}
 		return ir.NameExpr{Name: ctx.GetText()}
 	}
@@ -264,10 +276,12 @@ func (l *Lowerer) expression(ctx gen.IExpressionContext) ir.Expr {
 			if ctx.Arguments() != nil {
 				args = l.arguments(ctx.Arguments())
 			}
-			return ir.CallExpr{Target: target, Name: ctx.Identifier().GetText(), Args: args}
+			return ir.CallExpr{Target: target, Name: ctx.Identifier().GetText(), Args: args, Type: ir.Type{Kind: ir.KindInvalid}}
 		}
 		if len(children) == 2 {
-			return ir.BinaryExpr{Left: l.expression(children[0]), Op: op, Right: l.expression(children[1])}
+			left := l.expression(children[0])
+			right := l.expression(children[1])
+			return ir.BinaryExpr{Left: left, Op: op, Right: right, Type: binaryType(op, left, right)}
 		}
 	}
 	return ir.NameExpr{Name: ctx.GetText()}
@@ -288,7 +302,7 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 		}
 	}
 	if identifier := ctx.Identifier(); identifier != nil {
-		return ir.NameExpr{Name: identifier.GetText()}
+		return ir.NameExpr{Name: identifier.GetText(), Type: ir.Type{Kind: ir.KindInvalid}}
 	}
 	if ctx.QualifiedName() != nil && ctx.Arguments() != nil {
 		name := ctx.QualifiedName().GetText()
@@ -299,12 +313,68 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 			target = name[:lastDot]
 			callName = name[lastDot+1:]
 		}
-		return ir.CallExpr{Target: target, Name: callName, Args: l.arguments(ctx.Arguments())}
+		return ir.CallExpr{Target: target, Name: callName, Args: l.arguments(ctx.Arguments()), Type: ir.Type{Kind: ir.KindInvalid}}
 	}
 	if ctx.Expression() != nil {
 		return l.expression(ctx.Expression())
 	}
 	return ir.NameExpr{Name: ctx.GetText()}
+}
+
+func (l *Lowerer) span(token antlr.Token) ir.Span {
+	if token == nil {
+		return ir.Span{File: l.file}
+	}
+	return ir.Span{File: l.file, Line: token.GetLine(), Column: token.GetColumn()}
+}
+
+func qualifiedSymbol(packageName string, name string) string {
+	if packageName == "" {
+		return name
+	}
+	return packageName + "." + name
+}
+
+func unaryType(op string, child ir.Expr) ir.Type {
+	if op == "!" {
+		return ir.Type{Kind: ir.KindBoolean}
+	}
+	return exprType(child)
+}
+
+func binaryType(op string, left ir.Expr, right ir.Expr) ir.Type {
+	switch op {
+	case "==", "!=", "<", "<=", ">", ">=", "&&", "||":
+		return ir.Type{Kind: ir.KindBoolean}
+	case "+":
+		if exprType(left).Kind == ir.KindString || exprType(right).Kind == ir.KindString {
+			return ir.Type{Kind: ir.KindString}
+		}
+	}
+	if exprType(left).Kind == ir.KindDouble || exprType(right).Kind == ir.KindDouble {
+		return ir.Type{Kind: ir.KindDouble}
+	}
+	if exprType(left).Kind == ir.KindInt && exprType(right).Kind == ir.KindInt {
+		return ir.Type{Kind: ir.KindInt}
+	}
+	return ir.Type{Kind: ir.KindInvalid}
+}
+
+func exprType(expression ir.Expr) ir.Type {
+	switch value := expression.(type) {
+	case ir.LiteralExpr:
+		return value.Type
+	case ir.NameExpr:
+		return value.Type
+	case ir.BinaryExpr:
+		return value.Type
+	case ir.UnaryExpr:
+		return value.Type
+	case ir.CallExpr:
+		return value.Type
+	default:
+		return ir.Type{Kind: ir.KindInvalid}
+	}
 }
 
 func (l *Lowerer) arguments(ctx gen.IArgumentsContext) []ir.Expr {

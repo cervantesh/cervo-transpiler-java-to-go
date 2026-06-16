@@ -1,6 +1,7 @@
 package ir
 
 type File struct {
+	Path        string
 	PackageName string
 	Classes     []Class
 	Funcs       []Func
@@ -8,11 +9,15 @@ type File struct {
 
 type Class struct {
 	Name    string
+	Symbol  string
+	Span    Span
 	Methods []Func
 }
 
 type Func struct {
 	Name       string
+	Symbol     string
+	Span       Span
 	Params     []Param
 	ReturnType Type
 	Body       []Stmt
@@ -22,6 +27,13 @@ type Func struct {
 type Param struct {
 	Name string
 	Type Type
+	Span Span
+}
+
+type Span struct {
+	File   string
+	Line   int
+	Column int
 }
 
 type Stmt interface {
@@ -35,6 +47,7 @@ type Expr interface {
 type VarDeclStmt struct {
 	Name  string
 	Type  Type
+	Span  Span
 	Value Expr
 }
 
@@ -43,24 +56,28 @@ func (VarDeclStmt) stmtNode() {}
 type AssignStmt struct {
 	Name  string
 	Op    string
+	Span  Span
 	Value Expr
 }
 
 func (AssignStmt) stmtNode() {}
 
 type ExprStmt struct {
+	Span Span
 	Expr Expr
 }
 
 func (ExprStmt) stmtNode() {}
 
 type ReturnStmt struct {
+	Span  Span
 	Value Expr
 }
 
 func (ReturnStmt) stmtNode() {}
 
 type IfStmt struct {
+	Span Span
 	Cond Expr
 	Then []Stmt
 	Else []Stmt
@@ -69,6 +86,7 @@ type IfStmt struct {
 func (IfStmt) stmtNode() {}
 
 type WhileStmt struct {
+	Span Span
 	Cond Expr
 	Body []Stmt
 }
@@ -76,6 +94,7 @@ type WhileStmt struct {
 func (WhileStmt) stmtNode() {}
 
 type ForStmt struct {
+	Span Span
 	Init Stmt
 	Cond Expr
 	Post Stmt
@@ -93,6 +112,7 @@ func (LiteralExpr) exprNode() {}
 
 type NameExpr struct {
 	Name string
+	Type Type
 }
 
 func (NameExpr) exprNode() {}
@@ -101,6 +121,7 @@ type BinaryExpr struct {
 	Left  Expr
 	Op    string
 	Right Expr
+	Type  Type
 }
 
 func (BinaryExpr) exprNode() {}
@@ -108,6 +129,7 @@ func (BinaryExpr) exprNode() {}
 type UnaryExpr struct {
 	Op   string
 	Expr Expr
+	Type Type
 }
 
 func (UnaryExpr) exprNode() {}
@@ -116,6 +138,7 @@ type CallExpr struct {
 	Target string
 	Name   string
 	Args   []Expr
+	Type   Type
 }
 
 func (CallExpr) exprNode() {}
