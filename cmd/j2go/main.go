@@ -14,6 +14,18 @@ import (
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/version"
 )
 
+type diagnosticList []error
+
+func (d diagnosticList) Error() string {
+	parts := make([]string, 0, len(d))
+	for _, diagnostic := range d {
+		if diagnostic != nil {
+			parts = append(parts, diagnostic.Error())
+		}
+	}
+	return strings.Join(parts, "\n")
+}
+
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
 }
@@ -185,7 +197,7 @@ func transpileFile(input string, outDir string) error {
 	}
 	result := pipeline.TranspileSource(input, string(source))
 	if len(result.Diagnostics) > 0 {
-		return result.Diagnostics[0]
+		return diagnosticList(result.Diagnostics)
 	}
 	base := strings.TrimSuffix(filepath.Base(input), filepath.Ext(input)) + ".go"
 	return os.WriteFile(filepath.Join(outDir, base), result.Code, 0644)

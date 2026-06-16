@@ -106,6 +106,39 @@ func TestRunTranspileSubcommandTranspilesFile(t *testing.T) {
 	}
 }
 
+func TestRunTranspilePrintsAllUnsupportedDiagnostics(t *testing.T) {
+	tmp := t.TempDir()
+	input := filepath.Join(tmp, "Demo.java")
+	outDir := filepath.Join(tmp, "out")
+	source := `package demo;
+
+import java.util.List;
+
+public class Demo {
+  public static void main(String[] args) {
+    System.out.println(1);
+  }
+}`
+	if err := os.WriteFile(input, []byte(source), 0644); err != nil {
+		t.Fatalf("write source: %v", err)
+	}
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := run([]string{"transpile", "-out", outDir, input}, &stdout, &stderr)
+	if code != 1 {
+		t.Fatalf("expected failure exit code 1, got %d; stderr=%s", code, stderr.String())
+	}
+	for _, want := range []string{"JTG1001", "JTG1002", "unsupported feature:", "recommendation:"} {
+		if !strings.Contains(stderr.String(), want) {
+			t.Fatalf("expected %q in stderr:\n%s", want, stderr.String())
+		}
+	}
+	if _, err := os.Stat(filepath.Join(outDir, "Demo.go")); !os.IsNotExist(err) {
+		t.Fatalf("expected no generated file, stat err=%v", err)
+	}
+}
+
 func TestRunScanProject(t *testing.T) {
 	projectRoot := writePureJavaProject(t)
 	var stdout bytes.Buffer
