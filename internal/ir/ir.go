@@ -3,9 +3,15 @@ package ir
 type File struct {
 	Path        string
 	PackageName string
+	Imports     []Import
 	Classes     []Class
 	Interfaces  []Interface
 	Funcs       []Func
+}
+
+type Import struct {
+	Name string
+	Path string
 }
 
 type Class struct {

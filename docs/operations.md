@@ -72,7 +72,7 @@ j2go migrate ./java-lib --out ./go-lib --report build/migration-report.md --log-
 j2go migrate ./java-lib --out ./go-lib --report build/migration-report.md --log-file build/j2go.log
 ```
 
-The migrate command may generate supported files and skip unsupported files in the same run. Skipped work is reported through stderr, the Markdown report, and the operation log.
+The migrate command may generate supported files and skip unsupported files in the same run. It maps supported internal Java imports to deterministic Go imports, writes supported Java test fixtures as `_test.go`, and reports Go symbol collisions before emitting ambiguous output. Skipped work is reported through stderr, the Markdown report, and the operation log.
 
 ## Review
 

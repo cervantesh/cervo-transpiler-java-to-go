@@ -281,7 +281,7 @@ Run a partial project migration:
 .\build\j2go.exe migrate --config .\cervo-migration.yaml
 ```
 
-The migration command creates a Go module, writes generated Go files under package-derived directories, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
+The migration command creates a Go module, writes generated Go files under package-derived directories, emits deterministic Go imports for supported internal package references, translates supported Java test files into `_test.go` files, reports Go symbol collisions before writing misleading output, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
 
 Generate an advisory AI review from a deterministic report:
 

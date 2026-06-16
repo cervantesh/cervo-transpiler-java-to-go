@@ -52,3 +52,30 @@ func TestEmitUsesIRPackageName(t *testing.T) {
 		}
 	}
 }
+
+func TestEmitExplicitImportsAndQualifiedTypes(t *testing.T) {
+	modelType := ir.Type{Kind: ir.KindObject, Name: "model.User"}
+	code, err := Emit(ir.File{
+		PackageName: "service",
+		Imports:     []ir.Import{{Path: "example.com/migrated/com/acme/model"}},
+		Funcs: []ir.Func{{
+			Name:       "Use",
+			Params:     []ir.Param{{Name: "user", Type: modelType}},
+			ReturnType: modelType,
+			Body:       []ir.Stmt{ir.ReturnStmt{Value: ir.NameExpr{Name: "user", Type: modelType}}},
+		}},
+	})
+	if err != nil {
+		t.Fatalf("Emit failed: %v", err)
+	}
+	text := string(code)
+	for _, want := range []string{
+		"package service",
+		"import \"example.com/migrated/com/acme/model\"",
+		"func Use(user model.User) model.User",
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("expected %q in output:\n%s", want, text)
+		}
+	}
+}

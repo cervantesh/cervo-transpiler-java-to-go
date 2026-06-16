@@ -5,6 +5,9 @@ import (
 	"go/ast"
 	"go/format"
 	"go/token"
+	"path"
+	"sort"
+	"strconv"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/ir"
 )
@@ -28,13 +31,8 @@ func Emit(file ir.File) ([]byte, error) {
 
 func declarations(file ir.File) []ast.Decl {
 	decls := []ast.Decl{}
-	if needsFmt(file) {
-		decls = append(decls, &ast.GenDecl{
-			Tok: token.IMPORT,
-			Specs: []ast.Spec{&ast.ImportSpec{
-				Path: &ast.BasicLit{Kind: token.STRING, Value: "\"fmt\""},
-			}},
-		})
+	if imports := importDecl(file); imports != nil {
+		decls = append(decls, imports)
 	}
 	for _, class := range file.Classes {
 		if class.NeedsStruct {
@@ -53,6 +51,42 @@ func declarations(file ir.File) []ast.Decl {
 		}
 	}
 	return decls
+}
+
+func importDecl(file ir.File) ast.Decl {
+	imports := append([]ir.Import(nil), file.Imports...)
+	if needsFmt(file) {
+		imports = append(imports, ir.Import{Path: "fmt"})
+	}
+	if len(imports) == 0 {
+		return nil
+	}
+
+	byPath := map[string]ir.Import{}
+	for _, importSpec := range imports {
+		if importSpec.Path == "" {
+			continue
+		}
+		byPath[importSpec.Path] = importSpec
+	}
+	paths := make([]string, 0, len(byPath))
+	for importPath := range byPath {
+		paths = append(paths, importPath)
+	}
+	sort.Strings(paths)
+
+	specs := make([]ast.Spec, 0, len(paths))
+	for _, importPath := range paths {
+		importSpec := byPath[importPath]
+		spec := &ast.ImportSpec{
+			Path: &ast.BasicLit{Kind: token.STRING, Value: strconv.Quote(importPath)},
+		}
+		if importSpec.Name != "" && importSpec.Name != path.Base(importPath) {
+			spec.Name = ast.NewIdent(importSpec.Name)
+		}
+		specs = append(specs, spec)
+	}
+	return &ast.GenDecl{Tok: token.IMPORT, Specs: specs}
 }
 
 func structDecl(class ir.Class) ast.Decl {

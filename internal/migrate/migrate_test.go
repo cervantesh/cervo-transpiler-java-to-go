@@ -142,6 +142,99 @@ public class Broken {
 	}
 }
 
+func TestRunMigratesInternalImportsAndBasicTests(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "src", "main", "java", "com", "acme", "math", "Calculator.java"), `package com.acme.math;
+
+public class Calculator {
+    public static int add(int a, int b) {
+        return a + b;
+    }
+}`)
+	writeFile(t, filepath.Join(root, "src", "main", "java", "com", "acme", "service", "CalculatorService.java"), `package com.acme.service;
+
+import com.acme.math.Calculator;
+
+public class CalculatorService {
+    public static int total() {
+        return Calculator.add(2, 3);
+    }
+}`)
+	writeFile(t, filepath.Join(root, "src", "test", "java", "com", "acme", "math", "CalculatorTest.java"), `package com.acme.math;
+
+public class CalculatorTest {
+    public static void smoke() {
+        Calculator.add(1, 2);
+    }
+}`)
+
+	outDir := filepath.Join(t.TempDir(), "go-lib")
+	result, err := Run(root, Options{OutDir: outDir, ModulePath: "example.com/migrated"})
+	if err != nil {
+		t.Fatalf("Run failed: %v", err)
+	}
+	if result.Summary.Generated != 3 || result.Summary.Skipped != 0 || result.Summary.Diagnostics != 0 {
+		t.Fatalf("unexpected summary: %#v diagnostics=%#v", result.Summary, result.Diagnostics)
+	}
+
+	calculator := readFile(t, filepath.Join(outDir, "com", "acme", "math", "Calculator.go"))
+	for _, want := range []string{"package math", "func Add(a int, b int) int", "return a + b"} {
+		if !strings.Contains(calculator, want) {
+			t.Fatalf("expected %q in Calculator.go:\n%s", want, calculator)
+		}
+	}
+	service := readFile(t, filepath.Join(outDir, "com", "acme", "service", "CalculatorService.go"))
+	for _, want := range []string{
+		"package service",
+		"import \"example.com/migrated/com/acme/math\"",
+		"func Total() int",
+		"return math.Add(2, 3)",
+	} {
+		if !strings.Contains(service, want) {
+			t.Fatalf("expected %q in CalculatorService.go:\n%s", want, service)
+		}
+	}
+	testFile := readFile(t, filepath.Join(outDir, "com", "acme", "math", "CalculatorTest_test.go"))
+	for _, want := range []string{"package math", "import \"testing\"", "func TestSmoke(t *testing.T)", "Add(1, 2)"} {
+		if !strings.Contains(testFile, want) {
+			t.Fatalf("expected %q in CalculatorTest_test.go:\n%s", want, testFile)
+		}
+	}
+	runGoTest(t, outDir)
+}
+
+func TestRunReportsGoSymbolCollisions(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "src", "main", "java", "com", "acme", "one", "First.java"), `package com.acme.one;
+
+public class First {
+    public static int value() {
+        return 1;
+    }
+}`)
+	writeFile(t, filepath.Join(root, "src", "main", "java", "com", "acme", "one", "Second.java"), `package com.acme.one;
+
+public class Second {
+    public static int Value() {
+        return 2;
+    }
+}`)
+
+	outDir := filepath.Join(t.TempDir(), "go-lib")
+	result, err := Run(root, Options{OutDir: outDir})
+	if err != nil {
+		t.Fatalf("Run failed: %v", err)
+	}
+	if result.Summary.Generated != 0 || result.Summary.Skipped != 2 || result.Summary.Diagnostics != 2 {
+		t.Fatalf("unexpected summary: %#v diagnostics=%#v", result.Summary, result.Diagnostics)
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if !strings.Contains(diagnostic.Error(), "JTG2001") || !strings.Contains(diagnostic.Error(), "duplicate Go symbol after migration: Value") {
+			t.Fatalf("expected Go symbol collision diagnostic, got %v", diagnostic)
+		}
+	}
+}
+
 func writeMigratableProject(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()
