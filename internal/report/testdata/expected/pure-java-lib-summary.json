@@ -1,0 +1,14 @@
+{
+  "javaFiles": 3,
+  "packages": 2,
+  "classes": 3,
+  "methods": 4,
+  "constructors": 1,
+  "fields": 1,
+  "diagnostics": 0,
+  "unsupported": 3,
+  "internalImports": 1,
+  "lowRiskFiles": 0,
+  "mediumRiskFiles": 2,
+  "highRiskFiles": 1
+}
