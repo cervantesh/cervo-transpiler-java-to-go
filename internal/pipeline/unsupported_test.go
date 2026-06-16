@@ -10,15 +10,13 @@ import (
 func TestUnsupportedFixturesReturnStructuredDiagnostics(t *testing.T) {
 	root := workspaceRoot(t)
 	cases := map[string]string{
-		"unsupported_field":           "JTG1016",
-		"unsupported_package_import":  "JTG1001",
-		"unsupported_exception":       "JTG1007",
-		"unsupported_instance_method": "JTG1017",
-		"unsupported_overload":        "JTG1018",
-		"unsupported_interface":       "JTG1003",
-		"unsupported_inheritance":     "JTG1004",
-		"unsupported_generics":        "JTG1014",
-		"unsupported_array_indexing":  "JTG1015",
+		"unsupported_package_import": "JTG1001",
+		"unsupported_exception":      "JTG1007",
+		"unsupported_overload":       "JTG1018",
+		"unsupported_interface":      "JTG1003",
+		"unsupported_inheritance":    "JTG1004",
+		"unsupported_generics":       "JTG1014",
+		"unsupported_array_indexing": "JTG1015",
 	}
 
 	for name, code := range cases {

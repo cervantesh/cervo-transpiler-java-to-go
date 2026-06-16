@@ -13,6 +13,8 @@ import (
 type Lowerer struct {
 	file        string
 	diagnostics []semantic.Diagnostic
+	classFields map[string]ir.Type
+	receiver    string
 }
 
 func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semantic.Diagnostic) {
@@ -34,23 +36,32 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 		}
 		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.FieldDecl() != nil {
-				l.unsupported(member.FieldDecl().GetStart(), "JTG1016", "class fields", "Add struct field lowering before transpiling Java fields.")
-				continue
+				class.Fields = append(class.Fields, l.lowerFields(member.FieldDecl())...)
+				class.NeedsStruct = true
 			}
+		}
+		hasConstructor := false
+		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.ConstructorDecl() != nil {
-				l.unsupported(member.ConstructorDecl().GetStart(), "JTG1006", "constructors", "Add constructor lowering before transpiling Java constructors.")
+				hasConstructor = true
+				class.NeedsStruct = true
+				out.Funcs = append(out.Funcs, l.constructor(member.ConstructorDecl(), class))
 				continue
 			}
 			method := member.MethodDecl()
 			if method == nil {
 				continue
 			}
-			fn := l.method(method, class.Symbol)
+			fn := l.method(method, class)
 			if fn.Static {
 				out.Funcs = append(out.Funcs, fn)
 			} else {
+				class.NeedsStruct = true
 				class.Methods = append(class.Methods, fn)
 			}
+		}
+		if class.NeedsStruct && !hasConstructor {
+			out.Funcs = append(out.Funcs, l.defaultConstructor(class))
 		}
 		out.Classes = append(out.Classes, class)
 	}
@@ -58,14 +69,19 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 	return out, l.diagnostics
 }
 
-func (l *Lowerer) method(ctx gen.IMethodDeclContext, ownerSymbol string) ir.Func {
+func (l *Lowerer) method(ctx gen.IMethodDeclContext, class ir.Class) ir.Func {
 	name := ctx.Identifier().GetText()
 	fn := ir.Func{
 		Name:       name,
-		Symbol:     qualifiedSymbol(ownerSymbol, name),
+		Symbol:     qualifiedSymbol(class.Symbol, name),
 		Span:       l.span(ctx.GetStart()),
 		ReturnType: MapJavaType(ctx.TypeTypeOrVoid().GetText()),
 		Static:     hasModifier(ctx.AllModifier(), "static"),
+	}
+	if !fn.Static {
+		receiverName := receiverName(class.Name)
+		receiverType := pointerToObject(class.Name)
+		fn.Receiver = &ir.Param{Name: receiverName, Type: receiverType, Span: l.span(ctx.GetStart())}
 	}
 	if params := ctx.FormalParameters().FormalParameterList(); params != nil && fn.Name != "main" {
 		for _, param := range params.AllFormalParameter() {
@@ -76,8 +92,91 @@ func (l *Lowerer) method(ctx gen.IMethodDeclContext, ownerSymbol string) ir.Func
 			})
 		}
 	}
+	previousFields := l.classFields
+	previousReceiver := l.receiver
+	l.classFields = fieldMap(class.Fields)
+	if fn.Receiver != nil {
+		l.receiver = fn.Receiver.Name
+	} else {
+		l.receiver = ""
+	}
 	fn.Body = l.block(ctx.Block())
+	l.classFields = previousFields
+	l.receiver = previousReceiver
 	return fn
+}
+
+func (l *Lowerer) lowerFields(ctx gen.IFieldDeclContext) []ir.Field {
+	typ := MapJavaType(ctx.TypeType().GetText())
+	out := []ir.Field{}
+	for _, decl := range ctx.VariableDeclarators().AllVariableDeclarator() {
+		out = append(out, ir.Field{Name: decl.Identifier().GetText(), Type: typ, Span: l.span(decl.GetStart())})
+	}
+	return out
+}
+
+func (l *Lowerer) constructor(ctx gen.IConstructorDeclContext, class ir.Class) ir.Func {
+	params := []ir.Param{}
+	if list := ctx.FormalParameters().FormalParameterList(); list != nil {
+		for _, param := range list.AllFormalParameter() {
+			params = append(params, ir.Param{Name: param.Identifier().GetText(), Type: MapJavaType(param.TypeType().GetText()), Span: l.span(param.GetStart())})
+		}
+	}
+	returnType := pointerToObject(class.Name)
+	return ir.Func{
+		Name:       "New" + class.Name,
+		Symbol:     qualifiedSymbol(class.Symbol, "New"+class.Name),
+		Span:       l.span(ctx.GetStart()),
+		Params:     params,
+		ReturnType: returnType,
+		Static:     true,
+		Body: []ir.Stmt{ir.ReturnStmt{
+			Span:  l.span(ctx.GetStart()),
+			Value: l.constructorReturn(class, params),
+		}},
+	}
+}
+
+func (l *Lowerer) defaultConstructor(class ir.Class) ir.Func {
+	return ir.Func{
+		Name:       "New" + class.Name,
+		Symbol:     qualifiedSymbol(class.Symbol, "New"+class.Name),
+		Span:       class.Span,
+		ReturnType: pointerToObject(class.Name),
+		Static:     true,
+		Body: []ir.Stmt{ir.ReturnStmt{
+			Span: class.Span,
+			Value: ir.AddressExpr{
+				Type: pointerToObject(class.Name),
+				Expr: ir.CompositeLitExpr{
+					TypeName: class.Name,
+					Type:     ir.Type{Kind: ir.KindObject, Name: class.Name},
+				},
+			},
+		}},
+	}
+}
+
+func (l *Lowerer) constructorReturn(class ir.Class, params []ir.Param) ir.Expr {
+	paramByName := map[string]ir.Param{}
+	for _, param := range params {
+		paramByName[param.Name] = param
+	}
+	fields := []ir.KeyValueExpr{}
+	for _, field := range class.Fields {
+		if param, ok := paramByName[field.Name]; ok {
+			fields = append(fields, ir.KeyValueExpr{Key: field.Name, Value: ir.NameExpr{Name: param.Name, Type: param.Type, Span: param.Span}})
+		}
+	}
+	objectType := ir.Type{Kind: ir.KindObject, Name: class.Name}
+	return ir.AddressExpr{
+		Type: pointerToObject(class.Name),
+		Expr: ir.CompositeLitExpr{
+			TypeName: class.Name,
+			Fields:   fields,
+			Type:     objectType,
+		},
+	}
 }
 
 func hasModifier(modifiers []gen.IModifierContext, name string) bool {
@@ -302,6 +401,11 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 		}
 	}
 	if identifier := ctx.Identifier(); identifier != nil {
+		if l.receiver != "" {
+			if typ, ok := l.classFields[identifier.GetText()]; ok {
+				return ir.FieldExpr{Target: l.receiver, Field: identifier.GetText(), Type: typ}
+			}
+		}
 		return ir.NameExpr{Name: identifier.GetText(), Type: ir.Type{Kind: ir.KindInvalid}, Span: l.span(ctx.GetStart())}
 	}
 	if ctx.QualifiedName() != nil && ctx.Arguments() != nil {
@@ -309,6 +413,13 @@ func (l *Lowerer) primary(ctx gen.IPrimaryContext) ir.Expr {
 		lastDot := strings.LastIndex(name, ".")
 		target := ""
 		callName := name
+		if ctx.GetStart() != nil && ctx.GetStart().GetText() == "new" {
+			callName = "New" + name
+			if lastDot >= 0 {
+				callName = "New" + name[lastDot+1:]
+			}
+			return ir.CallExpr{Target: "", Name: callName, Args: l.arguments(ctx.Arguments()), Type: pointerToObject(strings.TrimPrefix(callName, "New"))}
+		}
 		if lastDot >= 0 {
 			target = name[:lastDot]
 			callName = name[lastDot+1:]
@@ -372,9 +483,39 @@ func exprType(expression ir.Expr) ir.Type {
 		return value.Type
 	case ir.CallExpr:
 		return value.Type
+	case ir.FieldExpr:
+		return value.Type
+	case ir.AddressExpr:
+		return value.Type
+	case ir.CompositeLitExpr:
+		return value.Type
 	default:
 		return ir.Type{Kind: ir.KindInvalid}
 	}
+}
+
+func fieldMap(fields []ir.Field) map[string]ir.Type {
+	out := map[string]ir.Type{}
+	for _, field := range fields {
+		out[field.Name] = field.Type
+	}
+	return out
+}
+
+func pointerToObject(name string) ir.Type {
+	objectType := ir.Type{Kind: ir.KindObject, Name: name}
+	return ir.Type{Kind: ir.KindPointer, Elem: &objectType}
+}
+
+func receiverName(className string) string {
+	if className == "" {
+		return "receiver"
+	}
+	name := strings.ToLower(className[:1])
+	if name == "_" || name == "$" {
+		return "receiver"
+	}
+	return name
 }
 
 func (l *Lowerer) arguments(ctx gen.IArgumentsContext) []ir.Expr {

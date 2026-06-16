@@ -77,7 +77,8 @@ func TestMarkdownReportIncludesRiskAndMigrationOrder(t *testing.T) {
 		"## Unsupported Feature Counts",
 		"## Recommended Migration Order",
 		"`src/main/java/com/example/Calculator.java`",
-		"Add struct field lowering before transpiling Java fields.",
+		"| class fields | 1 |",
+		"None.",
 		"`instance int add(2 params)`",
 	} {
 		if !strings.Contains(text, want) {

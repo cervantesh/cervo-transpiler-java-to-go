@@ -22,6 +22,12 @@ func expr(e ir.Expr) ast.Expr {
 		return &ast.BinaryExpr{X: expr(v.Left), Op: tokenForBinary(v.Op), Y: expr(v.Right)}
 	case ir.CallExpr:
 		return call(v)
+	case ir.FieldExpr:
+		return &ast.SelectorExpr{X: ast.NewIdent(v.Target), Sel: ast.NewIdent(v.Field)}
+	case ir.AddressExpr:
+		return &ast.UnaryExpr{Op: token.AND, X: expr(v.Expr)}
+	case ir.CompositeLitExpr:
+		return compositeLit(v)
 	default:
 		return ast.NewIdent("nil")
 	}
@@ -63,6 +69,14 @@ func call(v ir.CallExpr) ast.Expr {
 		Fun:  &ast.SelectorExpr{X: ast.NewIdent(target), Sel: ast.NewIdent(name)},
 		Args: args,
 	}
+}
+
+func compositeLit(v ir.CompositeLitExpr) ast.Expr {
+	elts := make([]ast.Expr, 0, len(v.Fields))
+	for _, field := range v.Fields {
+		elts = append(elts, &ast.KeyValueExpr{Key: ast.NewIdent(field.Key), Value: expr(field.Value)})
+	}
+	return &ast.CompositeLit{Type: ast.NewIdent(v.TypeName), Elts: elts}
 }
 
 func tokenForUnary(op string) token.Token {

@@ -32,6 +32,11 @@ func declarations(file ir.File) []ast.Decl {
 			}},
 		})
 	}
+	for _, class := range file.Classes {
+		if class.NeedsStruct {
+			decls = append(decls, structDecl(class))
+		}
+	}
 	for _, fn := range file.Funcs {
 		decls = append(decls, funcDecl(fn))
 	}
@@ -43,8 +48,25 @@ func declarations(file ir.File) []ast.Decl {
 	return decls
 }
 
+func structDecl(class ir.Class) ast.Decl {
+	fields := make([]*ast.Field, 0, len(class.Fields))
+	for _, field := range class.Fields {
+		fields = append(fields, &ast.Field{
+			Names: []*ast.Ident{ast.NewIdent(field.Name)},
+			Type:  typeExpr(field.Type),
+		})
+	}
+	return &ast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []ast.Spec{&ast.TypeSpec{
+			Name: ast.NewIdent(class.Name),
+			Type: &ast.StructType{Fields: &ast.FieldList{List: fields}},
+		}},
+	}
+}
+
 func funcDecl(fn ir.Func) *ast.FuncDecl {
-	return &ast.FuncDecl{
+	decl := &ast.FuncDecl{
 		Name: ast.NewIdent(fn.Name),
 		Type: &ast.FuncType{
 			Params:  &ast.FieldList{List: params(fn.Params)},
@@ -52,6 +74,13 @@ func funcDecl(fn ir.Func) *ast.FuncDecl {
 		},
 		Body: &ast.BlockStmt{List: stmts(fn.Body)},
 	}
+	if fn.Receiver != nil {
+		decl.Recv = &ast.FieldList{List: []*ast.Field{{
+			Names: []*ast.Ident{ast.NewIdent(fn.Receiver.Name)},
+			Type:  typeExpr(fn.Receiver.Type),
+		}}}
+	}
+	return decl
 }
 
 func params(in []ir.Param) []*ast.Field {
@@ -139,6 +168,14 @@ func exprNeedsFmt(expression ir.Expr) bool {
 		return exprNeedsFmt(v.Left) || exprNeedsFmt(v.Right)
 	case ir.UnaryExpr:
 		return exprNeedsFmt(v.Expr)
+	case ir.AddressExpr:
+		return exprNeedsFmt(v.Expr)
+	case ir.CompositeLitExpr:
+		for _, field := range v.Fields {
+			if exprNeedsFmt(field.Value) {
+				return true
+			}
+		}
 	}
 	return false
 }

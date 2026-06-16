@@ -12,7 +12,7 @@ Project: `<PROJECT_ROOT>`
 | Methods | 4 |
 | Constructors | 1 |
 | Fields | 1 |
-| Unsupported features | 3 |
+| Unsupported features | 0 |
 | Diagnostics | 0 |
 | Internal imports | 1 |
 
@@ -30,33 +30,28 @@ Project: `<PROJECT_ROOT>`
 | Feature | Count |
 | --- | ---: |
 | class declarations | 3 |
+| class fields | 1 |
+| constructors | 1 |
 | import declarations | 1 |
+| instance methods | 1 |
 | package declarations | 3 |
 | static methods | 3 |
 
 ## Unsupported Feature Counts
 
-| Feature | Count |
-| --- | ---: |
-| class fields | 1 |
-| constructors | 1 |
-| instance methods | 1 |
+None.
 
 ## Files
 
 ### `src/main/java/com/example/Calculator.java`
 
 - Source root: `src/main/java`
-- Risk: `high`
+- Risk: `medium`
 - Package: `com.example`
 - Classes: `com.example.Calculator`
 - Fields in `com.example.Calculator`: `int last`
 - Constructors in `com.example.Calculator`: `Calculator(0 params)`
 - Methods in `com.example.Calculator`: `instance int add(2 params)`, `static int twice(1 params)`
-- Unsupported:
-  - `class fields` (JTG1016): Add struct field lowering before transpiling Java fields.
-  - `constructors` (JTG1006): Add constructor lowering before transpiling Java constructors.
-  - `instance methods` (JTG1017): Add Go receiver generation before transpiling instance methods.
 
 ### `src/main/java/com/example/MathUtil.java`
 
@@ -77,6 +72,6 @@ Project: `<PROJECT_ROOT>`
 
 ## Recommended Migration Order
 
+- `src/main/java/com/example/Calculator.java` (medium risk)
 - `src/main/java/com/example/MathUtil.java` (medium risk)
 - `src/test/java/com/example/CalculatorTest.java` (medium risk)
-- `src/main/java/com/example/Calculator.java` (high risk)
