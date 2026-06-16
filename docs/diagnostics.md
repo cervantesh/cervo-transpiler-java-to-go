@@ -42,6 +42,9 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 | `JTG1018` | method overloading | Rename overloaded methods or add overload name mangling before generating Go. |
 | `JTG1019` | assignment expressions | Move the assignment to a standalone statement before transpiling. |
 | `JTG1020` | standalone blocks | Inline the block or add block-scope lowering before transpiling nested standalone blocks. |
+| `JTG2001` | duplicate symbols | Rename the duplicate package, class, field, method, parameter, or local variable before migration. |
+| `JTG2004` | unsupported overloads | Rename overloaded Java methods or add a deterministic overload name-mangling policy. |
+| `JTG2005` | unresolved internal imports | Add the missing source file, fix the package/import name, or mark the dependency as external. |
 
 ## Test Coverage
 
