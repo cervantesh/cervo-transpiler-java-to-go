@@ -26,11 +26,15 @@ func TestGoldenHello(t *testing.T) {
 		t.Fatalf("diagnostics: %#v", result.Diagnostics)
 	}
 
-	got := strings.TrimSpace(string(result.Code))
-	expected := strings.TrimSpace(string(want))
+	got := strings.TrimSpace(normalizeNewlines(string(result.Code)))
+	expected := strings.TrimSpace(normalizeNewlines(string(want)))
 	if got != expected {
 		t.Fatalf("golden mismatch\n--- got ---\n%s\n--- want ---\n%s", got, expected)
 	}
+}
+
+func normalizeNewlines(s string) string {
+	return strings.ReplaceAll(s, "\r\n", "\n")
 }
 
 func workspaceRoot(t *testing.T) string {
