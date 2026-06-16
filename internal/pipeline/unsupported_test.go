@@ -129,6 +129,60 @@ func TestStandaloneBlockReturnsDiagnostic(t *testing.T) {
 	}
 }
 
+func TestDuplicateLocalVariableReturnsSemanticDiagnostic(t *testing.T) {
+	source := `public class Demo {
+  public static void main(String[] args) {
+    int count = 1;
+    int count = 2;
+    System.out.println(count);
+  }
+}`
+
+	result := TranspileSource("Demo.java", source)
+	if !diagnosticsContain(result.Diagnostics, "JTG2001") {
+		t.Fatalf("expected duplicate local diagnostic in %#v", result.Diagnostics)
+	}
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+}
+
+func TestUnknownSymbolReturnsSemanticDiagnostic(t *testing.T) {
+	source := `public class Demo {
+  public static void main(String[] args) {
+    missing = 1;
+  }
+}`
+
+	result := TranspileSource("Demo.java", source)
+	if !diagnosticsContain(result.Diagnostics, "JTG2002") {
+		t.Fatalf("expected unknown symbol diagnostic in %#v", result.Diagnostics)
+	}
+	if !diagnosticsContain(result.Diagnostics, "Demo.java:") {
+		t.Fatalf("expected source position in %#v", result.Diagnostics)
+	}
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+}
+
+func TestIncompatibleAssignmentReturnsSemanticDiagnostic(t *testing.T) {
+	source := `public class Demo {
+  public static void main(String[] args) {
+    int count = "wrong";
+    System.out.println(count);
+  }
+}`
+
+	result := TranspileSource("Demo.java", source)
+	if !diagnosticsContain(result.Diagnostics, "JTG2003") {
+		t.Fatalf("expected incompatible type diagnostic in %#v", result.Diagnostics)
+	}
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+}
+
 func diagnosticsContain(diagnostics []error, want string) bool {
 	for _, diagnostic := range diagnostics {
 		if strings.Contains(diagnostic.Error(), want) {

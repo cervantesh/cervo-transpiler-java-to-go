@@ -113,6 +113,7 @@ func (LiteralExpr) exprNode() {}
 type NameExpr struct {
 	Name string
 	Type Type
+	Span Span
 }
 
 func (NameExpr) exprNode() {}

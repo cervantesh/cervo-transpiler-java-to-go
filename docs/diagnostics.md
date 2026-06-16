@@ -43,6 +43,8 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 | `JTG1019` | assignment expressions | Move the assignment to a standalone statement before transpiling. |
 | `JTG1020` | standalone blocks | Inline the block or add block-scope lowering before transpiling nested standalone blocks. |
 | `JTG2001` | duplicate symbols | Rename the duplicate package, class, field, method, parameter, or local variable before migration. |
+| `JTG2002` | unknown symbols | Declare the symbol, fix the name, or add the missing import/resolution rule before migration. |
+| `JTG2003` | incompatible types | Rewrite the expression or add an explicit conversion/mapping before migration. |
 | `JTG2004` | unsupported overloads | Rename overloaded Java methods or add a deterministic overload name-mangling policy. |
 | `JTG2005` | unresolved internal imports | Add the missing source file, fix the package/import name, or mark the dependency as external. |
 
