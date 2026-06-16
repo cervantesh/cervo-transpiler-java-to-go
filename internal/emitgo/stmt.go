@@ -82,5 +82,8 @@ func typeExpr(t ir.Type) ast.Expr {
 	if t.Kind == ir.KindArray && t.Elem != nil {
 		return &ast.ArrayType{Elt: typeExpr(*t.Elem)}
 	}
+	if t.Kind == ir.KindPointer && t.Elem != nil {
+		return &ast.StarExpr{X: typeExpr(*t.Elem)}
+	}
 	return ast.NewIdent(t.GoName())
 }

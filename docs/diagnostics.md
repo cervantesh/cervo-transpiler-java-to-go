@@ -14,8 +14,8 @@ error: <file>:<line>:<column>: <code>: unsupported feature: <feature>
 Example:
 
 ```text
-error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: class fields
-  recommendation: Add struct field lowering before transpiling Java fields.
+error: tests\fixtures\unsupported_interface.java:1:8: JTG1003: unsupported feature: interfaces
+  recommendation: Add an interface-to-Go-interface lowering strategy before using Java interfaces.
 ```
 
 ## Codes
@@ -27,7 +27,7 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 | `JTG1003` | interfaces | Add an interface-to-Go-interface lowering strategy before using Java interfaces. |
 | `JTG1004` | inheritance | Rewrite inheritance as composition or add an object model lowering pass. |
 | `JTG1005` | interface implementation | Add Java interface mapping before transpiling implements clauses. |
-| `JTG1006` | object construction | Add class/constructor lowering before using new expressions. |
+| `JTG1006` | unsupported object construction | Add or simplify class/constructor lowering before using non-direct new expressions. |
 | `JTG1007` | try/catch exceptions | Design explicit Go error returns before transpiling exceptions. |
 | `JTG1008` | catch blocks | Design explicit Go error returns before transpiling exceptions. |
 | `JTG1009` | finally blocks | Map cleanup to defer before transpiling finally blocks. |
@@ -37,8 +37,8 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 | `JTG1013` | annotations | Remove annotations or add an annotation policy for migration metadata. |
 | `JTG1014` | generics | Specialize the generic type manually or add a Java-to-Go type-parameter mapping pass. |
 | `JTG1015` | arrays and indexing | Add array declarations, indexing, and length lowering before using arrays. |
-| `JTG1016` | class fields | Add struct field lowering before transpiling Java fields. |
-| `JTG1017` | instance methods | Add Go receiver generation before transpiling instance methods. |
+| `JTG1016` | legacy class fields | Add struct field lowering before transpiling Java fields in the legacy path. |
+| `JTG1017` | legacy instance methods | Add Go receiver generation before transpiling instance methods in the legacy path. |
 | `JTG1018` | method overloading | Rename overloaded methods or add overload name mangling before generating Go. |
 | `JTG1019` | assignment expressions | Move the assignment to a standalone statement before transpiling. |
 | `JTG1020` | standalone blocks | Inline the block or add block-scope lowering before transpiling nested standalone blocks. |
@@ -50,7 +50,7 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 
 ## Test Coverage
 
-`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline covers the same fixtures in `internal/pipeline`.
+`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline keeps structured diagnostics for still-unsupported features and adds positive object-model coverage in `internal/pipeline`.
 
 - `tests\fixtures\unsupported_field.java`
 - `tests\fixtures\unsupported_package_import.java`

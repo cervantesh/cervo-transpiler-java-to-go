@@ -26,8 +26,13 @@ func TestScanPureJavaLibrary(t *testing.T) {
 	if project.Summary.InternalImports != 1 {
 		t.Fatalf("expected one internal dependency, got %#v", project.InternalDependencies)
 	}
-	if project.Summary.Unsupported == 0 {
-		t.Fatalf("expected unsupported object-model features, got %#v", project.Summary)
+	if project.Summary.Unsupported != 0 {
+		t.Fatalf("expected object-model features to be supported, got %#v", project.Summary)
+	}
+	for _, feature := range []string{"class fields", "constructors", "instance methods"} {
+		if project.FeatureCounts[feature] == 0 {
+			t.Fatalf("expected supported feature count for %q, got %#v", feature, project.FeatureCounts)
+		}
 	}
 }
 

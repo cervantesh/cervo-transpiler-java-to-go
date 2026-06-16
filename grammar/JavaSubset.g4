@@ -147,6 +147,7 @@ expression
 
 primary
     : literal
+    | 'new' qualifiedName arguments
     | Identifier
     | qualifiedName arguments
     | '(' expression ')'

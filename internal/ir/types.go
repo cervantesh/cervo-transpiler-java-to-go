@@ -10,6 +10,7 @@ const (
 	KindDouble
 	KindString
 	KindArray
+	KindPointer
 	KindObject
 )
 
@@ -36,6 +37,11 @@ func (t Type) GoName() string {
 			return "[]any"
 		}
 		return "[]" + t.Elem.GoName()
+	case KindPointer:
+		if t.Elem == nil {
+			return "*any"
+		}
+		return "*" + t.Elem.GoName()
 	case KindObject:
 		if t.Name != "" {
 			return t.Name

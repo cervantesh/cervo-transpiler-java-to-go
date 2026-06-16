@@ -8,16 +8,25 @@ type File struct {
 }
 
 type Class struct {
-	Name    string
-	Symbol  string
-	Span    Span
-	Methods []Func
+	Name        string
+	Symbol      string
+	Span        Span
+	Fields      []Field
+	Methods     []Func
+	NeedsStruct bool
+}
+
+type Field struct {
+	Name string
+	Type Type
+	Span Span
 }
 
 type Func struct {
 	Name       string
 	Symbol     string
 	Span       Span
+	Receiver   *Param
 	Params     []Param
 	ReturnType Type
 	Body       []Stmt
@@ -143,3 +152,31 @@ type CallExpr struct {
 }
 
 func (CallExpr) exprNode() {}
+
+type FieldExpr struct {
+	Target string
+	Field  string
+	Type   Type
+}
+
+func (FieldExpr) exprNode() {}
+
+type AddressExpr struct {
+	Expr Expr
+	Type Type
+}
+
+func (AddressExpr) exprNode() {}
+
+type CompositeLitExpr struct {
+	TypeName string
+	Fields   []KeyValueExpr
+	Type     Type
+}
+
+func (CompositeLitExpr) exprNode() {}
+
+type KeyValueExpr struct {
+	Key   string
+	Value Expr
+}

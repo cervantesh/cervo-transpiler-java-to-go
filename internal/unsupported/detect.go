@@ -26,7 +26,6 @@ var keywordRules = []keywordRule{
 	{"interface", "JTG1003", "interfaces", "Add an interface-to-Go-interface lowering strategy before using Java interfaces."},
 	{"extends", "JTG1004", "inheritance", "Rewrite inheritance as composition or add an object model lowering pass."},
 	{"implements", "JTG1005", "interface implementation", "Add Java interface mapping before transpiling implements clauses."},
-	{"new", "JTG1006", "object construction", "Add class/constructor lowering before using new expressions."},
 	{"try", "JTG1007", "try/catch exceptions", "Design explicit Go error returns before transpiling exceptions."},
 	{"catch", "JTG1008", "catch blocks", "Design explicit Go error returns before transpiling exceptions."},
 	{"finally", "JTG1009", "finally blocks", "Map cleanup to defer before transpiling finally blocks."},
@@ -36,7 +35,6 @@ var keywordRules = []keywordRule{
 
 var (
 	classDeclPattern   = regexp.MustCompile(`\bclass\s+([A-Za-z_$][A-Za-z0-9_$]*)\b`)
-	classFieldPattern  = regexp.MustCompile(`^\s*((public|private|protected|static|final)\s+)*(int|double|boolean|String|[A-Z][A-Za-z0-9_]*)\s+[A-Za-z_][A-Za-z0-9_]*\s*(=|;|,)`)
 	genericUsageRegexp = regexp.MustCompile(`([A-Za-z_][A-Za-z0-9_\.]*)\s*<\s*([A-Za-z_?][A-Za-z0-9_?\.]*)`)
 )
 
@@ -80,16 +78,9 @@ func Detect(fileName string, source string) []semantic.Diagnostic {
 			diagnostics = append(diagnostics, diagnostic(fileName, current.number, position, "JTG1015", "arrays and indexing", "Add array declarations, indexing, and length lowering before using arrays."))
 		}
 
-		if braceDepth == 1 && classFieldPattern.MatchString(current.text) && !strings.Contains(current.text, "(") {
-			diagnostics = append(diagnostics, diagnostic(fileName, current.number, firstNonSpace(current.text), "JTG1016", "class fields", "Add struct field lowering before transpiling Java fields."))
-		}
-
 		if braceDepth == 1 && looksLikeMethodSignature(current.text) {
 			methodName := methodNameFromSignature(current.text)
 			if methodName != "" && methodName != className {
-				if !containsKeyword(current.text, "static") {
-					diagnostics = append(diagnostics, diagnostic(fileName, current.number, strings.Index(current.text, methodName), "JTG1017", "instance methods", "Add Go receiver generation before transpiling instance methods."))
-				}
 				if _, exists := methodLines[methodName]; exists {
 					diagnostics = append(diagnostics, diagnostic(fileName, current.number, strings.Index(current.text, methodName), "JTG1018", "method overloading", "Rename overloaded methods or add overload name mangling before generating Go."))
 				} else {
@@ -270,13 +261,4 @@ func braceDelta(text string) int {
 		}
 	}
 	return delta
-}
-
-func firstNonSpace(text string) int {
-	for i, value := range text {
-		if value != ' ' && value != '\t' {
-			return i
-		}
-	}
-	return 0
 }

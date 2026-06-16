@@ -6,9 +6,9 @@
   "constructors": 1,
   "fields": 1,
   "diagnostics": 0,
-  "unsupported": 3,
+  "unsupported": 0,
   "internalImports": 1,
   "lowRiskFiles": 0,
-  "mediumRiskFiles": 2,
-  "highRiskFiles": 1
+  "mediumRiskFiles": 3,
+  "highRiskFiles": 0
 }

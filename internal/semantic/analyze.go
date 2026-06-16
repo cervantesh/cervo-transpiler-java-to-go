@@ -124,6 +124,16 @@ func (a *irAnalyzer) exprType(scope *Scope, expression ir.Expr) ir.Type {
 			a.exprType(scope, arg)
 		}
 		return value.Type
+	case ir.FieldExpr:
+		return value.Type
+	case ir.AddressExpr:
+		a.exprType(scope, value.Expr)
+		return value.Type
+	case ir.CompositeLitExpr:
+		for _, field := range value.Fields {
+			a.exprType(scope, field.Value)
+		}
+		return value.Type
 	default:
 		return ir.Type{Kind: ir.KindInvalid}
 	}
@@ -142,9 +152,19 @@ func (a *irAnalyzer) checkAssignable(span ir.Span, expected ir.Type, actual ir.T
 	if expected.Kind == ir.KindInvalid || actual.Kind == ir.KindInvalid {
 		return
 	}
-	if !typeEqual(expected, actual) {
+	if !isAssignable(expected, actual) {
 		a.add(span, CodeIncompatibleType, fmt.Sprintf("type incompatible: expected %s, got %s", expected.GoName(), actual.GoName()))
 	}
+}
+
+func isAssignable(expected ir.Type, actual ir.Type) bool {
+	if typeEqual(expected, actual) {
+		return true
+	}
+	if expected.Kind == ir.KindObject && actual.Kind == ir.KindPointer && actual.Elem != nil {
+		return typeEqual(expected, *actual.Elem)
+	}
+	return false
 }
 
 func (a *irAnalyzer) add(span ir.Span, code string, message string) {

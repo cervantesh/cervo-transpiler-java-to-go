@@ -161,16 +161,16 @@ func extractCompilationUnit(file *File, tree gen.ICompilationUnitContext) {
 		file.Classes = append(file.Classes, class)
 		file.Features = append(file.Features, feature("class declarations", true, classDecl.GetStart()))
 		for _, field := range class.Fields {
-			file.Unsupported = append(file.Unsupported, unsupported("JTG1016", "class fields", "Add struct field lowering before transpiling Java fields.", field.Span))
+			file.Features = append(file.Features, Feature{Name: "class fields", Supported: true, Span: field.Span})
 		}
 		for _, constructor := range class.Constructors {
-			file.Unsupported = append(file.Unsupported, unsupported("JTG1006", "constructors", "Add constructor lowering before transpiling Java constructors.", constructor.Span))
+			file.Features = append(file.Features, Feature{Name: "constructors", Supported: true, Span: constructor.Span})
 		}
 		for _, method := range class.Methods {
 			if method.Static {
 				file.Features = append(file.Features, Feature{Name: "static methods", Supported: true, Span: method.Span})
 			} else {
-				file.Unsupported = append(file.Unsupported, unsupported("JTG1017", "instance methods", "Add Go receiver generation before transpiling instance methods.", method.Span))
+				file.Features = append(file.Features, Feature{Name: "instance methods", Supported: true, Span: method.Span})
 			}
 		}
 	}
