@@ -1,4 +1,4 @@
-// Code generated from C:/dev/cervo-transpiler-java-to-go/.worktrees/issue-5-modern-mvp/grammar/JavaSubset.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from grammar/JavaSubset.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package gen // JavaSubset
 import (
