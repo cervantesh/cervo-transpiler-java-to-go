@@ -140,8 +140,9 @@ The current version supports:
   - constructors and default constructors -> `NewClass(...) *Class`
   - instance methods -> Go receiver methods
   - direct `new Class(...)` calls -> `NewClass(...)`
+  - simple `interface` declarations -> Go interfaces
 
-Unsupported features still include inheritance, interfaces, packages/imports in direct transpile mode, general arrays, exceptions, generics, lambdas, annotations, overloading, reflection, and broad Java standard-library translation.
+Unsupported features still include inheritance, `implements` mapping, packages/imports in direct transpile mode, general arrays, exceptions, generics, lambdas, annotations, overloading, reflection, and broad Java standard-library translation.
 
 Unsupported features are detected before parsing when possible and reported as structured `JTG` diagnostics with line, column, feature name, and recommendation. See [docs/diagnostics.md](docs/diagnostics.md).
 
@@ -328,7 +329,7 @@ That file records the tool versions, build output, golden-test output, and negat
 
 ## Known Limitations
 
-This phase is still intentionally small. It does not perform full classpath resolution, method overload resolution, interface lowering, inheritance lowering, or broad library migration.
+This phase is still intentionally small. It does not perform full classpath resolution, method overload resolution, `implements` lowering, inheritance lowering, or broad library migration.
 
 Examples of unsupported input should fail with a structured diagnostic or parser error instead of producing misleading Go code. For example, interfaces are rejected before parsing with `JTG1003`.
 

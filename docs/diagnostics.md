@@ -14,8 +14,8 @@ error: <file>:<line>:<column>: <code>: unsupported feature: <feature>
 Example:
 
 ```text
-error: tests\fixtures\unsupported_interface.java:1:8: JTG1003: unsupported feature: interfaces
-  recommendation: Add an interface-to-Go-interface lowering strategy before using Java interfaces.
+error: tests\fixtures\unsupported_inheritance.java:1:37: JTG1004: unsupported feature: inheritance
+  recommendation: Rewrite inheritance as composition or add an object model lowering pass.
 ```
 
 ## Codes
@@ -24,7 +24,7 @@ error: tests\fixtures\unsupported_interface.java:1:8: JTG1003: unsupported featu
 | --- | --- | --- |
 | `JTG1001` | package declarations | Remove the package declaration for the current subset or add package-to-module mapping. |
 | `JTG1002` | import declarations | Inline supported code or add import mapping before transpiling. |
-| `JTG1003` | interfaces | Add an interface-to-Go-interface lowering strategy before using Java interfaces. |
+| `JTG1003` | legacy interfaces | Add interface lowering before using Java interfaces in the legacy path. |
 | `JTG1004` | inheritance | Rewrite inheritance as composition or add an object model lowering pass. |
 | `JTG1005` | interface implementation | Add Java interface mapping before transpiling implements clauses. |
 | `JTG1006` | unsupported object construction | Add or simplify class/constructor lowering before using non-direct new expressions. |
@@ -50,7 +50,7 @@ error: tests\fixtures\unsupported_interface.java:1:8: JTG1003: unsupported featu
 
 ## Test Coverage
 
-`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline keeps structured diagnostics for still-unsupported features and adds positive object-model coverage in `internal/pipeline`.
+`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline keeps structured diagnostics for still-unsupported features and adds positive object-model/interface coverage in `internal/pipeline`.
 
 - `tests\fixtures\unsupported_field.java`
 - `tests\fixtures\unsupported_package_import.java`

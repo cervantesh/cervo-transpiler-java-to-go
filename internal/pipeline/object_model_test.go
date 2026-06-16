@@ -84,6 +84,47 @@ func TestInstanceMethodWithoutFieldsCompiles(t *testing.T) {
 	}
 }
 
+func TestSimpleInterfaceDeclarationCompiles(t *testing.T) {
+	source := `public interface Named {
+  String Name();
+}
+
+public class User {
+  public String Name() {
+    return "Ada";
+  }
+
+  public static void main(String[] args) {
+    Named named = new User();
+    System.out.println(named.Name());
+  }
+}`
+
+	result := TranspileSource("User.java", source)
+	if len(result.Diagnostics) != 0 {
+		t.Fatalf("diagnostics: %#v", result.Diagnostics)
+	}
+	code := string(result.Code)
+	for _, want := range []string{
+		"type Named interface",
+		"Name() string",
+		"type User struct",
+		"func NewUser() *User",
+		"func (u *User) Name() string",
+		"named := NewUser()",
+		"fmt.Println(named.Name())",
+	} {
+		if !strings.Contains(code, want) {
+			t.Fatalf("expected %q in generated Go:\n%s", want, code)
+		}
+	}
+
+	output := runGeneratedGo(t, result.Code)
+	if strings.TrimSpace(output) != "Ada" {
+		t.Fatalf("expected generated program to print Ada, got %q", output)
+	}
+}
+
 func runGeneratedGo(t *testing.T, code []byte) string {
 	t.Helper()
 	dir := t.TempDir()
