@@ -68,6 +68,47 @@ public class Demo {
 	}
 }
 
+func TestAssignmentExpressionReturnsDiagnostic(t *testing.T) {
+	source := `public class Demo {
+  public static void main(String[] args) {
+    int count = 1;
+    System.out.println(count = 2);
+  }
+}`
+
+	result := TranspileSource("Demo.java", source)
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+	if !diagnosticsContain(result.Diagnostics, "JTG1019") {
+		t.Fatalf("expected assignment expression diagnostic in %#v", result.Diagnostics)
+	}
+	if diagnosticsContain(result.Diagnostics, "__assign_") {
+		t.Fatalf("expected no assignment sentinel in diagnostics: %#v", result.Diagnostics)
+	}
+}
+
+func TestStandaloneBlockReturnsDiagnostic(t *testing.T) {
+	source := `public class Demo {
+  public static void main(String[] args) {
+    {
+      System.out.println(1);
+    }
+  }
+}`
+
+	result := TranspileSource("Demo.java", source)
+	if len(result.Code) != 0 {
+		t.Fatalf("expected no generated Go, got:\n%s", string(result.Code))
+	}
+	if !diagnosticsContain(result.Diagnostics, "JTG1020") {
+		t.Fatalf("expected standalone block diagnostic in %#v", result.Diagnostics)
+	}
+	if diagnosticsContain(result.Diagnostics, "__unsupported_block") {
+		t.Fatalf("expected no unsupported block sentinel in diagnostics: %#v", result.Diagnostics)
+	}
+}
+
 func diagnosticsContain(diagnostics []error, want string) bool {
 	for _, diagnostic := range diagnostics {
 		if strings.Contains(diagnostic.Error(), want) {
