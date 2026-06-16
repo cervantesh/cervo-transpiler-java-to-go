@@ -135,7 +135,6 @@ parExpression
 expression
     : primary
     | expression '.' Identifier arguments?
-    | Identifier op=('=' | '+=' | '-=') expression
     | prefix=('!' | '-') expression
     | expression bop=('*' | '/' | '%') expression
     | expression bop=('+' | '-') expression
@@ -143,6 +142,7 @@ expression
     | expression bop=('==' | '!=') expression
     | expression bop='&&' expression
     | expression bop='||' expression
+    | <assoc=right> Identifier op=('=' | '+=' | '-=') expression
     ;
 
 primary
