@@ -44,6 +44,7 @@ The modern MVP now implements:
 - Go emission through `go/ast` and `go/format` in `internal/emitgo`.
 - End-to-end pipeline and CLI in `internal/pipeline` and `cmd/j2go`.
 - Project migration pipeline in `internal/migrate` for partial Java library migration.
+- Optional advisory AI sidecar in `internal/aisidecar`.
 - Golden tests under `modern-tests`.
 
 ## Legacy Reference
@@ -264,6 +265,15 @@ Run a partial project migration:
 
 The migration command creates a Go module, writes generated Go files under package-derived directories, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
 
+Generate an advisory AI review from a deterministic report:
+
+```powershell
+.\build\j2go.exe ai explain --report build\migration-report.json --out build\ai-review.md --provider canned
+.\build\j2go.exe ai explain --report build\migration-report.json --out build\ai-review.md --provider external
+```
+
+The AI sidecar is opt-in. The canned provider is offline and deterministic for tests. The external provider runs `J2GO_AI_COMMAND` and is responsible for calling any real AI service outside the deterministic transpiler.
+
 ## Legacy Build
 
 Windows PowerShell:
@@ -345,4 +355,4 @@ Examples of unsupported input should fail with a structured diagnostic or parser
 
 ## AI-Assisted Migration
 
-AI belongs beside the deterministic transpiler, not inside the default code-generation path. See [docs/ai-assisted-migration.md](docs/ai-assisted-migration.md) for the sidecar architecture and implementation order.
+AI belongs beside the deterministic transpiler, not inside the default code-generation path. See [docs/ai-assisted-migration.md](docs/ai-assisted-migration.md) and [docs/ai-prompts.md](docs/ai-prompts.md) for the sidecar architecture, provider policy, and versioned prompts.

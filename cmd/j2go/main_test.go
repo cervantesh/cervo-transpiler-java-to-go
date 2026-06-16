@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/javaproject"
+	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/report"
 )
 
 func TestRunVersion(t *testing.T) {
@@ -65,6 +66,8 @@ func TestRunTranspilesFile(t *testing.T) {
 	if err := os.WriteFile(input, []byte(source), 0644); err != nil {
 		t.Fatalf("write source: %v", err)
 	}
+	t.Setenv("J2GO_AI_PROVIDER", "external")
+	t.Setenv("J2GO_AI_COMMAND", "")
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -205,6 +208,8 @@ func TestRunMigrateDryRunWritesReport(t *testing.T) {
 	reportPath := filepath.Join(tmp, "migration-report.md")
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
+	t.Setenv("J2GO_AI_PROVIDER", "external")
+	t.Setenv("J2GO_AI_COMMAND", "")
 
 	code := run([]string{"migrate", projectRoot, "--out", outDir, "--report", reportPath, "--dry-run"}, &stdout, &stderr)
 	if code != 0 {
@@ -227,6 +232,48 @@ func TestRunMigrateDryRunWritesReport(t *testing.T) {
 	}
 	if !strings.Contains(string(data), "## Migration Execution Summary") {
 		t.Fatalf("expected execution summary in report:\n%s", string(data))
+	}
+}
+
+func TestRunAIExplainWritesAdvisory(t *testing.T) {
+	tmp := t.TempDir()
+	reportPath := filepath.Join(tmp, "migration-report.json")
+	outPath := filepath.Join(tmp, "ai-review.md")
+	snippetPath := filepath.Join(tmp, "Generated.go")
+	project := javaproject.Project{
+		Root: "sample-project",
+		Files: []javaproject.File{{
+			RelativePath: "src/main/java/com/example/Demo.java",
+			Risk:         "low",
+		}},
+		Summary: javaproject.Summary{JavaFiles: 1, Packages: 1, Classes: 1},
+	}
+	data, err := report.JSON(project)
+	if err != nil {
+		t.Fatalf("render report: %v", err)
+	}
+	writeFile(t, reportPath, string(data))
+	writeFile(t, snippetPath, "package example\n\nfunc Demo() {}\n")
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := run([]string{"ai", "explain", "--report", reportPath, "--out", outPath, "--provider", "canned", "--snippet", snippetPath}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("expected ai explain success, got %d; stderr=%s", code, stderr.String())
+	}
+	for _, want := range []string{"AI advisory written:", "Provider: canned", "Structured report parsed: true"} {
+		if !strings.Contains(stdout.String(), want) {
+			t.Fatalf("expected %q in stdout:\n%s", want, stdout.String())
+		}
+	}
+	output, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read AI advisory: %v", err)
+	}
+	for _, want := range []string{"# AI Advisory Migration Review", "Advisory output only", "Generated-Code Snippets Reviewed"} {
+		if !strings.Contains(string(output), want) {
+			t.Fatalf("expected %q in AI advisory:\n%s", want, string(output))
+		}
 	}
 }
 

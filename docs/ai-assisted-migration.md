@@ -5,15 +5,15 @@ This repo keeps the compiler deterministic and puts AI around it as an optional 
 Default pipeline:
 
 ```text
-Java source -> Flex lexer -> Bison parser -> C++ AST -> Go generator -> gofmt/tests
+Java source -> ANTLR4 parser -> Cervo IR -> semantic analysis -> Go generator -> gofmt/tests
 ```
 
 AI sidecar pipeline:
 
 ```text
-Java source + structured diagnostics + generated Go
-  -> AI migration assistant
-  -> report, explanation, review notes, optional draft suggestions
+deterministic report + structured diagnostics + explicit generated Go snippets
+  -> optional AI migration assistant
+  -> advisory explanation, risk summary, review notes, proposed tests
 ```
 
 ## Rule
@@ -22,25 +22,27 @@ AI must not be the default source of truth for generated Go.
 
 The compiler decides what is supported and what gets emitted. AI can explain diagnostics, summarize migration risk, propose reviewed golden tests, and draft advisory code for unsupported constructs. Those outputs must be clearly marked as suggestions.
 
-## First-Phase Foundation
+## Current Sidecar
 
-The current first phase already provides the deterministic foundation needed by an AI sidecar:
+The current implementation exposes the sidecar through:
 
-- structured `JTG` diagnostics in `src/diagnostics.hpp` and `src/diagnostics.cpp`
-- unsupported-feature fixtures in `tests/fixtures/unsupported_*.java`
-- reproducible diagnostics documented in `docs/diagnostics.md`
-- a 30-case test suite in `test.ps1`
+```powershell
+j2go ai explain --report build\migration-report.json --out build\ai-review.md --provider canned
+j2go ai explain --report build\migration-report.json --out build\ai-review.md --provider external
+```
+
+The `canned` provider is deterministic and runs without network access or API keys. The `external` provider is opt-in and reads its command from `J2GO_AI_COMMAND`; it receives a bounded JSON payload on stdin and returns advisory Markdown on stdout.
+
+Versioned prompts are documented in [ai-prompts.md](ai-prompts.md).
 
 ## Useful AI Features
 
 ### 1. Migration Report
 
-Add a report mode that scans Java files and summarizes risk.
-
-Example future command:
+Generate a deterministic report first:
 
 ```powershell
-.\build\javago.exe --report src build\migration-report.md
+j2go report .\my-java-lib --format json --out build\migration-report.json
 ```
 
 Report contents:
@@ -69,19 +71,10 @@ This method uses Java exceptions. Go does not have try/catch, so the migration n
 
 ### 3. Controlled Fallback Suggestions
 
-Add an opt-in flag for advisory draft code.
-
-Example future command:
+Add explicit generated snippets only when review of generated Go is desired:
 
 ```powershell
-.\build\javago.exe --ai-suggest examples\Main.java build\Main.go
-```
-
-Suggested code must include a warning:
-
-```go
-// AI suggestion: review before using.
-// Original Java construct was not supported by the deterministic transpiler.
+j2go ai explain --report build\migration-report.json --out build\ai-review.md --snippet .\go-lib\com\example\Service.go
 ```
 
 ### 4. Golden Test Assistance
@@ -92,21 +85,12 @@ AI can propose expected Go for new fixtures, but the reviewed golden file remain
 
 After deterministic generation, AI can suggest cleaner Go patterns such as explicit `error` returns, simpler package-level functions, or `context.Context` for cancellation-heavy APIs.
 
-## Proposed Files
-
-- `src/report_generator.hpp`
-- `src/report_generator.cpp`
-- `docs/ai-prompts.md`
-- `scripts/ai_explain.ps1`
-- `tests/fixtures/report_*.java`
-- `tests/expected/*.stderr.txt`
-
 ## Implementation Order
 
-1. Add deterministic Markdown/JSON report output.
-2. Add `docs/ai-prompts.md` with versioned prompts.
-3. Add an offline AI provider or canned-response script for tests.
-4. Add an optional real-provider script that reads diagnostics JSON.
-5. Add `--ai-suggest` only after report output is stable.
+1. Add deterministic Markdown/JSON report output. Done.
+2. Add `docs/ai-prompts.md` with versioned prompts. Done.
+3. Add an offline AI provider for tests. Done.
+4. Add an optional real-provider hook that reads JSON on stdin. Done.
+5. Keep AI out of default `transpile` and `migrate` paths. Enforced by CLI tests.
 
 This keeps Cervo's migration workflow practical without sacrificing reproducibility.
