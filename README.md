@@ -10,6 +10,8 @@ Java source -> ANTLR4 parse tree -> semantic analysis -> Cervo IR -> Go generato
 
 The detailed implementation plan is in [docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md](docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md), and the architecture summary is in [docs/architecture-modern.md](docs/architecture-modern.md).
 
+Current maturity is documented in [docs/maturity-analysis-2026-06-16.md](docs/maturity-analysis-2026-06-16.md).
+
 ## Project Objective
 
 The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.
