@@ -52,8 +52,8 @@ foreach ($Case in $SupportedCases) {
     Invoke-Checked { & $Exe $InputPath $Actual } "transpile $Case"
     Invoke-Checked { gofmt -w $Actual } "gofmt $Case"
 
-    $ActualText = Get-Content -Raw $Actual
-    $ExpectedText = Get-Content -Raw $Expected
+    $ActualText = (Get-Content -Raw $Actual) -replace "`r`n", "`n"
+    $ExpectedText = (Get-Content -Raw $Expected) -replace "`r`n", "`n"
     if ($ActualText -ne $ExpectedText) {
         Write-Error "Golden test failed: $Case"
     }

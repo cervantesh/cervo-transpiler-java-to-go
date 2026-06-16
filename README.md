@@ -28,9 +28,22 @@ Java source
 
 The parser builds an AST first, and the Go generator emits code from that AST. AI can assist around the compiler through reports and suggestions, but the default transpilation path remains deterministic.
 
-## What This Implements
+## Modern MVP
 
-This first phase implements:
+The modern MVP now implements:
+
+- ANTLR4 parser generation from `grammar/JavaSubset.g4`.
+- Parser facade with syntax diagnostics in `internal/parser`.
+- Cervo IR in `internal/ir`.
+- Semantic diagnostics and scoped symbols in `internal/semantic`.
+- Parse-tree lowering in `internal/lower`.
+- Go emission through `go/ast` and `go/format` in `internal/emitgo`.
+- End-to-end pipeline and CLI in `internal/pipeline` and `cmd/j2go`.
+- Golden tests under `modern-tests`.
+
+## Legacy Reference
+
+The original reference implementation remains available while the modern pipeline catches up in coverage. It implements:
 
 - Tokenization with Flex.
 - Grammar-based parsing with Bison.
@@ -42,7 +55,7 @@ This first phase implements:
 - Validation of generated Go with `gofmt` and `go run`.
 - Error reporting with line and column information for unsupported or invalid input.
 
-## Current Frontend
+## Legacy Frontend
 
 The current frontend uses Flex and Bison because they make the compiler stages explicit and keep the first phase compact:
 
@@ -59,12 +72,19 @@ A later production migration tool should move toward a richer Java frontend, typ
 .
 |-- build.ps1                  Windows build script
 |-- Makefile                   Make-style build for compatible environments
+|-- go.mod                     Modern Go module
 |-- README.md                  Project explanation and usage
+|-- cmd/j2go/                  Modern CLI
 |-- docs/
 |   |-- ai-assisted-migration.md
+|   |-- architecture-modern.md
 |   |-- diagnostics.md
 |   `-- evidence/
 |       `-- verification-2026-06-16.md
+|-- grammar/
+|   `-- JavaSubset.g4          ANTLR grammar for the modern MVP
+|-- internal/                  Modern parser, IR, lowerer, emitter, pipeline
+|-- modern-tests/              Modern golden fixtures
 |-- examples/
 |   `-- Main.java              Demo Java input
 |-- src/
@@ -81,7 +101,7 @@ A later production migration tool should move toward a richer Java frontend, typ
     `-- expected/              Expected formatted Go outputs
 ```
 
-Generated files are written to `build/` and `tests/generated/`, which are intentionally ignored by Git.
+Generated binaries and test outputs are written to `build/`, `tests/generated/`, and `modern-tests/generated/`, which are intentionally ignored by Git.
 
 ## Supported Java Subset
 
@@ -190,7 +210,26 @@ Program output:
 7
 ```
 
-## Build
+## Modern Build
+
+Generate the ANTLR parser and run modern tests:
+
+```powershell
+New-Item -ItemType Directory -Force tools\antlr | Out-Null
+Invoke-WebRequest -Uri https://www.antlr.org/download/antlr-4.13.1-complete.jar -OutFile tools\antlr\antlr-4.13.1-complete.jar
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\antlr\generate-parser.ps1 -Jar tools/antlr/antlr-4.13.1-complete.jar -Grammar grammar/JavaSubset.g4 -OutputDir internal/parser/gen
+go test ./...
+go build -o build\j2go.exe ./cmd/j2go
+```
+
+Run the modern CLI:
+
+```powershell
+.\build\j2go.exe -out modern-tests\generated modern-tests\fixtures\hello\Hello.java
+gofmt -w modern-tests\generated\Hello.go
+```
+
+## Legacy Build
 
 Windows PowerShell:
 

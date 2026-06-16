@@ -1,3 +1,8 @@
 build/
 tests/generated/
 .worktrees/
+modern-tests/generated/
+tools/antlr/antlr-*.jar
+*.exe
+*.test
+coverage.out
