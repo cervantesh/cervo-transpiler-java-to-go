@@ -1,14 +1,20 @@
 # cervo-transpiler-java-to-go
 
-First-phase Java-to-Go transpiler for the Cervo migration project, built with Flex, Bison, C++, and Go verification tooling.
+Java-to-Go transpiler project for the Cervo migration effort.
 
-This repository contains the current deterministic compiler core. It is intentionally small, but it is structured so later phases can add semantic reports, AI-assisted migration notes, and broader Java coverage without making generated Go non-reproducible.
+The target architecture is modern compiler-style translation:
+
+```text
+Java source -> ANTLR4 parse tree -> semantic analysis -> Cervo IR -> Go generator -> gofmt/golden tests
+```
+
+The detailed implementation plan is in [docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md](docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md), and the architecture summary is in [docs/architecture-modern.md](docs/architecture-modern.md).
 
 ## Project Objective
 
-The project translates a small, controlled subset of Java into valid Go code.
+The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.
 
-The implemented compiler pipeline is:
+The existing checked-in compiler core is a legacy reference pipeline:
 
 ```text
 Java source
