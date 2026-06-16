@@ -30,11 +30,11 @@ func Lower(fileName string, tree gen.ICompilationUnitContext) (ir.File, []semant
 		class := ir.Class{Name: classDecl.Identifier().GetText()}
 		for _, member := range classDecl.ClassBody().AllClassMember() {
 			if member.FieldDecl() != nil {
-				l.unsupported(member.FieldDecl().GetStart(), "JTG1016", "unsupported class fields")
+				l.unsupported(member.FieldDecl().GetStart(), "JTG1016", "class fields", "Add struct field lowering before transpiling Java fields.")
 				continue
 			}
 			if member.ConstructorDecl() != nil {
-				l.unsupported(member.ConstructorDecl().GetStart(), "JTG1006", "unsupported constructors")
+				l.unsupported(member.ConstructorDecl().GetStart(), "JTG1006", "constructors", "Add constructor lowering before transpiling Java constructors.")
 				continue
 			}
 			method := member.MethodDecl()
@@ -313,16 +313,18 @@ func (l *Lowerer) arguments(ctx gen.IArgumentsContext) []ir.Expr {
 	return args
 }
 
-func (l *Lowerer) unsupported(token antlr.Token, code string, message string) {
+func (l *Lowerer) unsupported(token antlr.Token, code string, feature string, recommendation string) {
+	message := "unsupported feature: " + feature
 	if token == nil {
-		l.diagnostics = append(l.diagnostics, semantic.Diagnostic{File: l.file, Code: code, Message: message})
+		l.diagnostics = append(l.diagnostics, semantic.Diagnostic{File: l.file, Code: code, Message: message, Recommendation: recommendation})
 		return
 	}
 	l.diagnostics = append(l.diagnostics, semantic.Diagnostic{
-		File:    l.file,
-		Line:    token.GetLine(),
-		Column:  token.GetColumn(),
-		Code:    code,
-		Message: message,
+		File:           l.file,
+		Line:           token.GetLine(),
+		Column:         token.GetColumn(),
+		Code:           code,
+		Message:        message,
+		Recommendation: recommendation,
 	})
 }

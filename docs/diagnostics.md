@@ -1,6 +1,6 @@
 # Structured Diagnostics
 
-The transpiler runs a deterministic unsupported-feature scan before invoking the Flex/Bison parser.
+The legacy and modern transpilers run a deterministic unsupported-feature scan before invoking their parsers.
 
 This scan is intentionally not a full Java parser. It exists to turn common out-of-scope Java constructs into stable diagnostics that can be consumed by tests, migration reports, and the AI-assisted sidecar.
 
@@ -43,7 +43,7 @@ error: tests\fixtures\unsupported_field.java:2:5: JTG1016: unsupported feature: 
 
 ## Test Coverage
 
-`test.ps1` validates structured diagnostics with these fixtures:
+`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline covers the same fixtures in `internal/pipeline`.
 
 - `tests\fixtures\unsupported_field.java`
 - `tests\fixtures\unsupported_package_import.java`
