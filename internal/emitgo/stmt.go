@@ -33,7 +33,7 @@ func stmtNode(s ir.Stmt) ast.Stmt {
 			}},
 		}}
 	case ir.AssignStmt:
-		return &ast.AssignStmt{Lhs: []ast.Expr{ast.NewIdent(v.Name)}, Tok: tokenForAssign(v.Op), Rhs: []ast.Expr{expr(v.Value)}}
+		return &ast.AssignStmt{Lhs: []ast.Expr{assignTarget(v.Name)}, Tok: tokenForAssign(v.Op), Rhs: []ast.Expr{expr(v.Value)}}
 	case ir.ExprStmt:
 		return &ast.ExprStmt{X: expr(v.Expr)}
 	case ir.ReturnStmt:
@@ -50,6 +50,14 @@ func stmtNode(s ir.Stmt) ast.Stmt {
 	default:
 		return &ast.EmptyStmt{}
 	}
+}
+
+func assignTarget(name string) ast.Expr {
+	parts := strings.Split(name, ".")
+	if len(parts) == 2 && parts[0] != "" && parts[1] != "" {
+		return &ast.SelectorExpr{X: ast.NewIdent(parts[0]), Sel: ast.NewIdent(parts[1])}
+	}
+	return ast.NewIdent(name)
 }
 
 func simpleStmt(stmt ir.Stmt) ast.Stmt {

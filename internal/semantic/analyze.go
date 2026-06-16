@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cervantesh/cervo-transpiler-java-to-go/internal/ir"
 )
@@ -31,6 +32,11 @@ type irAnalyzer struct {
 
 func (a *irAnalyzer) analyzeFunc(fn ir.Func) {
 	scope := NewScope(nil)
+	if fn.Receiver != nil {
+		if err := scope.Define(Symbol{Name: fn.Receiver.Name, Type: fn.Receiver.Type}); err != nil {
+			a.add(fn.Receiver.Span, CodeDuplicateSymbol, "duplicate symbol: receiver "+fn.Receiver.Name)
+		}
+	}
 	for _, param := range fn.Params {
 		if err := scope.Define(Symbol{Name: param.Name, Type: param.Type}); err != nil {
 			a.add(param.Span, CodeDuplicateSymbol, "duplicate symbol: parameter "+param.Name)
@@ -51,13 +57,13 @@ func (a *irAnalyzer) analyzeStmt(scope *Scope, returnType ir.Type, stmt ir.Stmt)
 			a.add(value.Span, CodeDuplicateSymbol, "duplicate symbol: local variable "+value.Name)
 		}
 	case ir.AssignStmt:
-		symbol, ok := scope.Lookup(value.Name)
+		expected, ok := a.assignTargetType(scope, value.Name)
 		if !ok {
 			a.add(value.Span, CodeUnknownSymbol, "symbol not found: "+value.Name)
 			a.exprType(scope, value.Value)
 			return
 		}
-		a.checkAssignable(value.Span, symbol.Type, a.exprType(scope, value.Value))
+		a.checkAssignable(value.Span, expected, a.exprType(scope, value.Value))
 	case ir.ExprStmt:
 		a.exprType(scope, value.Expr)
 	case ir.ReturnStmt:
@@ -87,6 +93,38 @@ func (a *irAnalyzer) analyzeStmt(scope *Scope, returnType ir.Type, stmt ir.Stmt)
 			a.analyzeStmt(child, returnType, inner)
 		}
 	}
+}
+
+func (a *irAnalyzer) assignTargetType(scope *Scope, name string) (ir.Type, bool) {
+	if symbol, ok := scope.Lookup(name); ok {
+		return symbol.Type, true
+	}
+	parts := strings.Split(name, ".")
+	if len(parts) != 2 {
+		return ir.Type{}, false
+	}
+	receiver, ok := scope.Lookup(parts[0])
+	if !ok {
+		return ir.Type{}, false
+	}
+	receiverType := receiver.Type
+	if receiverType.Kind == ir.KindPointer && receiverType.Elem != nil {
+		receiverType = *receiverType.Elem
+	}
+	if receiverType.Kind != ir.KindObject {
+		return ir.Type{}, false
+	}
+	for _, class := range a.file.Classes {
+		if class.Name != receiverType.Name && class.Symbol != receiverType.Name {
+			continue
+		}
+		for _, field := range class.Fields {
+			if field.Name == parts[1] {
+				return field.Type, true
+			}
+		}
+	}
+	return ir.Type{}, false
 }
 
 func (a *irAnalyzer) analyzeNested(parent *Scope, returnType ir.Type, stmts []ir.Stmt) {
