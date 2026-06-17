@@ -1,9 +1,9 @@
 package aisidecar
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -96,11 +96,8 @@ func TestExplainExternalProviderWrapsCommandOutputAsAdvisory(t *testing.T) {
 	reportPath := filepath.Join(t.TempDir(), "migration-report.md")
 	outPath := filepath.Join(t.TempDir(), "ai-review.md")
 	writeFile(t, reportPath, "# report\n")
-	command := "printf 'external ok\\n'"
-	if runtime.GOOS == "windows" {
-		command = "Write-Output 'external ok'"
-	}
-	t.Setenv("J2GO_AI_COMMAND", command)
+	t.Setenv("J2GO_AI_COMMAND", os.Args[0])
+	t.Setenv("J2GO_AI_ARGS", `["-test.run=TestExternalProviderHelper","--","external ok"]`)
 
 	result, err := Explain(Options{ReportPath: reportPath, OutPath: outPath, Provider: "external"})
 	if err != nil {
@@ -115,6 +112,14 @@ func TestExplainExternalProviderWrapsCommandOutputAsAdvisory(t *testing.T) {
 			t.Fatalf("expected %q in advisory output:\n%s", want, text)
 		}
 	}
+}
+
+func TestExternalProviderHelper(t *testing.T) {
+	if len(os.Args) < 2 || os.Args[len(os.Args)-2] != "--" {
+		return
+	}
+	fmt.Println(os.Args[len(os.Args)-1])
+	os.Exit(0)
 }
 
 func writeFile(t *testing.T, path string, body string) {

@@ -8,9 +8,9 @@ For tagged releases, download the binary for your OS and architecture from GitHu
 
 Local build:
 
-```powershell
-go build -o build\j2go.exe ./cmd/j2go
-.\build\j2go.exe --version
+```bash
+go build -o build/j2go ./cmd/j2go
+./build/j2go --version
 ```
 
 ## Configuration
@@ -19,7 +19,7 @@ Use `cervo-migration.yaml` for repeatable migration jobs. Start from `cervo-migr
 
 Validate config:
 
-```powershell
+```bash
 j2go config validate --config cervo-migration.yaml
 ```
 
@@ -42,7 +42,7 @@ ai:
 
 ## Scan
 
-```powershell
+```bash
 j2go scan ./java-lib
 ```
 
@@ -50,7 +50,7 @@ Exit code `0` means scan completed. Exit code `1` means runtime failure, such as
 
 ## Report
 
-```powershell
+```bash
 j2go report ./java-lib --format json --out build/migration-report.json
 j2go report ./java-lib --format markdown --out build/migration-report.md
 ```
@@ -61,13 +61,13 @@ Reports are deterministic for the same input tree and tool version.
 
 Dry run from config:
 
-```powershell
+```bash
 j2go migrate --config cervo-migration.yaml
 ```
 
 Explicit command:
 
-```powershell
+```bash
 j2go migrate ./java-lib --out ./go-lib --report build/migration-report.md --log-file build/j2go.log --dry-run
 j2go migrate ./java-lib --out ./go-lib --report build/migration-report.md --log-file build/j2go.log
 ```
@@ -78,11 +78,11 @@ The migrate command may generate supported files and skip unsupported files in t
 
 Generate advisory review notes from deterministic reports:
 
-```powershell
+```bash
 j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider canned
 ```
 
-Use `--provider external` only when `J2GO_AI_COMMAND` is configured. The external command receives the bounded JSON payload on stdin and must return Markdown on stdout.
+Use `--provider external` only when `J2GO_AI_COMMAND` is configured. `J2GO_AI_COMMAND` must point to an executable; optional arguments go in `J2GO_AI_ARGS` as a JSON string array. The external command receives the bounded JSON payload on stdin and must return Markdown on stdout.
 
 ## Exit Codes
 

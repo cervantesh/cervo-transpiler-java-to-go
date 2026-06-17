@@ -27,13 +27,10 @@ $(TARGET): $(BUILD_DIR)/parser.cpp $(BUILD_DIR)/lexer.cpp src/ast.cpp src/diagno
 	$(CXX) $(CXXFLAGS) $(BUILD_DIR)/parser.cpp $(BUILD_DIR)/lexer.cpp src/ast.cpp src/diagnostics.cpp src/generator.cpp src/main.cpp -o $(TARGET)
 
 test: all
-	pwsh ./test.ps1
+	go run ./tools/legacytest
 
-$(ANTLR_JAR):
-	powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force tools/antlr | Out-Null; Invoke-WebRequest -Uri https://www.antlr.org/download/antlr-$(ANTLR_VERSION)-complete.jar -OutFile $(ANTLR_JAR)"
-
-generate-parser: $(ANTLR_JAR)
-	powershell -NoProfile -ExecutionPolicy Bypass -File tools/antlr/generate-parser.ps1 -Jar $(ANTLR_JAR) -Grammar $(GRAMMAR) -OutputDir $(PARSER_OUT)
+generate-parser:
+	go run ./tools/antlrgen -jar $(ANTLR_JAR) -grammar $(GRAMMAR) -out $(PARSER_OUT) -version $(ANTLR_VERSION)
 
 modern-test:
 	go test ./...

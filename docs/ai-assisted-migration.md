@@ -26,12 +26,12 @@ The compiler decides what is supported and what gets emitted. AI can explain dia
 
 The current implementation exposes the sidecar through:
 
-```powershell
-j2go ai explain --report build\migration-report.json --out build\ai-review.md --provider canned
-j2go ai explain --report build\migration-report.json --out build\ai-review.md --provider external
+```bash
+j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider canned
+j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider external
 ```
 
-The `canned` provider is deterministic and runs without network access or API keys. The `external` provider is opt-in and reads its command from `J2GO_AI_COMMAND`; it receives a bounded JSON payload on stdin and returns advisory Markdown on stdout.
+The `canned` provider is deterministic and runs without network access or API keys. The `external` provider is opt-in and reads its executable from `J2GO_AI_COMMAND` plus optional JSON-string-array arguments from `J2GO_AI_ARGS`; it receives a bounded JSON payload on stdin and returns advisory Markdown on stdout.
 
 Versioned prompts are documented in [ai-prompts.md](ai-prompts.md).
 
@@ -41,8 +41,8 @@ Versioned prompts are documented in [ai-prompts.md](ai-prompts.md).
 
 Generate a deterministic report first:
 
-```powershell
-j2go report .\my-java-lib --format json --out build\migration-report.json
+```bash
+j2go report ./my-java-lib --format json --out build/migration-report.json
 ```
 
 Report contents:
@@ -73,8 +73,8 @@ This method uses Java exceptions. Go does not have try/catch, so the migration n
 
 Add explicit generated snippets only when review of generated Go is desired:
 
-```powershell
-j2go ai explain --report build\migration-report.json --out build\ai-review.md --snippet .\go-lib\com\example\Service.go
+```bash
+j2go ai explain --report build/migration-report.json --out build/ai-review.md --snippet ./go-lib/com/example/Service.go
 ```
 
 ### 4. Golden Test Assistance
