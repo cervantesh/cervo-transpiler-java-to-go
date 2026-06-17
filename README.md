@@ -1,386 +1,71 @@
 # cervo-transpiler-java-to-go
 
-Java-to-Go transpiler project for the Cervo migration effort.
+Modern Java-to-Go migration toolkit for the Cervo migration effort.
 
-The target architecture is modern compiler-style translation:
-
-```text
-Java source -> ANTLR4 parse tree -> semantic analysis -> Cervo IR -> Go generator -> gofmt/golden tests
-```
-
-The detailed implementation plan is in [docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md](docs/superpowers/plans/2026-06-16-modern-java-to-go-transpiler.md), and the architecture summary is in [docs/architecture-modern.md](docs/architecture-modern.md).
-
-Current maturity is documented in [docs/maturity-analysis-2026-06-16.md](docs/maturity-analysis-2026-06-16.md).
-
-The productive migration roadmap is tracked in [docs/productive-migration-roadmap.md](docs/productive-migration-roadmap.md).
-
-Operational usage is documented in [docs/operations.md](docs/operations.md), and supported toolchain versions are tracked in [docs/compatibility.md](docs/compatibility.md).
-
-Spring support is exploratory only; see [docs/spring-adapter-decision.md](docs/spring-adapter-decision.md).
-
-## Project Objective
-
-The project goal is to translate a controlled subset of Java into valid Go code through an explicit parser, semantic-analysis, IR, and backend pipeline.
-
-The existing checked-in compiler core is a legacy reference pipeline:
+The project uses a deterministic compiler-style pipeline:
 
 ```text
-Java source
-  -> Flex lexer
-  -> Bison parser
-  -> C++ AST
-  -> deterministic Go generator
-  -> gofmt
-  -> go run / golden tests
+Java source -> ANTLR4 parse tree -> semantic analysis -> Cervo IR -> Go generator -> gofmt/tests
 ```
 
-The parser builds an AST first, and the Go generator emits code from that AST. AI can assist around the compiler through reports and suggestions, but the default transpilation path remains deterministic.
+The current tool is a controlled-subset transpiler plus a project migration/reporting framework. AI support is advisory only and does not change deterministic generated code by default.
 
-## Modern MVP
+## Quick Start
 
-The modern MVP now implements:
-
-- ANTLR4 parser generation from `grammar/JavaSubset.g4`.
-- Parser facade with syntax diagnostics in `internal/parser`.
-- Cervo IR in `internal/ir`.
-- Semantic diagnostics and scoped symbols in `internal/semantic`.
-- Parse-tree lowering in `internal/lower`.
-- Go emission through `go/ast` and `go/format` in `internal/emitgo`.
-- End-to-end pipeline and CLI in `internal/pipeline` and `cmd/j2go`.
-- Project migration pipeline in `internal/migrate` for partial Java library migration.
-- Optional advisory AI sidecar in `internal/aisidecar`.
-- Golden tests under `modern-tests`.
-
-## Legacy Reference
-
-The original reference implementation remains available while the modern pipeline catches up in coverage. It implements:
-
-- Tokenization with Flex.
-- Grammar-based parsing with Bison.
-- Use of modern Bison features such as location tracking and detailed parse errors.
-- AST construction in C++ using ownership-oriented data structures.
-- Separation between parsing and code generation.
-- Translation from Java syntax into Go syntax.
-- Golden-file testing for compiler output.
-- Validation of generated Go with `gofmt` and `go run`.
-- Error reporting with line and column information for unsupported or invalid input.
-
-## Legacy Frontend
-
-The current frontend uses Flex and Bison because they make the compiler stages explicit and keep the first phase compact:
-
-- Flex defines how raw Java text becomes tokens.
-- Bison defines which token sequences form valid Java-subset programs.
-- The semantic actions create AST nodes.
-- A separate generator walks the AST and emits Go.
-
-A later production migration tool should move toward a richer Java frontend, type resolution, classpath analysis, project-wide semantic understanding, and an AI-assisted migration sidecar.
-
-## Project Structure
-
-```text
-.
-|-- cervo-migration.example.yaml Enterprise migration config example
-|-- CHANGELOG.md               Release notes
-|-- Makefile                   Make-style build for compatible environments
-|-- go.mod                     Modern Go module
-|-- README.md                  Project explanation and usage
-|-- corpus/                    Pinned external Java migration corpus
-|-- cmd/j2go/                  Modern CLI
-|-- docs/
-|   |-- ai-assisted-migration.md
-|   |-- architecture-modern.md
-|   |-- compatibility.md
-|   |-- diagnostics.md
-|   |-- operations.md
-|   |-- spring-adapter-decision.md
-|   `-- evidence/
-|       `-- verification-2026-06-16.md
-|-- grammar/
-|   `-- JavaSubset.g4          ANTLR grammar for the modern MVP
-|-- internal/                  Modern parser, IR, lowerer, emitter, pipeline
-|-- modern-tests/              Modern golden fixtures
-|-- examples/
-|   `-- Main.java              Demo Java input
-|-- explorations/
-|   `-- spring/                Spring adapter decision fixtures
-|-- evidence/
-|   `-- corpus/                Generated scan/report/migration evidence
-|-- src/
-|   |-- lexer.l                Flex lexer
-|   |-- parser.y               Bison parser
-|   |-- ast.hpp / ast.cpp      AST node model
-|   |-- diagnostics.hpp / .cpp Unsupported-feature diagnostics
-|   |-- generator.hpp / .cpp   AST-to-Go code generator
-|   |-- parser_driver.hpp      Parser facade
-|   `-- main.cpp               CLI entry point
-|-- tools/
-|   |-- antlrgen/              Go-based ANTLR parser generator wrapper
-|   |-- corpus/                Go-based corpus evidence runner
-|   `-- legacytest/            Go-based legacy golden-test runner
-`-- tests/
-    |-- fixtures/              Java test inputs
-    `-- expected/              Expected formatted Go outputs
-```
-
-Generated binaries and test outputs are written to `build/`, `tests/generated/`, and `modern-tests/generated/`, which are intentionally ignored by Git.
-External corpus clones are written to `.corpus/`, which is also ignored by Git.
-
-## Supported Java Subset
-
-The current version supports:
-
-- One public class.
-- Static methods.
-- `public static void main(String[] args)`.
-- Types: `int`, `double`, `boolean`, `String`, `void`.
-- Method parameters and return values.
-- Variable declarations:
-  - `int x;`
-  - `int x = 5;`
-- Assignments:
-  - `x = x + 1;`
-- Expressions:
-  - identifiers and literals
-  - `+`, `-`, `*`, `/`
-  - `<`, `>`, `<=`, `>=`, `==`, `!=`
-  - `&&`, `||`, `!`
-  - parenthesized expressions
-- Control flow:
-  - `if (...) { ... } else { ... }`
-  - `while (...) { ... }`
-- Output:
-  - `System.out.println(expr);`
-- Comments:
-  - `// ...`
-  - `/* ... */`
-- Object model subset:
-  - class fields -> Go struct fields
-  - constructors and default constructors -> `NewClass(...) *Class`
-  - instance methods -> Go receiver methods
-  - direct `new Class(...)` calls -> `NewClass(...)`
-  - simple `interface` declarations -> Go interfaces
-
-Unsupported features still include inheritance, `implements` mapping, packages/imports in direct transpile mode, general arrays, exceptions, generics, lambdas, annotations, overloading, reflection, and broad Java standard-library translation. Project migration mode can read package metadata and map Java packages to Go package directories, but it still skips files that need unsupported language features.
-
-Unsupported features are detected before parsing when possible and reported as structured `JTG` diagnostics with line, column, feature name, and recommendation. See [docs/diagnostics.md](docs/diagnostics.md).
-
-## Translation Rules
-
-The transpiler uses deterministic mappings:
-
-| Java | Go |
-| --- | --- |
-| `public class Main { ... }` | class wrapper is not emitted |
-| `public static void main(String[] args)` | `func main()` |
-| static Java method | top-level Go function |
-| `int` | `int` |
-| `double` | `float64` |
-| `boolean` | `bool` |
-| `String` | `string` |
-| `void` | no return type |
-| `while (condition)` | `for condition` |
-| `System.out.println(x)` | `fmt.Println(x)` |
-
-The generator only imports `fmt` when the AST contains a print statement.
-
-## Example
-
-Input Java:
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        int x = 3;
-        while (x < 5) {
-            x = x + 1;
-        }
-
-        if (x >= 5) {
-            System.out.println(add(x, 2));
-        } else {
-            System.out.println(0);
-        }
-    }
-
-    public static int add(int a, int b) {
-        return a + b;
-    }
-}
-```
-
-Generated Go:
-
-```go
-package main
-
-import "fmt"
-
-func main() {
-	var x int = 3
-	for x < 5 {
-		x = x + 1
-	}
-	if x >= 5 {
-		fmt.Println(add(x, 2))
-	} else {
-		fmt.Println(0)
-	}
-}
-
-func add(a int, b int) int {
-	return a + b
-}
-```
-
-Program output:
-
-```text
-7
-```
-
-## Modern Build
-
-Generate the ANTLR parser and run modern tests:
+From the repo root:
 
 ```bash
-go run ./tools/antlrgen -jar tools/antlr/antlr-4.13.1-complete.jar -grammar grammar/JavaSubset.g4 -out internal/parser/gen
 go test ./...
+go run ./tools/antlrgen -jar tools/antlr/antlr-4.13.1-complete.jar -grammar grammar/JavaSubset.g4 -out internal/parser/gen
 go build -o build/j2go ./cmd/j2go
 ```
 
-Run the modern CLI:
+Run the CLI through Go when you want a platform-neutral command:
 
 ```bash
-./build/j2go -out modern-tests/generated modern-tests/fixtures/hello/Hello.java
-gofmt -w modern-tests/generated/Hello.go
+go run ./cmd/j2go --version
+go run ./cmd/j2go scan ./internal/javaproject/testdata/pure-java-lib
+go run ./cmd/j2go report ./internal/javaproject/testdata/pure-java-lib --format markdown --out build/migration-report.md
+go run ./cmd/j2go migrate ./internal/javaproject/testdata/pure-java-lib --out build/go-lib --report build/migration-report.md --dry-run
 ```
 
-Scan a pure Java library project:
-
-```bash
-./build/j2go scan ./internal/javaproject/testdata/pure-java-lib
-```
-
-Validate an enterprise config file:
-
-```bash
-./build/j2go config validate --config ./cervo-migration.yaml
-```
-
-Generate deterministic migration reports:
-
-```bash
-./build/j2go report ./internal/javaproject/testdata/pure-java-lib --format json --out build/migration-report.json
-./build/j2go report ./internal/javaproject/testdata/pure-java-lib --format markdown --out build/migration-report.md
-```
-
-The report mode scans packages, imports, classes, methods, fields, constructors, unsupported features, diagnostics, internal dependencies, per-file risk, and recommended migration order. It does not call AI.
-
-Run a partial project migration:
-
-```bash
-./build/j2go migrate ./my-java-lib --out ./go-lib --report build/migration-report.md --dry-run
-./build/j2go migrate ./my-java-lib --out ./go-lib --report build/migration-report.md --log-file build/j2go.log
-./build/j2go migrate --config ./cervo-migration.yaml
-```
-
-The migration command creates a Go module, writes generated Go files under package-derived directories, emits deterministic Go imports for supported internal package references, translates supported Java test files into `_test.go` files, reports Go symbol collisions before writing misleading output, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
-
-Generate an advisory AI review from a deterministic report:
-
-```bash
-./build/j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider canned
-./build/j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider external
-```
-
-The AI sidecar is opt-in. The canned provider is offline and deterministic for tests. The external provider runs `J2GO_AI_COMMAND` and is responsible for calling any real AI service outside the deterministic transpiler.
-
-## Legacy Build
-
-Build the legacy reference compiler with Make:
-
-```bash
-make
-```
-
-Manual equivalent:
-
-```bash
-mkdir -p build
-bison -d -o build/parser.cpp src/parser.y
-flex -o build/lexer.cpp src/lexer.l
-g++ -std=c++17 -Isrc -Ibuild build/parser.cpp build/lexer.cpp src/ast.cpp src/diagnostics.cpp src/generator.cpp src/main.cpp -o build/javago
-```
-
-The Go legacy test runner also builds the compiler before running golden tests:
+Run the evidence suites:
 
 ```bash
 go run ./tools/legacytest
-```
-
-If `flex`, `bison`, or `g++` is missing, install them with the package manager for your platform.
-
-## Run
-
-```bash
-./build/javago examples/Main.java build/Main.go
-gofmt -w build/Main.go
-go run build/Main.go
-```
-
-Expected output:
-
-```text
-7
-```
-
-## Test
-
-Run the golden-test suite:
-
-```bash
-go run ./tools/legacytest
-```
-
-The test runner:
-
-- Rebuilds the transpiler.
-- Executes exactly 30 evidence cases.
-- Transpiles Java fixtures from `tests/fixtures`.
-- Formats generated Go with `gofmt`.
-- Compares generated Go against `tests/expected`.
-- Runs generated Go programs with `go run`.
-- Verifies syntax errors include line and column details.
-- Verifies unsupported Java features fail with structured `JTG` diagnostics and recommendations.
-
-The 30-case suite includes 20 supported Java-to-Go translations, one syntax-error case, and nine unsupported-feature diagnostics.
-
-## Verification Evidence
-
-Verification evidence is stored in:
-
-[docs/evidence/verification-2026-06-16.md](docs/evidence/verification-2026-06-16.md)
-
-That file records the tool versions, build output, golden-test output, and negative syntax/unsupported-feature tests.
-
-Corpus evidence is stored under [evidence/corpus](evidence/corpus). The corpus manifest is [corpus/corpus.json](corpus/corpus.json), and it can be regenerated cross-platform with:
-
-```bash
 go run ./tools/corpus
 ```
 
-The corpus is split by purpose:
+## Main Commands
 
-- `evidence/corpus/curated`: high-confidence multi-file transpilation evidence.
-- `evidence/corpus/external`: real-library stress/reporting evidence where partial migration and skipped files are expected.
+- `j2go scan <path>`: inspect a Java project.
+- `j2go report <path> --format json|markdown --out <file>`: create deterministic migration reports.
+- `j2go transpile <file-or-dir> -out <dir>`: transpile supported Java files.
+- `j2go migrate <project> --out <dir> --report <file> [--dry-run]`: generate a partial Go migration.
+- `j2go ai explain --report <file> --out <file>`: optional advisory AI review.
 
-## Known Limitations
+## Current Scope
 
-This phase is still intentionally small. It does not perform full classpath resolution, method overload resolution, `implements` lowering, inheritance lowering, Java test translation, or broad library migration.
+The transpiler supports a focused Java subset: simple classes, static methods, primitive types, variables, assignments, expressions, `if`, `while`, `System.out.println`, basic fields, constructors, instance methods, and simple interfaces.
 
-Examples of unsupported input should fail with a structured diagnostic or parser error instead of producing misleading Go code. For example, `implements` clauses are rejected with `JTG1005`.
+Unsupported Java features should produce structured `JTG` diagnostics instead of misleading Go output. Broad Java framework migration, including Spring, is intentionally outside the current deterministic path.
 
-## AI-Assisted Migration
+The legacy Flex/Bison implementation under `src/` remains as reference material while the modern Go/ANTLR pipeline continues to mature.
 
-AI belongs beside the deterministic transpiler, not inside the default code-generation path. See [docs/ai-assisted-migration.md](docs/ai-assisted-migration.md) and [docs/ai-prompts.md](docs/ai-prompts.md) for the sidecar architecture, provider policy, and versioned prompts.
+## Documentation
+
+Start with the GitHub Wiki:
+
+- [Wiki Home](https://github.com/cervantesh/cervo-transpiler-java-to-go/wiki)
+- [Project Guide](https://github.com/cervantesh/cervo-transpiler-java-to-go/wiki/Project-Guide)
+
+Core docs:
+
+- [Operations](docs/operations.md)
+- [Modern Architecture](docs/architecture-modern.md)
+- [Diagnostics](docs/diagnostics.md)
+- [Compatibility](docs/compatibility.md)
+- [Maturity Analysis](docs/maturity-analysis-2026-06-16.md)
+- [Productive Migration Roadmap](docs/productive-migration-roadmap.md)
+- [AI-Assisted Migration](docs/ai-assisted-migration.md)
+- [Spring Adapter Decision](docs/spring-adapter-decision.md)
