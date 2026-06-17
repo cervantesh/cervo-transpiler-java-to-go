@@ -28,6 +28,7 @@ type localProject struct {
 	ID          string      `json:"id"`
 	Name        string      `json:"name"`
 	Path        string      `json:"path"`
+	SourceRoot  string      `json:"sourceRoot,omitempty"`
 	Category    string      `json:"category"`
 	Description string      `json:"description"`
 	Expectation expectation `json:"expectation"`
@@ -39,6 +40,7 @@ type repository struct {
 	URL         string      `json:"url"`
 	Ref         string      `json:"ref"`
 	Commit      string      `json:"commit"`
+	SourceRoot  string      `json:"sourceRoot,omitempty"`
 	Category    string      `json:"category"`
 	Description string      `json:"description"`
 	Expectation expectation `json:"expectation"`
@@ -57,6 +59,7 @@ type corpusProject struct {
 	Category    string
 	Description string
 	Path        string
+	SourceRoot  string
 	URL         string
 	Ref         string
 	Commit      string
@@ -74,6 +77,7 @@ type sourceEvidence struct {
 	Commit      string      `json:"commit"`
 	Description string      `json:"description"`
 	SourcePath  string      `json:"sourcePath"`
+	SourceRoot  string      `json:"sourceRoot,omitempty"`
 	Expectation expectation `json:"expectation,omitempty"`
 }
 
@@ -203,6 +207,7 @@ func allProjects(cfg manifest) []corpusProject {
 			Category:    category,
 			Description: local.Description,
 			Path:        local.Path,
+			SourceRoot:  local.SourceRoot,
 			Expectation: local.Expectation,
 		})
 	}
@@ -220,6 +225,7 @@ func allProjects(cfg manifest) []corpusProject {
 			URL:         repo.URL,
 			Ref:         repo.Ref,
 			Commit:      repo.Commit,
+			SourceRoot:  repo.SourceRoot,
 			Expectation: repo.Expectation,
 		})
 	}
@@ -227,23 +233,28 @@ func allProjects(cfg manifest) []corpusProject {
 }
 
 func runProject(root string, cfg manifest, project corpusProject, skipClone bool) error {
-	sourceArg := project.Path
-	sourceDir := filepath.Join(root, project.Path)
+	baseArg := project.Path
+	baseDir := filepath.Join(root, filepath.FromSlash(project.Path))
 	if project.Kind == "git" {
-		sourceArg = filepath.ToSlash(filepath.Join(cfg.Workspace, project.ID))
-		sourceDir = filepath.Join(root, cfg.Workspace, project.ID)
+		baseArg = filepath.ToSlash(filepath.Join(cfg.Workspace, project.ID))
+		baseDir = filepath.Join(root, filepath.FromSlash(baseArg))
 	}
+	sourceArg := sourcePath(baseArg, project.SourceRoot)
+	sourceDir := filepath.Join(root, filepath.FromSlash(sourceArg))
 	evidenceRel := filepath.Join(cfg.Evidence, project.Category, project.ID)
 	evidenceDir := filepath.Join(root, evidenceRel)
 	evidenceArg := filepath.ToSlash(evidenceRel)
 	goArg := filepath.ToSlash(filepath.Join(evidenceRel, "go"))
 
 	if project.Kind == "git" && !skipClone {
-		if err := checkoutRepository(sourceDir, project); err != nil {
+		if err := checkoutRepository(baseDir, project); err != nil {
 			return err
 		}
-	} else if _, err := os.Stat(sourceDir); err != nil {
-		return fmt.Errorf("skip-clone requested but source directory is unavailable: %w", err)
+	} else if _, err := os.Stat(baseDir); err != nil {
+		return fmt.Errorf("skip-clone requested but repository directory is unavailable: %w", err)
+	}
+	if _, err := os.Stat(sourceDir); err != nil {
+		return fmt.Errorf("corpus source root %q is unavailable: %w", sourceArg, err)
 	}
 
 	if err := os.RemoveAll(evidenceDir); err != nil {
@@ -280,6 +291,13 @@ func runProject(root string, cfg manifest, project corpusProject, skipClone bool
 	return nil
 }
 
+func sourcePath(baseArg string, sourceRoot string) string {
+	if sourceRoot == "" || sourceRoot == "." {
+		return filepath.ToSlash(baseArg)
+	}
+	return filepath.ToSlash(filepath.Join(baseArg, filepath.FromSlash(sourceRoot)))
+}
+
 func checkoutRepository(sourceDir string, repo corpusProject) error {
 	if _, err := os.Stat(sourceDir); errors.Is(err, os.ErrNotExist) {
 		if err := runShell("git", "clone", repo.URL, sourceDir); err != nil {
@@ -313,6 +331,7 @@ func writeSourceEvidence(evidenceDir string, repo corpusProject, sourceDir strin
 		Commit:      repo.Commit,
 		Description: repo.Description,
 		SourcePath:  filepath.ToSlash(sourceDir),
+		SourceRoot:  repo.SourceRoot,
 		Expectation: repo.Expectation,
 	}
 	data, err := json.MarshalIndent(payload, "", "  ")

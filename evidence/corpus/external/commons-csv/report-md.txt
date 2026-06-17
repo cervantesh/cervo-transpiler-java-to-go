@@ -1,1 +1,1 @@
-$ go run ./cmd/j2go report .corpus/commons-csv --format markdown --out evidence/corpus/external/commons-csv/report.md
+$ go run ./cmd/j2go report .corpus/commons-csv/src/main/java --format markdown --out evidence/corpus/external/commons-csv/report.md

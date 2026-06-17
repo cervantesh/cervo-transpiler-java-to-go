@@ -17,6 +17,22 @@ func TestParseValidMainClass(t *testing.T) {
 	}
 }
 
+func TestParseFinalParametersLocalsAndUnicodeEscapes(t *testing.T) {
+	source := `public class Tokens {
+  public static String normalize(final String value) {
+    final String marker = "\u0000";
+    return value + marker;
+  }
+}`
+	tree, diagnostics := ParseSource("Tokens.java", source)
+	if len(diagnostics) != 0 {
+		t.Fatalf("expected no diagnostics, got %#v", diagnostics)
+	}
+	if tree == nil {
+		t.Fatal("expected parse tree")
+	}
+}
+
 func TestParseInvalidClassReportsLineAndColumn(t *testing.T) {
 	source := `public class Broken {
   public static void main(String[] args) {

@@ -40,6 +40,37 @@ func TestMapJavaArrayType(t *testing.T) {
 	}
 }
 
+func TestLowerIgnoresFinalParameterAndLocalModifiers(t *testing.T) {
+	source := `public class Tokens {
+  public static String normalize(final String value) {
+    final String marker = "\u0000";
+    return value + marker;
+  }
+}`
+	tree, syntax := parser.ParseSource("Tokens.java", source)
+	if len(syntax) != 0 {
+		t.Fatalf("syntax diagnostics: %#v", syntax)
+	}
+	file, diagnostics := Lower("Tokens.java", tree)
+	if len(diagnostics) != 0 {
+		t.Fatalf("lower diagnostics: %#v", diagnostics)
+	}
+	if len(file.Funcs) != 1 || len(file.Funcs[0].Params) != 1 {
+		t.Fatalf("expected one function with one parameter, got %#v", file.Funcs)
+	}
+	if file.Funcs[0].Params[0].Name != "value" || file.Funcs[0].Params[0].Type.Kind != ir.KindString {
+		t.Fatalf("expected final parameter to lower as string value, got %#v", file.Funcs[0].Params[0])
+	}
+	decl, ok := file.Funcs[0].Body[0].(ir.VarDeclStmt)
+	if !ok {
+		t.Fatalf("expected local declaration, got %#v", file.Funcs[0].Body[0])
+	}
+	literal, ok := decl.Value.(ir.LiteralExpr)
+	if !ok || literal.Value != `"\u0000"` || literal.Type.Kind != ir.KindString {
+		t.Fatalf("expected unicode string literal, got %#v", decl.Value)
+	}
+}
+
 func TestLowerAddsTypedIRMetadata(t *testing.T) {
 	source := `package demo;
 

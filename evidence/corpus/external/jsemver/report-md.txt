@@ -1,1 +1,1 @@
-$ go run ./cmd/j2go report .corpus/jsemver --format markdown --out evidence/corpus/external/jsemver/report.md
+$ go run ./cmd/j2go report .corpus/jsemver/src/main/java --format markdown --out evidence/corpus/external/jsemver/report.md

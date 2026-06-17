@@ -38,14 +38,15 @@ go run ./tools/corpus -manifest corpus/corpus.json
 ```
 
 For external Git repositories, the runner clones or updates each repository under `.corpus/` and checks out the pinned commit. For curated local projects, it reads the source directly from `corpus/projects/`.
+Corpus entries may set `sourceRoot` to analyze a deterministic subdirectory such as `src/main/java`. This keeps third-party test suites and build fixtures from diluting the library migration signal while still preserving the pinned repository metadata in `source.json`.
 
 For every corpus project it then runs:
 
 ```bash
-go run ./cmd/j2go scan <repo>
-go run ./cmd/j2go report <repo> --format json --out <evidence>/report.json
-go run ./cmd/j2go report <repo> --format markdown --out <evidence>/report.md
-go run ./cmd/j2go migrate <repo> --out <evidence>/go --report <evidence>/migration.md --log-file <evidence>/migration.log
+go run ./cmd/j2go scan <source-root>
+go run ./cmd/j2go report <source-root> --format json --out <evidence>/report.json
+go run ./cmd/j2go report <source-root> --format markdown --out <evidence>/report.md
+go run ./cmd/j2go migrate <source-root> --out <evidence>/go --report <evidence>/migration.md --log-file <evidence>/migration.log
 ```
 
 Each corpus output directory also receives `source.json`, `scan.txt`, and `migrate.txt` so the evidence can be reviewed without rerunning the tool.
@@ -60,9 +61,9 @@ The runner also executes `go test ./...` inside the generated Go module and save
 
 ## Current Corpus
 
-| ID | Category | Source | Why it is useful |
-| --- | --- | --- |
-| `curated-store-lib` | `curated` | `corpus/projects/curated-store-lib` | Controlled multi-package library with internal imports, object model, static methods, fields, and a generated Go test. |
-| `jsemver` | `external` | <https://github.com/zafarkhaja/jsemver> | Small Maven library with domain objects, parsing, comparison, and tests. |
-| `commons-csv` | `external` | <https://github.com/apache/commons-csv> | Real Apache library with a compact API and CSV-oriented object model. |
-| `java-diff-utils` | `external` | <https://github.com/java-diff-utils/java-diff-utils> | Medium-sized library with algorithms, patches, modules, and package structure. |
+| ID | Category | Source | Source root | Why it is useful |
+| --- | --- | --- | --- | --- |
+| `curated-store-lib` | `curated` | `corpus/projects/curated-store-lib` | Full curated project | Controlled multi-package library with internal imports, object model, static methods, fields, and a generated Go test. |
+| `jsemver` | `external` | <https://github.com/zafarkhaja/jsemver> | `src/main/java` | Small Maven library with domain objects, parsing, and comparison logic. |
+| `commons-csv` | `external` | <https://github.com/apache/commons-csv> | `src/main/java` | Real Apache library with a compact API and CSV-oriented object model. |
+| `java-diff-utils` | `external` | <https://github.com/java-diff-utils/java-diff-utils> | `java-diff-utils/src/main/java` | Medium-sized core library module with algorithms, patches, and package structure. |
