@@ -73,10 +73,10 @@ Expected output:
 ## Provider Policy
 
 - `canned` / `offline`: deterministic provider used by tests. It never calls the network and never requires an API key.
-- `external`: optional real-provider hook. It runs `J2GO_AI_COMMAND`, sends the JSON payload on stdin, and wraps stdout in the advisory header.
+- `external`: optional real-provider hook. It runs the executable in `J2GO_AI_COMMAND` with optional JSON-array arguments from `J2GO_AI_ARGS`, sends the JSON payload on stdin, and wraps stdout in the advisory header.
 
 Default transpilation and migration commands must not call either provider. The only public entry point is:
 
-```powershell
+```bash
 j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider canned
 ```

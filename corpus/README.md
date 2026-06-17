@@ -22,7 +22,7 @@ evidence/corpus/     # generated migration evidence, versionable
 
 ## Run
 
-Use the Go runner instead of PowerShell for better cross-platform behavior:
+Use the Go runner for cross-platform behavior:
 
 ```bash
 go run ./tools/corpus

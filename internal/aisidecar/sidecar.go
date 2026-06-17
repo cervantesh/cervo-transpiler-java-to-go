@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 
@@ -129,7 +128,13 @@ func selectProvider(name string) (Provider, error) {
 		if command == "" {
 			return nil, fmt.Errorf("external AI provider requires J2GO_AI_COMMAND")
 		}
-		return externalProvider{command: command}, nil
+		args := []string{}
+		if rawArgs := os.Getenv("J2GO_AI_ARGS"); rawArgs != "" {
+			if err := json.Unmarshal([]byte(rawArgs), &args); err != nil {
+				return nil, fmt.Errorf("J2GO_AI_ARGS must be a JSON string array: %w", err)
+			}
+		}
+		return externalProvider{command: command, args: args}, nil
 	default:
 		return nil, fmt.Errorf("unsupported AI provider %q", name)
 	}
@@ -280,6 +285,7 @@ func writeSnippetSummary(buffer *bytes.Buffer, snippets []Snippet) {
 
 type externalProvider struct {
 	command string
+	args    []string
 }
 
 func (p externalProvider) Name() string {
@@ -291,12 +297,7 @@ func (p externalProvider) Explain(input Input) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command("powershell", "-NoProfile", "-Command", p.command)
-	} else {
-		cmd = exec.Command("sh", "-c", p.command)
-	}
+	cmd := exec.Command(p.command, p.args...)
 	cmd.Stdin = bytes.NewReader(payload)
 	output, err := cmd.CombinedOutput()
 	if err != nil {

@@ -80,7 +80,6 @@ A later production migration tool should move toward a richer Java frontend, typ
 
 ```text
 .
-|-- build.ps1                  Windows build script
 |-- cervo-migration.example.yaml Enterprise migration config example
 |-- CHANGELOG.md               Release notes
 |-- Makefile                   Make-style build for compatible environments
@@ -115,7 +114,10 @@ A later production migration tool should move toward a richer Java frontend, typ
 |   |-- generator.hpp / .cpp   AST-to-Go code generator
 |   |-- parser_driver.hpp      Parser facade
 |   `-- main.cpp               CLI entry point
-|-- test.ps1                   Golden-test runner
+|-- tools/
+|   |-- antlrgen/              Go-based ANTLR parser generator wrapper
+|   |-- corpus/                Go-based corpus evidence runner
+|   `-- legacytest/            Go-based legacy golden-test runner
 `-- tests/
     |-- fixtures/              Java test inputs
     `-- expected/              Expected formatted Go outputs
@@ -241,97 +243,90 @@ Program output:
 
 Generate the ANTLR parser and run modern tests:
 
-```powershell
-New-Item -ItemType Directory -Force tools\antlr | Out-Null
-Invoke-WebRequest -Uri https://www.antlr.org/download/antlr-4.13.1-complete.jar -OutFile tools\antlr\antlr-4.13.1-complete.jar
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\antlr\generate-parser.ps1 -Jar tools/antlr/antlr-4.13.1-complete.jar -Grammar grammar/JavaSubset.g4 -OutputDir internal/parser/gen
+```bash
+go run ./tools/antlrgen -jar tools/antlr/antlr-4.13.1-complete.jar -grammar grammar/JavaSubset.g4 -out internal/parser/gen
 go test ./...
-go build -o build\j2go.exe ./cmd/j2go
+go build -o build/j2go ./cmd/j2go
 ```
 
 Run the modern CLI:
 
-```powershell
-.\build\j2go.exe -out modern-tests\generated modern-tests\fixtures\hello\Hello.java
-gofmt -w modern-tests\generated\Hello.go
+```bash
+./build/j2go -out modern-tests/generated modern-tests/fixtures/hello/Hello.java
+gofmt -w modern-tests/generated/Hello.go
 ```
 
 Scan a pure Java library project:
 
-```powershell
-.\build\j2go.exe scan .\internal\javaproject\testdata\pure-java-lib
+```bash
+./build/j2go scan ./internal/javaproject/testdata/pure-java-lib
 ```
 
 Validate an enterprise config file:
 
-```powershell
-.\build\j2go.exe config validate --config .\cervo-migration.yaml
+```bash
+./build/j2go config validate --config ./cervo-migration.yaml
 ```
 
 Generate deterministic migration reports:
 
-```powershell
-.\build\j2go.exe report .\internal\javaproject\testdata\pure-java-lib --format json --out build\migration-report.json
-.\build\j2go.exe report .\internal\javaproject\testdata\pure-java-lib --format markdown --out build\migration-report.md
+```bash
+./build/j2go report ./internal/javaproject/testdata/pure-java-lib --format json --out build/migration-report.json
+./build/j2go report ./internal/javaproject/testdata/pure-java-lib --format markdown --out build/migration-report.md
 ```
 
 The report mode scans packages, imports, classes, methods, fields, constructors, unsupported features, diagnostics, internal dependencies, per-file risk, and recommended migration order. It does not call AI.
 
 Run a partial project migration:
 
-```powershell
-.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md --dry-run
-.\build\j2go.exe migrate .\my-java-lib --out .\go-lib --report build\migration-report.md --log-file build\j2go.log
-.\build\j2go.exe migrate --config .\cervo-migration.yaml
+```bash
+./build/j2go migrate ./my-java-lib --out ./go-lib --report build/migration-report.md --dry-run
+./build/j2go migrate ./my-java-lib --out ./go-lib --report build/migration-report.md --log-file build/j2go.log
+./build/j2go migrate --config ./cervo-migration.yaml
 ```
 
 The migration command creates a Go module, writes generated Go files under package-derived directories, emits deterministic Go imports for supported internal package references, translates supported Java test files into `_test.go` files, reports Go symbol collisions before writing misleading output, emits a deterministic report with migration diagnostics, and skips unsupported Java files instead of mixing advisory output into generated code.
 
 Generate an advisory AI review from a deterministic report:
 
-```powershell
-.\build\j2go.exe ai explain --report build\migration-report.json --out build\ai-review.md --provider canned
-.\build\j2go.exe ai explain --report build\migration-report.json --out build\ai-review.md --provider external
+```bash
+./build/j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider canned
+./build/j2go ai explain --report build/migration-report.json --out build/ai-review.md --provider external
 ```
 
 The AI sidecar is opt-in. The canned provider is offline and deterministic for tests. The external provider runs `J2GO_AI_COMMAND` and is responsible for calling any real AI service outside the deterministic transpiler.
 
 ## Legacy Build
 
-Windows PowerShell:
+Build the legacy reference compiler with Make:
 
-```powershell
-.\build.ps1
+```bash
+make
 ```
 
 Manual equivalent:
 
-```powershell
-bison -d -o build\parser.cpp src\parser.y
-flex -o build\lexer.cpp src\lexer.l
-g++ -std=c++17 -Isrc -Ibuild build\parser.cpp build\lexer.cpp src\ast.cpp src\diagnostics.cpp src\generator.cpp src\main.cpp -o build\javago.exe
+```bash
+mkdir -p build
+bison -d -o build/parser.cpp src/parser.y
+flex -o build/lexer.cpp src/lexer.l
+g++ -std=c++17 -Isrc -Ibuild build/parser.cpp build/lexer.cpp src/ast.cpp src/diagnostics.cpp src/generator.cpp src/main.cpp -o build/javago
 ```
 
-The full build script also compiles `src\diagnostics.cpp`; use `.\build.ps1` as the source of truth for local builds.
+The Go legacy test runner also builds the compiler before running golden tests:
 
-If `flex` or `bison` is missing, install WinFlexBison:
-
-```powershell
-scoop install winflexbison
+```bash
+go run ./tools/legacytest
 ```
 
-or:
-
-```powershell
-choco install winflexbison3
-```
+If `flex`, `bison`, or `g++` is missing, install them with the package manager for your platform.
 
 ## Run
 
-```powershell
-.\build\javago.exe examples\Main.java build\Main.go
-gofmt -w build\Main.go
-go run build\Main.go
+```bash
+./build/javago examples/Main.java build/Main.go
+gofmt -w build/Main.go
+go run build/Main.go
 ```
 
 Expected output:
@@ -344,8 +339,8 @@ Expected output:
 
 Run the golden-test suite:
 
-```powershell
-.\test.ps1
+```bash
+go run ./tools/legacytest
 ```
 
 The test runner:

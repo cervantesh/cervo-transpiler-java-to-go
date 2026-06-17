@@ -26,16 +26,9 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: Download ANTLR
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force tools/antlr | Out-Null
-          Invoke-WebRequest -Uri https://www.antlr.org/download/antlr-4.13.1-complete.jar -OutFile tools/antlr/antlr-4.13.1-complete.jar
-
       - name: Check generated parser drift
-        shell: pwsh
         run: |
-          pwsh -NoProfile -ExecutionPolicy Bypass -File tools/antlr/generate-parser.ps1 -Jar tools/antlr/antlr-4.13.1-complete.jar -Grammar grammar/JavaSubset.g4 -OutputDir internal/parser/gen
+          go run ./tools/antlrgen -jar tools/antlr/antlr-4.13.1-complete.jar -grammar grammar/JavaSubset.g4 -out internal/parser/gen
           git diff --exit-code -- internal/parser/gen
 
       - name: Run Go tests
@@ -54,7 +47,7 @@ jobs:
 
   legacy:
     name: Legacy reference suite
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -66,12 +59,9 @@ jobs:
           cache: true
 
       - name: Install legacy compiler dependencies
-        shell: powershell
         run: |
-          choco install winflexbison3 mingw -y
-          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-          refreshenv
+          sudo apt-get update
+          sudo apt-get install -y flex bison g++
 
       - name: Run legacy evidence suite
-        shell: powershell
-        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\test.ps1
+        run: go run ./tools/legacytest

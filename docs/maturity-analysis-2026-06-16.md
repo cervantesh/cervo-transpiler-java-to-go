@@ -50,10 +50,10 @@ The repo is currently at **Level 2**, with parts of Level 3 already visible.
 
 Commands run successfully on 2026-06-16:
 
-```powershell
+```bash
 go test ./...
 go test ./... -cover
-powershell -NoProfile -ExecutionPolicy Bypass -File .\test.ps1
+go run ./tools/legacytest
 ```
 
 Coverage snapshot from `go test ./... -cover`:
@@ -147,7 +147,7 @@ Required work:
 - Replace string-prefix lowering checks with typed parse-context handling.
 - Add GitHub Actions for:
   - `go test ./...`
-  - legacy `test.ps1`
+  - legacy `go run ./tools/legacytest`
   - modern CLI golden check
   - parser generation drift check
 - Add CLI tests for `cmd/j2go`.

@@ -50,7 +50,7 @@ error: tests\fixtures\unsupported_inheritance.java:1:37: JTG1004: unsupported fe
 
 ## Test Coverage
 
-`test.ps1` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline keeps structured diagnostics for still-unsupported features and adds positive object-model/interface coverage in `internal/pipeline`.
+`go run ./tools/legacytest` validates the legacy structured diagnostics with these fixtures. The modern Go pipeline keeps structured diagnostics for still-unsupported features and adds positive object-model/interface coverage in `internal/pipeline`.
 
 - `tests\fixtures\unsupported_field.java`
 - `tests\fixtures\unsupported_package_import.java`

@@ -78,7 +78,7 @@ Required for framework behavior that is implicit, runtime-driven, or cross-cutti
 
 Future command shape:
 
-```powershell
+```bash
 j2go spring scan ./spring-app --out build/spring-inventory.json
 j2go spring plan ./spring-app --out build/spring-plan.md
 ```

@@ -9,8 +9,14 @@ Requirements:
 
 Generate parser files:
 
-```powershell
+```bash
 make generate-parser
 ```
 
-On this workstation `java` on `PATH` currently points to Java 8. `tools/antlr/generate-parser.ps1` prefers `C:\dev\jdk-24.0.1\bin\java.exe` when it is available, then falls back to `java`.
+Equivalent direct command:
+
+```bash
+go run ./tools/antlrgen -jar tools/antlr/antlr-4.13.1-complete.jar -grammar grammar/JavaSubset.g4 -out internal/parser/gen
+```
+
+`tools/antlrgen` downloads the ANTLR jar when it is missing. Set `JTG_JAVA` if the desired JDK is not first on `PATH`.
