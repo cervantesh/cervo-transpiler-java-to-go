@@ -7,6 +7,7 @@
   "ref": "master",
   "commit": "5e2e5b981533964aaeb19e2ba56d0f53dbd8b2dc",
   "description": "Pure Java diff and patch library with multiple packages and modules.",
-  "sourcePath": ".corpus/java-diff-utils",
+  "sourcePath": ".corpus/java-diff-utils/java-diff-utils/src/main/java",
+  "sourceRoot": "java-diff-utils/src/main/java",
   "expectation": {}
 }

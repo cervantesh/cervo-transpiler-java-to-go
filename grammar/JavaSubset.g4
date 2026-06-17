@@ -79,7 +79,7 @@ formalParameterList
     ;
 
 formalParameter
-    : typeType Identifier
+    : 'final'* typeType Identifier
     ;
 
 typeTypeOrVoid
@@ -121,7 +121,7 @@ blockStatement
     ;
 
 localVariableDecl
-    : typeType variableDeclarators
+    : 'final'* typeType variableDeclarators
     ;
 
 statement
@@ -218,7 +218,11 @@ fragment DecimalIntegerLiteral
     ;
 
 fragment EscapeSequence
-    : '\\' [btnfr"'\\]
+    : '\\' ([btnfr"'\\] | 'u' HexDigit HexDigit HexDigit HexDigit)
+    ;
+
+fragment HexDigit
+    : [0-9a-fA-F]
     ;
 
 Identifier

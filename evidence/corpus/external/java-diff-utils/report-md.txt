@@ -1,1 +1,1 @@
-$ go run ./cmd/j2go report .corpus/java-diff-utils --format markdown --out evidence/corpus/external/java-diff-utils/report.md
+$ go run ./cmd/j2go report .corpus/java-diff-utils/java-diff-utils/src/main/java --format markdown --out evidence/corpus/external/java-diff-utils/report.md

@@ -10,13 +10,15 @@ import (
 func TestAllProjectsSeparatesCuratedAndExternalDefaults(t *testing.T) {
 	cfg := manifest{
 		LocalProjects: []localProject{{
-			ID:   "curated-lib",
-			Path: "corpus/projects/curated-lib",
+			ID:         "curated-lib",
+			Path:       "corpus/projects/curated-lib",
+			SourceRoot: "src/main/java",
 		}},
 		Repositories: []repository{{
-			ID:     "external-lib",
-			URL:    "https://example.com/lib.git",
-			Commit: "abc123",
+			ID:         "external-lib",
+			URL:        "https://example.com/lib.git",
+			Commit:     "abc123",
+			SourceRoot: "module/src/main/java",
 		}},
 	}
 
@@ -27,8 +29,24 @@ func TestAllProjectsSeparatesCuratedAndExternalDefaults(t *testing.T) {
 	if projects[0].Kind != "local" || projects[0].Category != "curated" {
 		t.Fatalf("expected local curated project, got %#v", projects[0])
 	}
+	if projects[0].SourceRoot != "src/main/java" {
+		t.Fatalf("expected local source root, got %#v", projects[0])
+	}
 	if projects[1].Kind != "git" || projects[1].Category != "external" {
 		t.Fatalf("expected git external project, got %#v", projects[1])
+	}
+	if projects[1].SourceRoot != "module/src/main/java" {
+		t.Fatalf("expected git source root, got %#v", projects[1])
+	}
+}
+
+func TestSourcePathUsesConfiguredSourceRoot(t *testing.T) {
+	got := sourcePath(".corpus/example", "module/src/main/java")
+	if got != ".corpus/example/module/src/main/java" {
+		t.Fatalf("expected configured source root, got %q", got)
+	}
+	if got := sourcePath(".corpus/example", ""); got != ".corpus/example" {
+		t.Fatalf("expected base path when no source root is configured, got %q", got)
 	}
 }
 

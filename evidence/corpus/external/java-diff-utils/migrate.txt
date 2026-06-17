@@ -1,20 +1,12 @@
-$ go run ./cmd/j2go migrate .corpus/java-diff-utils --out evidence/corpus/external/java-diff-utils/go --report evidence/corpus/external/java-diff-utils/migration.md --log-file evidence/corpus/external/java-diff-utils/migration.log --module github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/external/java-diff-utils/go
+$ go run ./cmd/j2go migrate .corpus/java-diff-utils/java-diff-utils/src/main/java --out evidence/corpus/external/java-diff-utils/go --report evidence/corpus/external/java-diff-utils/migration.md --log-file evidence/corpus/external/java-diff-utils/migration.log --module github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/external/java-diff-utils/go
 
 [stdout]
-Migration summary: javaFiles=55 generated=3 skipped=52 diagnostics=690 dryRun=false
+Migration summary: javaFiles=32 generated=2 skipped=30 diagnostics=411 dryRun=false
 Report: evidence/corpus/external/java-diff-utils/migration.md
 Output: evidence/corpus/external/java-diff-utils/go
 Log: evidence/corpus/external/java-diff-utils/migration.log
 
 [stderr]
-.corpus/java-diff-utils/java-diff-utils-jgit/src/main/java/com/github/difflib/algorithm/jgit/HistogramDiff.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmI
-.corpus/java-diff-utils/java-diff-utils-jgit/src/main/java/com/github/difflib/algorithm/jgit/HistogramDiff.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
-.corpus/java-diff-utils/java-diff-utils-jgit/src/main/java/com/github/difflib/algorithm/jgit/HistogramDiff.java:0:0: JTG2005: import unresolved: com.github.difflib.patch.DeltaType
-.corpus/java-diff-utils/java-diff-utils-jgit/src/test/java/com/github/difflib/algorithm/jgit/HistogramDiffTest.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
-.corpus/java-diff-utils/java-diff-utils-jgit/src/test/java/com/github/difflib/algorithm/jgit/HistogramDiffTest.java:35:2: JTG2001: duplicate Go symbol after migration: NewHistogramDiffTest
-.corpus/java-diff-utils/java-diff-utils-jgit/src/test/java/com/github/difflib/algorithm/jgit/HistogramDiffTest.java:45:14: JTG2001: duplicate Go symbol after migration: NewHistogramDiffTest
-.corpus/java-diff-utils/java-diff-utils-jgit/src/test/java/com/github/difflib/algorithm/jgit/HistogramDiffTest.java:63:38: JTG2001: duplicate Go symbol after migration: NewHistogramDiffTest
-.corpus/java-diff-utils/java-diff-utils-jgit/src/test/java/com/github/difflib/algorithm/jgit/LRHistogramDiffTest.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmFactory
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmI
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
@@ -31,7 +23,6 @@ Log: evidence/corpus/external/java-diff-utils/migration.log
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:217:28: JTG2001: duplicate Go symbol after migration: NewDiffUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:221:30: JTG2001: duplicate Go symbol after migration: NewDiffUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:228:2: JTG2001: duplicate Go symbol after migration: NewDiffUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/DiffUtils.java:35:0: JTG2001: duplicate Go symbol after migration: DiffUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/UnifiedDiffUtils.java:47:30: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/UnifiedDiffUtils.java:144:29: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/UnifiedDiffUtils.java:212:30: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffUtils
@@ -404,296 +395,26 @@ Log: evidence/corpus/external/java-diff-utils/migration.log
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/DiffRowGenerator.java:58:56: JTG2001: duplicate Go symbol after migration: NewDiffRowGenerator
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/DiffRowGenerator.java:66:45: JTG2001: duplicate Go symbol after migration: NewDiffRowGenerator
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/DiffRowGenerator.java:67:36: JTG2001: duplicate Go symbol after migration: NewDiffRowGenerator
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/StringUtils.java:22:0: JTG2001: duplicate Go symbol after migration: StringUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/StringUtils.java:38:29: JTG2001: duplicate Go symbol after migration: NewStringUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/StringUtils.java:79:2: JTG2001: duplicate Go symbol after migration: NewStringUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:32:44: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:40:14: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:41:39: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:43:64: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:46:11: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:47:11: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:48:40: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:49:34: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:49:46: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:50:27: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:50:39: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:52:26: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:61:23: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:61:56: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:62:23: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:66:38: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:66:50: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:67:38: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:67:50: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:69:18: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:72:18: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
+.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/DeltaMergeUtils.java:79:2: JTG2001: duplicate Go symbol after migration: NewDeltaMergeUtils
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/InlineDeltaMergeInfo.java:33:2: JTG2001: duplicate Go symbol after migration: NewInlineDeltaMergeInfo
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/InlineDeltaMergeInfo.java:39:37: JTG2001: duplicate Go symbol after migration: NewInlineDeltaMergeInfo
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/InlineDeltaMergeInfo.java:43:22: JTG2001: duplicate Go symbol after migration: NewInlineDeltaMergeInfo
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/text/deltamerge/InlineDeltaMergeInfo.java:47:22: JTG2001: duplicate Go symbol after migration: NewInlineDeltaMergeInfo
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiff.java:71:2: JTG2001: duplicate Go symbol after migration: From
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiff.java:46:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiff
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiff.java:58:22: JTG2001: duplicate Go symbol after migration: NewUnifiedDiff
+.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiff.java:71:2: JTG2001: duplicate Go symbol after migration: From
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffFile.java:140:2: JTG2001: duplicate Go symbol after migration: From
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffParserException.java:24:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffParserException
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffParserException.java:26:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffParserException
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffParserException.java:30:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffParserException
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffParserException.java:34:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffParserException
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffParserException.java:38:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffParserException
+.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffReader.java:227:71: JTG2001: duplicate Go symbol after migration: GetName
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffReader.java:469:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffLine
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffReader.java:473:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffLine
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffReader.java:479:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffLine
-.corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffReader.java:227:71: JTG2001: duplicate Go symbol after migration: GetName
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffWriter.java:35:71: JTG2001: duplicate symbol: class com.github.difflib.unifieddiff.getName
 .corpus/java-diff-utils/java-diff-utils/src/main/java/com/github/difflib/unifieddiff/UnifiedDiffWriter.java:35:71: JTG2001: duplicate Go symbol after migration: GetName
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:39:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:39:58: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:50:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:50:58: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:59:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:61:42: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:64:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:64:58: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:82:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:82:58: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:114:43: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:156:29: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:181:46: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/DiffUtilsTest.java:181:58: JTG2001: duplicate Go symbol after migration: NewDiffUtilsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:211:38: JTG2001: duplicate symbol: class com.github.difflib.DiffUtils
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:25:29: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:70:36: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:71:45: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:85:32: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:92:32: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:147:49: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:167:44: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:167:56: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:167:67: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:205:36: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:206:45: JTG2001: duplicate Go symbol after migration: NewGenerateUnifiedDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/GenerateUnifiedDiffTest.java:211:38: JTG2001: duplicate Go symbol after migration: DiffUtils
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffTest.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffTest.java:39:14: JTG2001: duplicate Go symbol after migration: NewMyersDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffTest.java:53:38: JTG2001: duplicate Go symbol after migration: NewMyersDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffWithLinearSpaceTest.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmListener
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffWithLinearSpaceTest.java:40:38: JTG2001: duplicate Go symbol after migration: NewMyersDiffWithLinearSpaceTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/MyersDiffWithLinearSpaceTest.java:56:38: JTG2001: duplicate Go symbol after migration: NewMyersDiffWithLinearSpaceTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:266:8: JTG2001: duplicate Go symbol after migration: NewFuzzyApplyTestDataGenerator
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:268:15: JTG2001: duplicate Go symbol after migration: NewFuzzyApplyTestDataGenerator
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:28:46: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:31:18: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:42:46: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:45:18: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:56:46: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:59:18: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:69:23: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/algorithm/myers/WithMyersDiffWithLinearSpacePatchTest.java:74:29: JTG2001: duplicate Go symbol after migration: NewWithMyersDiffWithLinearSpacePatchTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/ApplyPatch.java:18:2: JTG2001: duplicate Go symbol after migration: main
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/ComputeDifference.java:17:2: JTG2001: duplicate Go symbol after migration: main
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:18:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:19:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:20:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:20:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:21:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:21:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:22:8: no viable alternative at input 'try{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:25:25: extraneous input 'e' expecting ')'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:25:28: missing ';' at '{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:29:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:29:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:33:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:34:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:35:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:35:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:36:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:36:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:37:8: no viable alternative at input 'try{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:40:25: extraneous input 'e' expecting ')'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:40:28: missing ';' at '{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:44:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:44:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:48:20: no viable alternative at input 'publicstaticList<'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:48:58: missing '{' at 'throws'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:48:100: missing ';' at '{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:49:9: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:49:15: extraneous input '>' expecting Identifier
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:49:38: mismatched input '<' expecting '('
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:49:39: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:49:41: mismatched input ')' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:51:24: mismatched input 'in' expecting ')'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:51:73: mismatched input ')' expecting ';'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/examples/OriginalAndDiffTest.java:59:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:10:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:11:2: no viable alternative at input 'Testvoid'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:11:21: missing '{' at 'throws'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:11:49: missing ';' at '{'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:12:38: mismatched input '<' expecting '('
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:12:39: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:12:42: mismatched input ',' expecting ')'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:12:62: extraneous input ')' expecting ';'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:34:2: extraneous input 'private' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:35:35: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/ChunkTest.java:35:44: extraneous input 'x' expecting ')'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:50:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:66:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:66:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:82:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:82:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:82:3: JTG2001: duplicate symbol: method com.github.difflib.patch.PatchWithAllDiffAlgorithmsTest.MethodSource
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:0:0: JTG2005: import unresolved: com.github.difflib.algorithm.DiffAlgorithmFactory
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:25:35: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:39:48: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:40:46: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:42:42: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:55:48: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:56:46: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:58:42: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:71:48: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:72:46: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:74:42: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:87:48: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:88:46: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithAllDiffAlgorithmsTest.java:90:42: JTG2001: duplicate Go symbol after migration: NewPatchWithAllDiffAlgorithmsTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithMyerDiffTest.java:37:46: JTG2001: duplicate Go symbol after migration: NewPatchWithMyerDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithMyerDiffTest.java:39:42: JTG2001: duplicate Go symbol after migration: NewPatchWithMyerDiffTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithMyerDiffWithLinearSpaceTest.java:49:46: JTG2001: duplicate Go symbol after migration: NewPatchWithMyerDiffWithLinearSpaceTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/patch/PatchWithMyerDiffWithLinearSpaceTest.java:51:42: JTG2001: duplicate Go symbol after migration: NewPatchWithMyerDiffWithLinearSpaceTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:12:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:13:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:25:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:26:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:29:33: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:44:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:45:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:49:30: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:65:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:66:2: no viable alternative at input 'Testpublic'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorEqualitiesTest.java:70:30: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorTest.java:103:23: JTG2001: duplicate Go symbol after migration: NewDiffRowGeneratorTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/DiffRowGeneratorTest.java:867:4: JTG2001: duplicate Go symbol after migration: NewDiffRowGeneratorTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/StringUtilsTest.java:59:53: JTG2001: duplicate symbol: class com.github.difflib.text.StringUtils
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/text/StringUtilsTest.java:59:53: JTG2001: duplicate Go symbol after migration: StringUtils
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:260:26: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:290:26: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:356:26: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:448:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:459:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:469:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:479:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:489:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:500:20: JTG2001: duplicate symbol: field com.github.difflib.unifieddiff.UnifiedDiffReaderTest.file1
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:38:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:40:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:40:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:40:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:95:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:97:15: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:116:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:118:15: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:145:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:147:15: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:161:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:163:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:163:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:163:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:176:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:178:15: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:196:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:198:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:198:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:198:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:211:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:213:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:213:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:213:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:231:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:233:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:233:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:233:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:238:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:254:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:256:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:256:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:256:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:261:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:269:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:271:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:271:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:271:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:274:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:274:35: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:286:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:288:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:288:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:288:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:291:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:291:35: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:305:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:307:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:307:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:307:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:317:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:319:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:319:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:319:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:329:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:331:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:331:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:331:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:339:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:341:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:341:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:341:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:351:86: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:354:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:354:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:354:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:357:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:357:42: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:368:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:370:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:370:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:370:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:425:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:427:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:427:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:427:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:435:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:437:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:437:31: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:437:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:447:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:450:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:450:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:457:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:461:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:461:39: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:467:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:471:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:471:41: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:477:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:481:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:481:40: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:487:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:491:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:491:35: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:498:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:502:4: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffReaderTest.java:502:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffReaderTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripNewLineTest.java:28:0: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripNewLineTest.java:28:1: mismatched input 'Disabled' expecting {<EOF>, 'package', ';', 'import', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripNewLineTest.java:30:2: token recognition error at: '@'
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:25:29: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:67:36: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:72:40: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:72:51: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:72:58: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:87:32: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffRoundTripTest.java:94:32: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffRoundTripTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffWriterTest.java:41:2: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffWriterTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffWriterTest.java:47:13: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffWriterTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffWriterTest.java:48:13: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffWriterTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffWriterTest.java:49:16: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffWriterTest
-.corpus/java-diff-utils/java-diff-utils/src/test/java/com/github/difflib/unifieddiff/UnifiedDiffWriterTest.java:53:22: JTG2001: duplicate Go symbol after migration: NewUnifiedDiffWriterTest

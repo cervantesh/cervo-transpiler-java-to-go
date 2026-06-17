@@ -7,6 +7,7 @@
   "ref": "master",
   "commit": "75b5abe97ca55c4569ea84e09330db22a0df2db7",
   "description": "Small pure Java semantic-versioning library with Maven layout.",
-  "sourcePath": ".corpus/jsemver",
+  "sourcePath": ".corpus/jsemver/src/main/java",
+  "sourceRoot": "src/main/java",
   "expectation": {}
 }
