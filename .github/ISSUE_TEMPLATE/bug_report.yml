@@ -1,0 +1,49 @@
+name: Bug report
+description: Report incorrect behavior in the transpiler, CLI, report generator, or migration pipeline.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      description: Exact command that reproduced the issue.
+      placeholder: go run ./cmd/j2go report ./example --format markdown --out build/report.md
+    validations:
+      required: true
+  - type: textarea
+    id: java_input
+    attributes:
+      label: Minimal Java input
+      description: Use a minimal public snippet. Do not paste proprietary code.
+      render: java
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include diagnostics, generated output, or report excerpts when useful.
+    validations:
+      required: true
+  - type: input
+    id: go_version
+    attributes:
+      label: Go version
+      placeholder: go version go1.24.x windows/amd64
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows, Linux, macOS

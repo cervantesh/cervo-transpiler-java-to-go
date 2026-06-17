@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/cervantesh/cervo-transpiler-java-to-go/security/policy
+    about: Read the security policy before disclosing vulnerabilities or private data issues.
+  - name: Project wiki
+    url: https://github.com/cervantesh/cervo-transpiler-java-to-go/wiki
+    about: Read architecture, migration, and usage notes.
