@@ -1,6 +1,7 @@
 package javaproject
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -46,5 +47,51 @@ func TestScanSingleJavaFile(t *testing.T) {
 	}
 	if project.Files[0].SourceRoot != "." {
 		t.Fatalf("expected root source root, got %q", project.Files[0].SourceRoot)
+	}
+}
+
+func TestScanDoesNotPanicOnUnsupportedParameterSyntax(t *testing.T) {
+	dir := t.TempDir()
+	source := filepath.Join(dir, "Varargs.java")
+	if err := os.WriteFile(source, []byte(`package demo;
+
+public class Varargs {
+  public void print(String... values) {
+  }
+}`), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	project, err := Scan(dir)
+	if err != nil {
+		t.Fatalf("Scan failed: %v", err)
+	}
+	if project.Summary.JavaFiles != 1 {
+		t.Fatalf("expected one Java file, got %#v", project.Summary)
+	}
+	if project.Summary.Diagnostics == 0 {
+		t.Fatalf("expected syntax diagnostics for unsupported varargs, got %#v", project.Files)
+	}
+}
+
+func TestScanDoesNotPanicOnUnsupportedClassSuffix(t *testing.T) {
+	dir := t.TempDir()
+	source := filepath.Join(dir, "ComparableThing.java")
+	if err := os.WriteFile(source, []byte(`package demo;
+
+public class ComparableThing implements Comparable<ComparableThing> {
+}`), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	project, err := Scan(dir)
+	if err != nil {
+		t.Fatalf("Scan failed: %v", err)
+	}
+	if project.Summary.JavaFiles != 1 {
+		t.Fatalf("expected one Java file, got %#v", project.Summary)
+	}
+	if project.Summary.Diagnostics == 0 {
+		t.Fatalf("expected syntax diagnostics for unsupported implements/generics, got %#v", project.Files)
 	}
 }

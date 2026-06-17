@@ -1,0 +1,6 @@
+$ go test ./...
+
+[stdout]
+?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/java-diff-utils/go/com/github/difflib	[no test files]
+?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/java-diff-utils/go/com/github/difflib/algorithm	[no test files]
+?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/java-diff-utils/go/com/github/difflib/unifieddiff	[no test files]
