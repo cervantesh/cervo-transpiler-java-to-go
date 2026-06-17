@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "workspace": ".corpus",
+  "evidence": "evidence/corpus",
+  "repositories": [
+    {
+      "id": "jsemver",
+      "name": "Java SemVer",
+      "url": "https://github.com/zafarkhaja/jsemver.git",
+      "ref": "master",
+      "commit": "75b5abe97ca55c4569ea84e09330db22a0df2db7",
+      "description": "Small pure Java semantic-versioning library with Maven layout."
+    },
+    {
+      "id": "commons-csv",
+      "name": "Apache Commons CSV",
+      "url": "https://github.com/apache/commons-csv.git",
+      "ref": "master",
+      "commit": "e21d66e410cdafca2e822361de5eb6b2596291f2",
+      "description": "Apache pure Java CSV library with a compact public API and tests."
+    },
+    {
+      "id": "java-diff-utils",
+      "name": "Java Diff Utils",
+      "url": "https://github.com/java-diff-utils/java-diff-utils.git",
+      "ref": "master",
+      "commit": "5e2e5b981533964aaeb19e2ba56d0f53dbd8b2dc",
+      "description": "Pure Java diff and patch library with multiple packages and modules."
+    }
+  ]
+}

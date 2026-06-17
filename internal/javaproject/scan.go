@@ -177,11 +177,17 @@ func extractCompilationUnit(file *File, tree gen.ICompilationUnitContext) {
 }
 
 func extractClass(packageName string, ctx gen.IClassDeclContext) Class {
-	name := ctx.Identifier().GetText()
+	name := ""
+	if ctx.Identifier() != nil {
+		name = ctx.Identifier().GetText()
+	}
 	class := Class{
 		Name:      name,
 		Qualified: qualified(packageName, name),
 		Span:      span(ctx.GetStart()),
+	}
+	if ctx.ClassBody() == nil {
+		return class
 	}
 	for _, member := range ctx.ClassBody().AllClassMember() {
 		if field := member.FieldDecl(); field != nil {
@@ -200,18 +206,32 @@ func extractClass(packageName string, ctx gen.IClassDeclContext) Class {
 }
 
 func extractFields(ctx gen.IFieldDeclContext) []Field {
+	if ctx.TypeType() == nil || ctx.VariableDeclarators() == nil {
+		return nil
+	}
 	fields := []Field{}
 	typ := ctx.TypeType().GetText()
 	for _, variable := range ctx.VariableDeclarators().AllVariableDeclarator() {
+		if variable.Identifier() == nil {
+			continue
+		}
 		fields = append(fields, Field{Name: variable.Identifier().GetText(), Type: typ, Span: span(variable.GetStart())})
 	}
 	return fields
 }
 
 func extractMethod(ctx gen.IMethodDeclContext) Method {
+	name := ""
+	if ctx.Identifier() != nil {
+		name = ctx.Identifier().GetText()
+	}
+	returnType := ""
+	if ctx.TypeTypeOrVoid() != nil {
+		returnType = ctx.TypeTypeOrVoid().GetText()
+	}
 	return Method{
-		Name:       ctx.Identifier().GetText(),
-		ReturnType: ctx.TypeTypeOrVoid().GetText(),
+		Name:       name,
+		ReturnType: returnType,
 		Static:     hasModifier(ctx.AllModifier(), "static"),
 		Params:     extractParams(ctx.FormalParameters()),
 		Span:       span(ctx.GetStart()),
@@ -219,8 +239,12 @@ func extractMethod(ctx gen.IMethodDeclContext) Method {
 }
 
 func extractConstructor(ctx gen.IConstructorDeclContext) Constructor {
+	name := ""
+	if ctx.Identifier() != nil {
+		name = ctx.Identifier().GetText()
+	}
 	return Constructor{
-		Name:   ctx.Identifier().GetText(),
+		Name:   name,
 		Params: extractParams(ctx.FormalParameters()),
 		Span:   span(ctx.GetStart()),
 	}
@@ -232,6 +256,9 @@ func extractParams(ctx gen.IFormalParametersContext) []Param {
 	}
 	params := []Param{}
 	for _, param := range ctx.FormalParameterList().AllFormalParameter() {
+		if param.TypeType() == nil || param.Identifier() == nil {
+			continue
+		}
 		params = append(params, Param{Name: param.Identifier().GetText(), Type: param.TypeType().GetText()})
 	}
 	return params

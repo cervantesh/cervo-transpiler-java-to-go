@@ -86,6 +86,7 @@ A later production migration tool should move toward a richer Java frontend, typ
 |-- Makefile                   Make-style build for compatible environments
 |-- go.mod                     Modern Go module
 |-- README.md                  Project explanation and usage
+|-- corpus/                    Pinned external Java migration corpus
 |-- cmd/j2go/                  Modern CLI
 |-- docs/
 |   |-- ai-assisted-migration.md
@@ -104,6 +105,8 @@ A later production migration tool should move toward a richer Java frontend, typ
 |   `-- Main.java              Demo Java input
 |-- explorations/
 |   `-- spring/                Spring adapter decision fixtures
+|-- evidence/
+|   `-- corpus/                Generated scan/report/migration evidence
 |-- src/
 |   |-- lexer.l                Flex lexer
 |   |-- parser.y               Bison parser
@@ -119,6 +122,7 @@ A later production migration tool should move toward a richer Java frontend, typ
 ```
 
 Generated binaries and test outputs are written to `build/`, `tests/generated/`, and `modern-tests/generated/`, which are intentionally ignored by Git.
+External corpus clones are written to `.corpus/`, which is also ignored by Git.
 
 ## Supported Java Subset
 
@@ -364,6 +368,12 @@ Verification evidence is stored in:
 [docs/evidence/verification-2026-06-16.md](docs/evidence/verification-2026-06-16.md)
 
 That file records the tool versions, build output, golden-test output, and negative syntax/unsupported-feature tests.
+
+Real-project corpus evidence is stored under [evidence/corpus](evidence/corpus). The corpus manifest is [corpus/corpus.json](corpus/corpus.json), and it can be regenerated cross-platform with:
+
+```bash
+go run ./tools/corpus
+```
 
 ## Known Limitations
 

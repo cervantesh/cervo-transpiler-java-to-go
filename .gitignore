@@ -1,6 +1,7 @@
 build/
 tests/generated/
 .worktrees/
+.corpus/
 modern-tests/generated/
 tools/antlr/antlr-*.jar
 *.exe
