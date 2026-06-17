@@ -52,6 +52,16 @@ Unsupported Java features should produce structured `JTG` diagnostics instead of
 
 The legacy Flex/Bison implementation under `src/` remains as reference material while the modern Go/ANTLR pipeline continues to mature.
 
+## Community And License
+
+This project is licensed under the [Apache License, Version 2.0](LICENSE).
+
+- [Sharing Rules](SHARING.md)
+- [Contributing](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Support](SUPPORT.md)
+
 ## Documentation
 
 Start with the GitHub Wiki:

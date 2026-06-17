@@ -1,0 +1,30 @@
+name: Unsupported Java feature
+description: Request support for a Java feature or improve diagnostics for unsupported syntax.
+title: "unsupported: "
+labels: ["unsupported-feature"]
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: Java feature
+      description: Describe the Java syntax or behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: minimal_input
+    attributes:
+      label: Minimal Java input
+      description: Use a minimal public snippet. Do not paste proprietary code.
+      render: java
+    validations:
+      required: true
+  - type: textarea
+    id: desired_output
+    attributes:
+      label: Desired Go output or diagnostic
+      description: Should this generate Go, emit a specific `JTG` diagnostic, or remain advisory?
+  - type: textarea
+    id: migration_value
+    attributes:
+      label: Migration value
+      description: Why does this matter for Java-to-Go migration?

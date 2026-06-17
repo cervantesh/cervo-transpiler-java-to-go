@@ -1,0 +1,32 @@
+name: Migration case
+description: Submit a reproducible Java-to-Go migration case or corpus candidate.
+title: "migration: "
+labels: ["migration", "corpus"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What project or Java pattern should be tested?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source repository or fixture
+      description: Public URL or local fixture path. Do not include private repositories.
+  - type: input
+    id: license
+    attributes:
+      label: Source license
+      description: License of the Java input or corpus candidate.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected migration evidence
+      description: What generated Go, report, or diagnostic output should be produced?
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Mention unsupported Java features, package layout, build system, or risk areas.
