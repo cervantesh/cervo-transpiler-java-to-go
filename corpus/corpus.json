@@ -2,6 +2,20 @@
   "version": 1,
   "workspace": ".corpus",
   "evidence": "evidence/corpus",
+  "localProjects": [
+    {
+      "id": "curated-store-lib",
+      "name": "Curated Store Library",
+      "path": "corpus/projects/curated-store-lib",
+      "category": "curated",
+      "description": "Controlled multi-package Java library designed to demonstrate high-confidence multi-file transpilation.",
+      "expectation": {
+        "minGenerated": 5,
+        "maxSkipped": 0,
+        "maxDiagnostics": 0
+      }
+    }
+  ],
   "repositories": [
     {
       "id": "jsemver",
@@ -9,6 +23,7 @@
       "url": "https://github.com/zafarkhaja/jsemver.git",
       "ref": "master",
       "commit": "75b5abe97ca55c4569ea84e09330db22a0df2db7",
+      "category": "external",
       "description": "Small pure Java semantic-versioning library with Maven layout."
     },
     {
@@ -17,6 +32,7 @@
       "url": "https://github.com/apache/commons-csv.git",
       "ref": "master",
       "commit": "e21d66e410cdafca2e822361de5eb6b2596291f2",
+      "category": "external",
       "description": "Apache pure Java CSV library with a compact public API and tests."
     },
     {
@@ -25,6 +41,7 @@
       "url": "https://github.com/java-diff-utils/java-diff-utils.git",
       "ref": "master",
       "commit": "5e2e5b981533964aaeb19e2ba56d0f53dbd8b2dc",
+      "category": "external",
       "description": "Pure Java diff and patch library with multiple packages and modules."
     }
   ]

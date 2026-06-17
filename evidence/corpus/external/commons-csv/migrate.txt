@@ -1,0 +1,712 @@
+$ go run ./cmd/j2go migrate .corpus/commons-csv --out evidence/corpus/external/commons-csv/go --report evidence/corpus/external/commons-csv/migration.md --log-file evidence/corpus/external/commons-csv/migration.log --module github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/external/commons-csv/go
+
+[stdout]
+Migration summary: javaFiles=55 generated=1 skipped=54 diagnostics=703 dryRun=false
+Report: evidence/corpus/external/commons-csv/migration.md
+Output: evidence/corpus/external/commons-csv/go
+Log: evidence/corpus/external/commons-csv/migration.log
+
+[stderr]
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:31:26: missing '{' at 'extends'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:33:50: extraneous input 'L' expecting ';'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:42:24: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:42:45: extraneous input 'final' expecting {'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:42:57: mismatched input '.' expecting Identifier
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:43:14: mismatched input 'String' expecting {'(', ')', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:43:20: extraneous input '.' expecting Identifier
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:43:27: missing ';' at '('
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVException.java:43:34: mismatched input ',' expecting ')'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:228:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.create
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:438:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setCommentMarker
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:462:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setDelimiter
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:504:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setEscape
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:563:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:587:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:587:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:621:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:621:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:621:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setHeader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:703:8: JTG2001: duplicate symbol: method org.apache.commons.csv.Builder.setHeaderComments
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:804:8: JTG2004: overload not supported: method org.apache.commons.csv.Builder.setQuote
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:277:8: JTG2001: duplicate Go symbol after migration: NewBuilder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:281:8: JTG2001: duplicate Go symbol after migration: NewBuilder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:211:8: JTG2001: duplicate Go symbol after migration: Create
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:228:8: JTG2001: duplicate Go symbol after migration: Create
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:189:18: JTG2001: duplicate Go symbol after migration: Builder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVFormat.java:182:0: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVParser.java:154:18: JTG2001: duplicate symbol: class org.apache.commons.csv.Builder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVParser.java:147:0: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVParser.java:165:8: JTG2001: duplicate Go symbol after migration: NewBuilder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVParser.java:154:18: JTG2001: duplicate Go symbol after migration: Builder
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVPrinter.java:107:4: JTG2001: duplicate Go symbol after migration: NewCSVPrinter
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVPrinter.java:117:16: JTG2001: duplicate Go symbol after migration: NewCSVPrinter
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVPrinter.java:80:0: JTG2001: duplicate Go symbol after migration: CSVPrinter
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:98:4: JTG2004: overload not supported: method org.apache.commons.csv.CSVRecord.get
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:125:4: JTG2004: overload not supported: method org.apache.commons.csv.CSVRecord.get
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:125:4: JTG2004: overload not supported: method org.apache.commons.csv.CSVRecord.get
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:70:4: JTG2001: duplicate Go symbol after migration: NewCSVRecord
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:132:22: JTG2001: duplicate Go symbol after migration: NewCSVRecord
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/CSVRecord.java:135:32: JTG2001: duplicate Go symbol after migration: NewCSVRecord
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:27:34: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:27:35: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:27:36: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:27:37: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:27:38: mismatched input ';' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:29:34: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:29:35: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:29:37: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:36:32: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:36:33: token recognition error at: '#'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:36:34: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:36:35: mismatched input ';' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:38:27: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:38:28: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:38:30: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:43:65: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:43:66: token recognition error at: '"');  // Explicit boxing is intentional.'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:45:4: mismatched input 'static' expecting {'(', ')', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:47:47: mismatched input '{' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:49:27: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:49:28: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:49:30: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:51:27: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:51:28: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:51:30: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:56:41: token recognition error at: '"\u'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:56:48: token recognition error at: '";'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:61:4: missing ';' at 'static'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:61:36: token recognition error at: '"\u'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:61:40: mismatched input '0' expecting ';'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:61:43: token recognition error at: '";'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:66:46: token recognition error at: '"\u'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:66:53: token recognition error at: '";'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:68:4: missing ';' at 'static'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:68:29: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:68:30: token recognition error at: '|''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:68:32: mismatched input ';' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:73:27: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:73:29: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:73:30: mismatched input ';' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:77:28: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:77:29: token recognition error at: '\'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Constants.java:77:31: token recognition error at: '''
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/DuplicateHeaderMode.java:28:7: no viable alternative at input 'publicenum'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:143:4: JTG2004: overload not supported: method org.apache.commons.csv.ExtendedBufferedReader.getEncodedCharLength
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:216:4: JTG2004: overload not supported: method org.apache.commons.csv.ExtendedBufferedReader.read
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:44:0: JTG2001: duplicate Go symbol after migration: ExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:72:4: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:84:4: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:146:23: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:147:73: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:149:22: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:153:22: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:154:80: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:156:18: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReader
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Lexer.java:33:0: JTG2001: duplicate Go symbol after migration: Lexer
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/QuoteMode.java:26:7: no viable alternative at input 'publicenum'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:32:14: no viable alternative at input 'enumType{'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:51:25: no viable alternative at input 'privatestaticfinalint'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:54:4: extraneous input 'Token' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:57:10: no viable alternative at input 'finalStringBuilder'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:60:4: extraneous input 'boolean' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:62:4: extraneous input 'boolean' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:64:4: extraneous input 'void' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:66:8: extraneous input 'type' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:67:8: extraneous input 'isReady' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:68:8: extraneous input 'isQuoted' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:69:4: extraneous input '}' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:76:4: token recognition error at: '@'
+.corpus/commons-csv/src/main/java/org/apache/commons/csv/Token.java:79:4: extraneous input '}' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:54:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:54:1: mismatched input 'BenchmarkMode' expecting {<EOF>, 'package', ';', 'import', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:55:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:56:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:57:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:58:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:59:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:60:0: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:66:8: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:81:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:89:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:106:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:112:37: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:112:39: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:122:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:127:83: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:127:85: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:128:38: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:128:39: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:128:41: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:138:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:143:25: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:143:27: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:156:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:159:28: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:159:30: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:170:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:184:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:198:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:213:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:220:60: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVBenchmark.java:220:62: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVDuplicateHeaderTest.java:336:50: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVDuplicateHeaderTest.java:336:50: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVDuplicateHeaderTest.java:295:50: JTG2001: duplicate Go symbol after migration: Builder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:47:31: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:74:34: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:76:42: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:78:42: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:80:43: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFileParserTest.java:83:20: JTG2001: duplicate Go symbol after migration: NewCSVFileParserTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:31:22: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:31:46: extraneous input 'final' expecting {'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:36:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:37:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:41:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:42:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:46:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:47:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:51:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:52:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:56:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:57:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:61:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:62:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:66:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:67:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:71:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:72:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:76:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:77:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:81:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatPredefinedTest.java:82:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:93:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:98:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:103:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:109:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:114:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:120:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:125:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:130:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:135:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:140:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:162:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:168:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:708:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:714:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:720:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:728:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:988:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:994:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1000:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1007:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1012:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1018:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1047:74: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1062:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1068:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1308:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1319:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1344:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1526:79: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1570:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.CSVFormat.Builder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:745:73: JTG2001: duplicate Go symbol after migration: CsvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1332:82: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1526:79: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:93:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:98:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:103:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:109:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:114:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:120:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:125:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:130:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:135:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:140:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:162:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:168:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:708:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:714:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:720:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:728:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:988:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:994:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1000:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1007:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1012:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1018:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1047:74: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1062:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1068:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1308:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1319:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1344:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVFormatTest.java:1570:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:363:37: JTG2001: duplicate symbol: class org.apache.commons.csv.parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:464:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:950:42: JTG2001: duplicate symbol: class org.apache.commons.csv.parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1178:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1184:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1226:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1243:48: JTG2001: duplicate symbol: class org.apache.commons.csv.iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1254:55: JTG2001: duplicate symbol: class org.apache.commons.csv.iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1271:48: JTG2001: duplicate symbol: class org.apache.commons.csv.iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1412:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1417:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1524:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1529:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1534:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1539:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1636:33: JTG2001: duplicate symbol: class org.apache.commons.csv.csvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1637:33: JTG2001: duplicate symbol: class org.apache.commons.csv.csvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1638:33: JTG2001: duplicate symbol: class org.apache.commons.csv.csvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1236:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1236:72: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1237:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1237:72: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1238:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1239:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1240:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1241:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1241:72: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1242:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1243:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1255:12: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1255:72: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1258:65: JTG2001: duplicate Go symbol after migration: NewIterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:464:46: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1412:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1417:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1524:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1529:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1534:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1539:42: JTG2001: duplicate Go symbol after migration: CSVParser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1235:55: JTG2001: duplicate Go symbol after migration: Iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1243:48: JTG2001: duplicate Go symbol after migration: Iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1254:55: JTG2001: duplicate Go symbol after migration: Iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1271:48: JTG2001: duplicate Go symbol after migration: Iterator
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1636:33: JTG2001: duplicate Go symbol after migration: CsvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1637:33: JTG2001: duplicate Go symbol after migration: CsvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1638:33: JTG2001: duplicate Go symbol after migration: CsvFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:136:37: JTG2001: duplicate Go symbol after migration: Parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:363:37: JTG2001: duplicate Go symbol after migration: Parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:950:42: JTG2001: duplicate Go symbol after migration: Parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1178:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1184:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVParserTest.java:1226:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:269:41: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:281:41: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:294:41: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:306:41: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:792:46: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:1168:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVPrinter
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:1173:42: JTG2001: duplicate symbol: class org.apache.commons.csv.CSVPrinter
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:1168:42: JTG2001: duplicate Go symbol after migration: CSVPrinter
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:1173:42: JTG2001: duplicate Go symbol after migration: CSVPrinter
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:130:8: JTG2001: duplicate Go symbol after migration: NewCSVPrinterTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:142:8: JTG2001: duplicate Go symbol after migration: NewCSVPrinterTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:147:30: JTG2001: duplicate Go symbol after migration: NewCSVPrinterTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:149:18: JTG2001: duplicate Go symbol after migration: NewCSVPrinterTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:269:41: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:281:41: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:294:41: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:306:41: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVPrinterTest.java:792:46: JTG2001: duplicate Go symbol after migration: CSVFormat
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:150:46: JTG2001: duplicate symbol: class org.apache.commons.csv.recordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:160:46: JTG2001: duplicate symbol: class org.apache.commons.csv.recordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:170:52: JTG2001: duplicate symbol: class org.apache.commons.csv.recordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:175:52: JTG2001: duplicate symbol: class org.apache.commons.csv.recordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:182:46: JTG2001: duplicate symbol: class org.apache.commons.csv.recordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:137:46: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:150:46: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:160:46: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:170:52: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:175:52: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CSVRecordTest.java:182:46: JTG2001: duplicate Go symbol after migration: RecordWithHeader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CsvAssertions.java:26:42: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/CsvAssertions.java:26:67: extraneous input 'final' expecting {'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/ExtendedBufferedReaderTest.java:66:8: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReaderTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/ExtendedBufferedReaderTest.java:89:22: JTG2001: duplicate Go symbol after migration: NewExtendedBufferedReaderTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:33:32: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:37:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:38:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:38:30: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:38:49: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:73: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:75: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:74: extraneous input ',' expecting {'(', ')', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:87: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:88: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:89: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:39:90: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:41:13: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:42:12: mismatched input 'CSVParser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:47:22: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:12: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:39: extraneous input '{' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:44: mismatched input '84' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:46: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:51: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:57: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:49:64: extraneous input '}' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:51:17: extraneous input 'final' expecting {';', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:51:40: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:51:42: missing ';' at 'parser'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:51:48: missing ';' at ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:52:40: mismatched input '[' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:52:45: mismatched input '+' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:52:46: mismatched input ']' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:52:73: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:52:92: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:57:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:58:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:58:31: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:58:50: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:73: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:75: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:74: extraneous input ',' expecting {'(', ')', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:87: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:88: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:89: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:59:90: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:61:13: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:62:12: mismatched input 'CSVParser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:67:22: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:12: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:39: extraneous input '{' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:44: mismatched input '89' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:46: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:51: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:69:57: extraneous input '}' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:71:17: extraneous input 'final' expecting {';', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:71:40: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:71:42: missing ';' at 'parser'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:71:48: missing ';' at ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:72:40: mismatched input '[' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:72:45: mismatched input '+' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:72:46: mismatched input ']' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:72:73: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:72:92: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv196Test.java:77:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv318Test.java:47:4: JTG2004: overload not supported: method org.apache.commons.csv.JiraCsv318Test.checkOutput
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv318Test.java:51:27: JTG2001: duplicate Go symbol after migration: NewJiraCsv318Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv318Test.java:60:27: JTG2001: duplicate Go symbol after migration: NewJiraCsv318Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv318Test.java:65:27: JTG2001: duplicate Go symbol after migration: NewJiraCsv318Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/JiraCsv318Test.java:99:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv318Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:99:24: JTG2001: duplicate symbol: field org.apache.commons.csv.LexerTest.format
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:132:24: JTG2001: duplicate symbol: field org.apache.commons.csv.LexerTest.format
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:167:24: JTG2001: duplicate symbol: field org.apache.commons.csv.LexerTest.format
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:54:4: JTG2004: overload not supported: method org.apache.commons.csv.LexerTest.assertNextToken
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:505:37: JTG2001: duplicate symbol: class org.apache.commons.csv.parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:62:5: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:80:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:81:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:100:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:101:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:133:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:168:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:170:8: JTG2001: duplicate Go symbol after migration: NewLexerTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:302:37: JTG2001: duplicate Go symbol after migration: Lexer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:505:37: JTG2001: duplicate Go symbol after migration: Parser
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:50:4: JTG2001: duplicate Go symbol after migration: AssertNextToken
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/LexerTest.java:54:4: JTG2001: duplicate Go symbol after migration: AssertNextToken
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/PerformanceTest.java:104:46: JTG2001: duplicate symbol: class org.apache.commons.csv.ExtendedBufferedReader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/PerformanceTest.java:104:76: JTG2001: duplicate symbol: class org.apache.commons.csv.
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/PerformanceTest.java:104:46: JTG2001: duplicate Go symbol after migration: ExtendedBufferedReader
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/PerformanceTest.java:104:76: JTG2001: duplicate Go symbol after migration: Pkg_
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/TokenTest.java:39:8: JTG2001: duplicate Go symbol after migration: NewTokenTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/TokenTest.java:39:36: JTG2001: duplicate Go symbol after migration: NewTokenTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/TokenTest.java:40:14: JTG2001: duplicate Go symbol after migration: NewTokenTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:40:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:41:9: no viable alternative at input 'TempDirPathtempDir'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:50:39: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:50:56: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:50:75: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:56:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:57:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:57:23: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:57:72: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:58:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:61:20: mismatched input 'reader' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:67:38: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:69:17: extraneous input 'final' expecting {';', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:69:40: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:69:42: missing ';' at 'parser'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:69:48: missing ';' at ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:70:16: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:76:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:77:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:77:23: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:77:72: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:78:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:80:20: mismatched input 'reader' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:85:38: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:87:17: extraneous input 'final' expecting {';', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:87:40: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:87:42: missing ';' at 'parser'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:87:48: missing ';' at ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:88:16: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/UserGuideTest.java:95:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/Utils.java:43:55: JTG2001: duplicate Go symbol after migration: NewUtils
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/Utils.java:65:4: JTG2001: duplicate Go symbol after migration: NewUtils
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv148Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:36:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:37:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:37:36: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:37:55: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:41:4: extraneous input 'private' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:41:47: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:41:71: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:41:90: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:46:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:51:22: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:51:23: token recognition error at: '"')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:52:12: extraneous input '.' expecting {'(', ')', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:52:18: missing ')' at ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:55:30: mismatched input '=' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:55:93: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:56:17: extraneous input 'final' expecting {';', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:56:40: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:56:42: missing ';' at 'parser'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:56:48: missing ';' at ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:58:41: mismatched input '+' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:58:42: extraneous input ',' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:63:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:64:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:64:39: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:64:58: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv149Test.java:68:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:32:29: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:32:53: extraneous input 'final' expecting {'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:32:80: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:32:99: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:33:23: mismatched input 'csvParser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:33:96: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:38:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:39:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:39:30: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:39:49: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:59: token recognition error at: '"\"66\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:70: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:71: token recognition error at: '",,\"\",\"DeutscheBK\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:97: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:93: mismatched input 'fffe' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:40:112: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:44:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:45:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:45:36: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:45:55: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:59: token recognition error at: '"66\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:70: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:71: token recognition error at: '"\",\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:69: extraneous input ',' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:46:92: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:50:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:51:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:51:31: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:51:50: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:59: token recognition error at: '"\"66\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:70: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:71: token recognition error at: '",,\"\",\"DeutscheBK\u'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:97: token recognition error at: '\'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:93: mismatched input 'fffe' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:52:112: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv150Test.java:56:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv154Test.java:42:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv154Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv154Test.java:47:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv154Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv167Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:38:22: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:38:23: token recognition error at: '^'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:38:24: token recognition error at: '''
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:44:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:45:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:45:16: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:45:65: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:46:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:48:13: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:49:8: mismatched input 'CSVParser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:49:109: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:50:35: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv198Test.java:55:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:59:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:75:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:91:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:107:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:124:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:139:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv203Test.buffer
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:44:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:60:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:76:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:92:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:108:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:125:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv203Test.java:140:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv203Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv206Test.java:42:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv206Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv206Test.java:68:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv206Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv206Test.java:74:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv206Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv211Test.java:42:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv211Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv211Test.java:45:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv211Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv213Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv227Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv247Test.java:78:46: JTG2001: duplicate symbol: class org.apache.commons.csv.issues.try
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv247Test.java:46:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv247Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv247Test.java:48:56: JTG2001: duplicate Go symbol after migration: NewJiraCsv247Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv247Test.java:71:46: JTG2001: duplicate Go symbol after migration: Try
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv247Test.java:78:46: JTG2001: duplicate Go symbol after migration: Try
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:52:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:53:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:53:26: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:53:69: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:59:25: mismatched input 'in' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:59:95: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:60:12: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:61:39: mismatched input 'class' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:62:12: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:62:46: extraneous input 'object' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:63:25: extraneous input '1' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:63:27: extraneous input ',' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:63:32: mismatched input '.' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:63:50: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:78:47: mismatched input 'class' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:78:52: mismatched input ',' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv248Test.java:79:8: extraneous input '}' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv249Test.java:41:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv249Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv249Test.java:46:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv249Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv253Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:41:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:42:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:42:16: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:42:35: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:43:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:44:28: mismatched input 'reader' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:45:83: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:46:12: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:35: mismatched input 'String' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:44: mismatched input '{' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:50: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:56: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:63: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:64: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:47:83: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:35: mismatched input 'String' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:44: mismatched input '{' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:50: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:56: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:61: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:62: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:48:81: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:35: mismatched input 'String' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:44: mismatched input '{' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:50: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:56: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:63: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:64: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:49:83: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv254Test.java:53:0: extraneous input '<EOF>' expecting {';', '}', 'public', 'private', 'protected', 'static', 'final', 'void', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv257Test.java:65:46: JTG2001: duplicate symbol: class org.apache.commons.csv.issues.try
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv257Test.java:65:46: JTG2001: duplicate Go symbol after migration: Try
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:50:15: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:54:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:59:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:64:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:69:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv263Test.java:74:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv263Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv264Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.DuplicateHeaderMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv265Test.java:55:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv265Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv265Test.java:58:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv265Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv265Test.java:58:60: JTG2001: duplicate Go symbol after migration: NewJiraCsv265Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv265Test.java:60:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv265Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv265Test.java:60:60: JTG2001: duplicate Go symbol after migration: NewJiraCsv265Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv271Test.java:48:27: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv271Test.stringWriter
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv271Test.java:38:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv271Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv271Test.java:49:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv271Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:62:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:77:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:92:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:107:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:121:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:136:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:150:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:164:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:178:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:192:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:207:28: JTG2001: duplicate symbol: field org.apache.commons.csv.issues.JiraCsv288Test.stringBuilder
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:48:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:63:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:78:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:93:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:108:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:122:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:137:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:151:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:165:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:179:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:193:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv288Test.java:208:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv288Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:63:28: extraneous input 'final' expecting {')', 'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:63:51: extraneous input 'final' expecting {'boolean', 'int', 'double', 'String', Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:63:75: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:63:92: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:64:18: mismatched input 'String' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:64:24: mismatched input '>' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:64:50: mismatched input '<' expecting '('
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:64:51: extraneous input '>' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:64:53: mismatched input ')' expecting {'(', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:65:23: mismatched input 'csvParser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:66:23: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:67:77: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:67:78: token recognition error at: ':'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:67:79: mismatched input 'toList' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:67:106: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:86:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:87:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:87:29: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:87:46: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:91:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:92:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:92:30: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:92:47: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:96:4: token recognition error at: '@'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:97:4: no viable alternative at input 'Testvoid'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:97:29: missing '{' at 'throws'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:97:46: missing ';' at '{'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:98:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:99:8: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:100:32: mismatched input '=' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:100:60: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:105:27: mismatched input 'parser' expecting ')'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:105:122: mismatched input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:106:44: mismatched input '[' expecting '('
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:106:58: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:106:70: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:106:71: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:106:106: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:107:16: extraneous input 'final' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:38: mismatched input 'String' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:47: mismatched input '{' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:54: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:62: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:63: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:108:92: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:38: mismatched input 'String' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:47: mismatched input '{' expecting Identifier
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:54: mismatched input ',' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:62: missing ';' at '}'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:63: extraneous input ',' expecting {';', '{', '}', '(', 'boolean', 'int', 'double', 'String', 'if', 'while', 'for', 'return', '!', '-', 'new', BooleanLiteral, 'null', IntegerLiteral, FloatingPointLiteral, StringLiteral, Identifier}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:109:92: extraneous input ')' expecting ';'
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv290Test.java:112:4: extraneous input '}' expecting {<EOF>, ';', 'class', 'interface', 'public', 'private', 'protected', 'static', 'final'}
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv294Test.java:48:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv294Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv294Test.java:49:8: JTG2001: duplicate Go symbol after migration: NewJiraCsv294Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv294Test.java:54:12: JTG2001: duplicate Go symbol after migration: NewJiraCsv294Test
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/issues/JiraCsv93Test.java:0:0: JTG2005: import unresolved: org.apache.commons.csv.QuoteMode
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/perf/PerformanceTest.java:59:75: JTG2001: duplicate Go symbol after migration: NewPerformanceTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/perf/PerformanceTest.java:59:92: JTG2001: duplicate Go symbol after migration: NewPerformanceTest
+.corpus/commons-csv/src/test/java/org/apache/commons/csv/perf/PerformanceTest.java:61:20: JTG2001: duplicate Go symbol after migration: NewPerformanceTest

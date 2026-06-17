@@ -1,0 +1,6 @@
+$ go test ./...
+
+[stdout]
+?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/curated/curated-store-lib/go/com/cervo/store/math	[no test files]
+?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/curated/curated-store-lib/go/com/cervo/store/model	[no test files]
+ok  	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/curated/curated-store-lib/go/com/cervo/store/service	(cached)

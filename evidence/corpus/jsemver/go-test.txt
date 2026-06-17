@@ -1,6 +1,0 @@
-$ go test ./...
-
-[stdout]
-?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/jsemver/go/com/github/zafarkhaja/semver	[no test files]
-?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/jsemver/go/com/github/zafarkhaja/semver/expr	[no test files]
-?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/jsemver/go/com/github/zafarkhaja/semver/util	[no test files]

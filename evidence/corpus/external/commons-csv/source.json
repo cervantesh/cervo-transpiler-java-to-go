@@ -1,0 +1,12 @@
+{
+  "id": "commons-csv",
+  "name": "Apache Commons CSV",
+  "kind": "git",
+  "category": "external",
+  "url": "https://github.com/apache/commons-csv.git",
+  "ref": "master",
+  "commit": "e21d66e410cdafca2e822361de5eb6b2596291f2",
+  "description": "Apache pure Java CSV library with a compact public API and tests.",
+  "sourcePath": ".corpus/commons-csv",
+  "expectation": {}
+}

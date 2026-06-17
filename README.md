@@ -369,11 +369,16 @@ Verification evidence is stored in:
 
 That file records the tool versions, build output, golden-test output, and negative syntax/unsupported-feature tests.
 
-Real-project corpus evidence is stored under [evidence/corpus](evidence/corpus). The corpus manifest is [corpus/corpus.json](corpus/corpus.json), and it can be regenerated cross-platform with:
+Corpus evidence is stored under [evidence/corpus](evidence/corpus). The corpus manifest is [corpus/corpus.json](corpus/corpus.json), and it can be regenerated cross-platform with:
 
 ```bash
 go run ./tools/corpus
 ```
+
+The corpus is split by purpose:
+
+- `evidence/corpus/curated`: high-confidence multi-file transpilation evidence.
+- `evidence/corpus/external`: real-library stress/reporting evidence where partial migration and skipped files are expected.
 
 ## Known Limitations
 

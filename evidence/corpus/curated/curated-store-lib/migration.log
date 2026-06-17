@@ -1,0 +1,8 @@
+command=migrate
+out=evidence/corpus/curated/curated-store-lib/go
+report=evidence/corpus/curated/curated-store-lib/migration.md
+dryRun=false
+javaFiles=5
+generated=5
+skipped=0
+diagnostics=0

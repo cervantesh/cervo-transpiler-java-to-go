@@ -1,0 +1,25 @@
+$ go run ./cmd/j2go scan corpus/projects/curated-store-lib
+
+[stdout]
+Project: corpus/projects/curated-store-lib
+Java files: 5
+Packages: 3
+Classes: 5
+Unsupported features: 0
+Package list:
+- com.cervo.store.math
+- com.cervo.store.model
+- com.cervo.store.service
+Internal dependencies:
+- src/main/java/com/cervo/store/service/OrderService.java imports com.cervo.store.math.PriceMath
+Files:
+- src/main/java/com/cervo/store/math/PriceMath.java (medium risk)
+  - class com.cervo.store.math.PriceMath
+- src/main/java/com/cervo/store/model/Counter.java (medium risk)
+  - class com.cervo.store.model.Counter
+- src/main/java/com/cervo/store/model/Label.java (medium risk)
+  - class com.cervo.store.model.Label
+- src/main/java/com/cervo/store/service/OrderService.java (medium risk)
+  - class com.cervo.store.service.OrderService
+- src/test/java/com/cervo/store/service/OrderServiceTest.java (medium risk)
+  - class com.cervo.store.service.OrderServiceTest

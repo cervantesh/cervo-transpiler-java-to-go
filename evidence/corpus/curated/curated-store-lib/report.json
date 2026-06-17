@@ -1,0 +1,480 @@
+{
+  "root": "corpus/projects/curated-store-lib",
+  "buildFiles": [
+    {
+      "path": "pom.xml",
+      "kind": "maven"
+    }
+  ],
+  "sourceRoots": [
+    {
+      "path": "src/main/java",
+      "kind": "main",
+      "exists": true
+    },
+    {
+      "path": "src/test/java",
+      "kind": "test",
+      "exists": true
+    }
+  ],
+  "files": [
+    {
+      "path": "corpus/projects/curated-store-lib/src/main/java/com/cervo/store/math/PriceMath.java",
+      "relativePath": "src/main/java/com/cervo/store/math/PriceMath.java",
+      "sourceRoot": "src/main/java",
+      "packageName": "com.cervo.store.math",
+      "classes": [
+        {
+          "name": "PriceMath",
+          "qualified": "com.cervo.store.math.PriceMath",
+          "methods": [
+            {
+              "name": "addTax",
+              "returnType": "int",
+              "static": true,
+              "params": [
+                {
+                  "name": "subtotal",
+                  "type": "int"
+                },
+                {
+                  "name": "tax",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 4,
+                "column": 4
+              }
+            },
+            {
+              "name": "discount",
+              "returnType": "int",
+              "static": true,
+              "params": [
+                {
+                  "name": "subtotal",
+                  "type": "int"
+                },
+                {
+                  "name": "amount",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 8,
+                "column": 4
+              }
+            }
+          ],
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "name": "package declarations",
+          "supported": true,
+          "span": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        {
+          "name": "class declarations",
+          "supported": true,
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 4,
+            "column": 4
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 8,
+            "column": 4
+          }
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "path": "corpus/projects/curated-store-lib/src/main/java/com/cervo/store/model/Counter.java",
+      "relativePath": "src/main/java/com/cervo/store/model/Counter.java",
+      "sourceRoot": "src/main/java",
+      "packageName": "com.cervo.store.model",
+      "classes": [
+        {
+          "name": "Counter",
+          "qualified": "com.cervo.store.model.Counter",
+          "fields": [
+            {
+              "name": "value",
+              "type": "int",
+              "span": {
+                "line": 4,
+                "column": 16
+              }
+            }
+          ],
+          "methods": [
+            {
+              "name": "add",
+              "returnType": "void",
+              "static": false,
+              "params": [
+                {
+                  "name": "delta",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 9,
+                "column": 4
+              }
+            },
+            {
+              "name": "current",
+              "returnType": "int",
+              "static": false,
+              "span": {
+                "line": 13,
+                "column": 4
+              }
+            }
+          ],
+          "constructors": [
+            {
+              "name": "Counter",
+              "params": [
+                {
+                  "name": "value",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 6,
+                "column": 4
+              }
+            }
+          ],
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "name": "package declarations",
+          "supported": true,
+          "span": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        {
+          "name": "class declarations",
+          "supported": true,
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        },
+        {
+          "name": "class fields",
+          "supported": true,
+          "span": {
+            "line": 4,
+            "column": 16
+          }
+        },
+        {
+          "name": "constructors",
+          "supported": true,
+          "span": {
+            "line": 6,
+            "column": 4
+          }
+        },
+        {
+          "name": "instance methods",
+          "supported": true,
+          "span": {
+            "line": 9,
+            "column": 4
+          }
+        },
+        {
+          "name": "instance methods",
+          "supported": true,
+          "span": {
+            "line": 13,
+            "column": 4
+          }
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "path": "corpus/projects/curated-store-lib/src/main/java/com/cervo/store/model/Label.java",
+      "relativePath": "src/main/java/com/cervo/store/model/Label.java",
+      "sourceRoot": "src/main/java",
+      "packageName": "com.cervo.store.model",
+      "classes": [
+        {
+          "name": "Label",
+          "qualified": "com.cervo.store.model.Label",
+          "methods": [
+            {
+              "name": "currency",
+              "returnType": "String",
+              "static": true,
+              "span": {
+                "line": 4,
+                "column": 4
+              }
+            }
+          ],
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "name": "package declarations",
+          "supported": true,
+          "span": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        {
+          "name": "class declarations",
+          "supported": true,
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 4,
+            "column": 4
+          }
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "path": "corpus/projects/curated-store-lib/src/main/java/com/cervo/store/service/OrderService.java",
+      "relativePath": "src/main/java/com/cervo/store/service/OrderService.java",
+      "sourceRoot": "src/main/java",
+      "packageName": "com.cervo.store.service",
+      "imports": [
+        {
+          "name": "com.cervo.store.math.PriceMath"
+        }
+      ],
+      "classes": [
+        {
+          "name": "OrderService",
+          "qualified": "com.cervo.store.service.OrderService",
+          "methods": [
+            {
+              "name": "total",
+              "returnType": "int",
+              "static": true,
+              "params": [
+                {
+                  "name": "subtotal",
+                  "type": "int"
+                },
+                {
+                  "name": "tax",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 6,
+                "column": 4
+              }
+            },
+            {
+              "name": "discountedTotal",
+              "returnType": "int",
+              "static": true,
+              "params": [
+                {
+                  "name": "subtotal",
+                  "type": "int"
+                },
+                {
+                  "name": "amount",
+                  "type": "int"
+                }
+              ],
+              "span": {
+                "line": 10,
+                "column": 4
+              }
+            }
+          ],
+          "span": {
+            "line": 5,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "name": "package declarations",
+          "supported": true,
+          "span": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        {
+          "name": "import declarations",
+          "supported": true,
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        },
+        {
+          "name": "class declarations",
+          "supported": true,
+          "span": {
+            "line": 5,
+            "column": 0
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 6,
+            "column": 4
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 10,
+            "column": 4
+          }
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "path": "corpus/projects/curated-store-lib/src/test/java/com/cervo/store/service/OrderServiceTest.java",
+      "relativePath": "src/test/java/com/cervo/store/service/OrderServiceTest.java",
+      "sourceRoot": "src/test/java",
+      "packageName": "com.cervo.store.service",
+      "classes": [
+        {
+          "name": "OrderServiceTest",
+          "qualified": "com.cervo.store.service.OrderServiceTest",
+          "methods": [
+            {
+              "name": "smoke",
+              "returnType": "void",
+              "static": true,
+              "span": {
+                "line": 4,
+                "column": 4
+              }
+            }
+          ],
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "name": "package declarations",
+          "supported": true,
+          "span": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        {
+          "name": "class declarations",
+          "supported": true,
+          "span": {
+            "line": 3,
+            "column": 0
+          }
+        },
+        {
+          "name": "static methods",
+          "supported": true,
+          "span": {
+            "line": 4,
+            "column": 4
+          }
+        }
+      ],
+      "risk": "medium"
+    }
+  ],
+  "packages": [
+    "com.cervo.store.math",
+    "com.cervo.store.model",
+    "com.cervo.store.service"
+  ],
+  "internalDependencies": [
+    {
+      "fromFile": "src/main/java/com/cervo/store/service/OrderService.java",
+      "import": "com.cervo.store.math.PriceMath",
+      "package": "com.cervo.store.math"
+    }
+  ],
+  "featureCounts": {
+    "class declarations": 5,
+    "class fields": 1,
+    "constructors": 1,
+    "import declarations": 1,
+    "instance methods": 2,
+    "package declarations": 5,
+    "static methods": 6
+  },
+  "unsupportedCounts": {},
+  "summary": {
+    "javaFiles": 5,
+    "packages": 3,
+    "classes": 5,
+    "methods": 8,
+    "constructors": 1,
+    "fields": 1,
+    "diagnostics": 0,
+    "unsupported": 0,
+    "internalImports": 1,
+    "lowRiskFiles": 0,
+    "mediumRiskFiles": 5,
+    "highRiskFiles": 0
+  }
+}

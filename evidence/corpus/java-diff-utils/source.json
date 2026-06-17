@@ -1,9 +1,0 @@
-{
-  "id": "java-diff-utils",
-  "name": "Java Diff Utils",
-  "url": "https://github.com/java-diff-utils/java-diff-utils.git",
-  "ref": "master",
-  "commit": "5e2e5b981533964aaeb19e2ba56d0f53dbd8b2dc",
-  "description": "Pure Java diff and patch library with multiple packages and modules.",
-  "sourcePath": ".corpus/java-diff-utils"
-}
