@@ -1,1 +1,0 @@
-$ go run ./cmd/j2go report .corpus/java-diff-utils --format json --out evidence/corpus/java-diff-utils/report.json

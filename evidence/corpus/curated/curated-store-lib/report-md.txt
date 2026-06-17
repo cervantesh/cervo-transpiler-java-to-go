@@ -1,0 +1,1 @@
+$ go run ./cmd/j2go report corpus/projects/curated-store-lib --format markdown --out evidence/corpus/curated/curated-store-lib/report.md

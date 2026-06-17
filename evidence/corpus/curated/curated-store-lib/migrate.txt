@@ -1,0 +1,7 @@
+$ go run ./cmd/j2go migrate corpus/projects/curated-store-lib --out evidence/corpus/curated/curated-store-lib/go --report evidence/corpus/curated/curated-store-lib/migration.md --log-file evidence/corpus/curated/curated-store-lib/migration.log --module github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/curated/curated-store-lib/go
+
+[stdout]
+Migration summary: javaFiles=5 generated=5 skipped=0 diagnostics=0 dryRun=false
+Report: evidence/corpus/curated/curated-store-lib/migration.md
+Output: evidence/corpus/curated/curated-store-lib/go
+Log: evidence/corpus/curated/curated-store-lib/migration.log

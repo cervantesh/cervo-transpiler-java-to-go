@@ -1,4 +1,0 @@
-$ go test ./...
-
-[stdout]
-?   	github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/commons-csv/go/org/apache/commons/csv	[no test files]

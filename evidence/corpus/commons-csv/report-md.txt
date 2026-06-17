@@ -1,1 +1,0 @@
-$ go run ./cmd/j2go report .corpus/commons-csv --format markdown --out evidence/corpus/commons-csv/report.md

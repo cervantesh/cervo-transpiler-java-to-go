@@ -10,35 +10,71 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
 const defaultManifest = "corpus/corpus.json"
 
 type manifest struct {
-	Version      int          `json:"version"`
-	Workspace    string       `json:"workspace"`
-	Evidence     string       `json:"evidence"`
-	Repositories []repository `json:"repositories"`
+	Version       int            `json:"version"`
+	Workspace     string         `json:"workspace"`
+	Evidence      string         `json:"evidence"`
+	LocalProjects []localProject `json:"localProjects"`
+	Repositories  []repository   `json:"repositories"`
+}
+
+type localProject struct {
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	Path        string      `json:"path"`
+	Category    string      `json:"category"`
+	Description string      `json:"description"`
+	Expectation expectation `json:"expectation"`
 }
 
 type repository struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	URL         string `json:"url"`
-	Ref         string `json:"ref"`
-	Commit      string `json:"commit"`
-	Description string `json:"description"`
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	URL         string      `json:"url"`
+	Ref         string      `json:"ref"`
+	Commit      string      `json:"commit"`
+	Category    string      `json:"category"`
+	Description string      `json:"description"`
+	Expectation expectation `json:"expectation"`
+}
+
+type expectation struct {
+	MinGenerated   int  `json:"minGenerated,omitempty"`
+	MaxSkipped     *int `json:"maxSkipped,omitempty"`
+	MaxDiagnostics *int `json:"maxDiagnostics,omitempty"`
+}
+
+type corpusProject struct {
+	ID          string
+	Name        string
+	Kind        string
+	Category    string
+	Description string
+	Path        string
+	URL         string
+	Ref         string
+	Commit      string
+	Expectation expectation
 }
 
 type sourceEvidence struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	URL         string `json:"url"`
-	Ref         string `json:"ref"`
-	Commit      string `json:"commit"`
-	Description string `json:"description"`
-	SourcePath  string `json:"sourcePath"`
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	Kind        string      `json:"kind"`
+	Category    string      `json:"category"`
+	Path        string      `json:"path,omitempty"`
+	URL         string      `json:"url"`
+	Ref         string      `json:"ref"`
+	Commit      string      `json:"commit"`
+	Description string      `json:"description"`
+	SourcePath  string      `json:"sourcePath"`
+	Expectation expectation `json:"expectation,omitempty"`
 }
 
 func main() {
@@ -49,7 +85,7 @@ func run(args []string, stdout io.Writer, stderr io.Writer) int {
 	fs := flag.NewFlagSet("corpus", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	manifestPath := fs.String("manifest", defaultManifest, "corpus manifest path")
-	repoFilter := fs.String("repo", "", "run only one repository id")
+	repoFilter := fs.String("repo", "", "run only one corpus project id")
 	skipClone := fs.Bool("skip-clone", false, "reuse existing .corpus clones without fetch/checkout")
 	if err := fs.Parse(args); err != nil {
 		return 2
@@ -70,24 +106,24 @@ func run(args []string, stdout io.Writer, stderr io.Writer) int {
 		return 1
 	}
 
-	selected := cfg.Repositories
+	selected := allProjects(cfg)
 	if *repoFilter != "" {
 		selected = selected[:0]
-		for _, repo := range cfg.Repositories {
-			if repo.ID == *repoFilter {
-				selected = append(selected, repo)
+		for _, project := range allProjects(cfg) {
+			if project.ID == *repoFilter {
+				selected = append(selected, project)
 			}
 		}
 		if len(selected) == 0 {
-			fmt.Fprintf(stderr, "unknown repository id %q\n", *repoFilter)
+			fmt.Fprintf(stderr, "unknown corpus project id %q\n", *repoFilter)
 			return 2
 		}
 	}
 
-	for _, repo := range selected {
-		fmt.Fprintf(stdout, "==> %s\n", repo.ID)
-		if err := runRepository(root, cfg, repo, *skipClone); err != nil {
-			fmt.Fprintf(stderr, "%s: %v\n", repo.ID, err)
+	for _, project := range selected {
+		fmt.Fprintf(stdout, "==> %s/%s\n", project.Category, project.ID)
+		if err := runProject(root, cfg, project, *skipClone); err != nil {
+			fmt.Fprintf(stderr, "%s: %v\n", project.ID, err)
 			return 1
 		}
 	}
@@ -129,6 +165,15 @@ func validateManifest(cfg manifest) error {
 		return errors.New("manifest evidence is required")
 	}
 	seen := map[string]bool{}
+	for _, project := range cfg.LocalProjects {
+		if project.ID == "" || project.Path == "" {
+			return fmt.Errorf("local project entries require id and path: %#v", project)
+		}
+		if seen[project.ID] {
+			return fmt.Errorf("duplicate corpus project id %q", project.ID)
+		}
+		seen[project.ID] = true
+	}
 	for _, repo := range cfg.Repositories {
 		if repo.ID == "" || repo.URL == "" || repo.Commit == "" {
 			return fmt.Errorf("repository entries require id, url, and commit: %#v", repo)
@@ -138,21 +183,63 @@ func validateManifest(cfg manifest) error {
 		}
 		seen[repo.ID] = true
 	}
-	if len(cfg.Repositories) == 0 {
-		return errors.New("manifest must include at least one repository")
+	if len(seen) == 0 {
+		return errors.New("manifest must include at least one corpus project")
 	}
 	return nil
 }
 
-func runRepository(root string, cfg manifest, repo repository, skipClone bool) error {
-	sourceDir := filepath.Join(root, cfg.Workspace, repo.ID)
-	evidenceDir := filepath.Join(root, cfg.Evidence, repo.ID)
-	sourceArg := filepath.ToSlash(filepath.Join(cfg.Workspace, repo.ID))
-	evidenceArg := filepath.ToSlash(filepath.Join(cfg.Evidence, repo.ID))
-	goArg := filepath.ToSlash(filepath.Join(cfg.Evidence, repo.ID, "go"))
+func allProjects(cfg manifest) []corpusProject {
+	projects := make([]corpusProject, 0, len(cfg.LocalProjects)+len(cfg.Repositories))
+	for _, local := range cfg.LocalProjects {
+		category := local.Category
+		if category == "" {
+			category = "curated"
+		}
+		projects = append(projects, corpusProject{
+			ID:          local.ID,
+			Name:        local.Name,
+			Kind:        "local",
+			Category:    category,
+			Description: local.Description,
+			Path:        local.Path,
+			Expectation: local.Expectation,
+		})
+	}
+	for _, repo := range cfg.Repositories {
+		category := repo.Category
+		if category == "" {
+			category = "external"
+		}
+		projects = append(projects, corpusProject{
+			ID:          repo.ID,
+			Name:        repo.Name,
+			Kind:        "git",
+			Category:    category,
+			Description: repo.Description,
+			URL:         repo.URL,
+			Ref:         repo.Ref,
+			Commit:      repo.Commit,
+			Expectation: repo.Expectation,
+		})
+	}
+	return projects
+}
 
-	if !skipClone {
-		if err := checkoutRepository(sourceDir, repo); err != nil {
+func runProject(root string, cfg manifest, project corpusProject, skipClone bool) error {
+	sourceArg := project.Path
+	sourceDir := filepath.Join(root, project.Path)
+	if project.Kind == "git" {
+		sourceArg = filepath.ToSlash(filepath.Join(cfg.Workspace, project.ID))
+		sourceDir = filepath.Join(root, cfg.Workspace, project.ID)
+	}
+	evidenceRel := filepath.Join(cfg.Evidence, project.Category, project.ID)
+	evidenceDir := filepath.Join(root, evidenceRel)
+	evidenceArg := filepath.ToSlash(evidenceRel)
+	goArg := filepath.ToSlash(filepath.Join(evidenceRel, "go"))
+
+	if project.Kind == "git" && !skipClone {
+		if err := checkoutRepository(sourceDir, project); err != nil {
 			return err
 		}
 	} else if _, err := os.Stat(sourceDir); err != nil {
@@ -165,7 +252,7 @@ func runRepository(root string, cfg manifest, repo repository, skipClone bool) e
 	if err := os.MkdirAll(evidenceDir, 0755); err != nil {
 		return err
 	}
-	if err := writeSourceEvidence(evidenceDir, repo, sourceArg); err != nil {
+	if err := writeSourceEvidence(evidenceDir, project, sourceArg); err != nil {
 		return err
 	}
 
@@ -178,16 +265,22 @@ func runRepository(root string, cfg manifest, repo repository, skipClone bool) e
 	if err := runJ2GO(root, filepath.Join(evidenceDir, "report-md.txt"), "report", sourceArg, "--format", "markdown", "--out", evidenceArg+"/report.md"); err != nil {
 		return err
 	}
-	if err := runJ2GO(root, filepath.Join(evidenceDir, "migrate.txt"), "migrate", sourceArg, "--out", goArg, "--report", evidenceArg+"/migration.md", "--log-file", evidenceArg+"/migration.log", "--module", "github.com/cervantesh/cervo-transpiler-java-to-go/evidence/corpus/"+repo.ID+"/go"); err != nil {
+	if err := runJ2GO(root, filepath.Join(evidenceDir, "migrate.txt"), "migrate", sourceArg, "--out", goArg, "--report", evidenceArg+"/migration.md", "--log-file", evidenceArg+"/migration.log", "--module", "github.com/cervantesh/cervo-transpiler-java-to-go/"+evidenceArg+"/go"); err != nil {
+		return err
+	}
+	if err := checkExpectations(filepath.Join(evidenceDir, "migration.log"), project); err != nil {
 		return err
 	}
 	if err := runTranscript(filepath.Join(root, goArg), filepath.Join(evidenceDir, "go-test.txt"), "go", "test", "./..."); err != nil {
 		return err
 	}
+	if err := scrubEvidencePaths(evidenceDir, root); err != nil {
+		return err
+	}
 	return nil
 }
 
-func checkoutRepository(sourceDir string, repo repository) error {
+func checkoutRepository(sourceDir string, repo corpusProject) error {
 	if _, err := os.Stat(sourceDir); errors.Is(err, os.ErrNotExist) {
 		if err := runShell("git", "clone", repo.URL, sourceDir); err != nil {
 			return err
@@ -208,15 +301,19 @@ func checkoutRepository(sourceDir string, repo repository) error {
 	return nil
 }
 
-func writeSourceEvidence(evidenceDir string, repo repository, sourceDir string) error {
+func writeSourceEvidence(evidenceDir string, repo corpusProject, sourceDir string) error {
 	payload := sourceEvidence{
 		ID:          repo.ID,
 		Name:        repo.Name,
+		Kind:        repo.Kind,
+		Category:    repo.Category,
+		Path:        repo.Path,
 		URL:         repo.URL,
 		Ref:         repo.Ref,
 		Commit:      repo.Commit,
 		Description: repo.Description,
 		SourcePath:  filepath.ToSlash(sourceDir),
+		Expectation: repo.Expectation,
 	}
 	data, err := json.MarshalIndent(payload, "", "  ")
 	if err != nil {
@@ -282,4 +379,87 @@ func commandLine(name string, args []string) string {
 		quoted = append(quoted, arg)
 	}
 	return strings.Join(quoted, " ")
+}
+
+type migrationStats struct {
+	JavaFiles   int
+	Generated   int
+	Skipped     int
+	Diagnostics int
+}
+
+func checkExpectations(logPath string, project corpusProject) error {
+	if project.Expectation.MinGenerated == 0 && project.Expectation.MaxSkipped == nil && project.Expectation.MaxDiagnostics == nil {
+		return nil
+	}
+	stats, err := readMigrationStats(logPath)
+	if err != nil {
+		return err
+	}
+	if stats.Generated < project.Expectation.MinGenerated {
+		return fmt.Errorf("%s generated %d files, expected at least %d", project.ID, stats.Generated, project.Expectation.MinGenerated)
+	}
+	if project.Expectation.MaxSkipped != nil && stats.Skipped > *project.Expectation.MaxSkipped {
+		return fmt.Errorf("%s skipped %d files, expected at most %d", project.ID, stats.Skipped, *project.Expectation.MaxSkipped)
+	}
+	if project.Expectation.MaxDiagnostics != nil && stats.Diagnostics > *project.Expectation.MaxDiagnostics {
+		return fmt.Errorf("%s produced %d diagnostics, expected at most %d", project.ID, stats.Diagnostics, *project.Expectation.MaxDiagnostics)
+	}
+	return nil
+}
+
+func readMigrationStats(logPath string) (migrationStats, error) {
+	data, err := os.ReadFile(logPath)
+	if err != nil {
+		return migrationStats{}, err
+	}
+	stats := migrationStats{}
+	for _, line := range strings.Split(string(data), "\n") {
+		key, value, ok := strings.Cut(strings.TrimSpace(line), "=")
+		if !ok {
+			continue
+		}
+		parsed, err := strconv.Atoi(value)
+		if err != nil {
+			continue
+		}
+		switch key {
+		case "javaFiles":
+			stats.JavaFiles = parsed
+		case "generated":
+			stats.Generated = parsed
+		case "skipped":
+			stats.Skipped = parsed
+		case "diagnostics":
+			stats.Diagnostics = parsed
+		}
+	}
+	return stats, nil
+}
+
+func scrubEvidencePaths(evidenceDir string, root string) error {
+	root = filepath.Clean(root)
+	replacements := []string{
+		filepath.ToSlash(root) + "/",
+		filepath.ToSlash(root),
+		root + string(os.PathSeparator),
+		root,
+	}
+	return filepath.WalkDir(evidenceDir, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() || filepath.Ext(path) == ".go" || filepath.Base(path) == "go.mod" {
+			return nil
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		text := string(data)
+		for _, replacement := range replacements {
+			text = strings.ReplaceAll(text, replacement, "")
+		}
+		return os.WriteFile(path, []byte(text), 0644)
+	})
 }

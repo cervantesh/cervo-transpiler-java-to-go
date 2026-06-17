@@ -11,7 +11,21 @@ The evidence is intentionally separated from `.corpus/`:
 - `.corpus/` contains local third-party repository clones and is ignored by git.
 - `evidence/corpus/` contains deterministic scan, report, and migration artifacts that can be committed for review.
 
-Each repository directory should contain:
+## Categories
+
+- `curated/`: high-confidence transpilation evidence for Java source intentionally kept inside the supported subset.
+- `external/`: stress/reporting evidence for real Java libraries. These runs are expected to be partial and should not be presented as full migration success.
+
+Current migration summaries:
+
+| Corpus | Category | Java files | Generated Go files | Skipped | Diagnostics |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `curated-store-lib` | `curated` | 5 | 5 | 0 | 0 |
+| `jsemver` | `external` | 44 | 3 | 41 | 241 |
+| `commons-csv` | `external` | 55 | 1 | 54 | 703 |
+| `java-diff-utils` | `external` | 55 | 3 | 52 | 690 |
+
+Each corpus project directory should contain:
 
 - `source.json`: pinned source metadata.
 - `scan.txt`: project scan output.

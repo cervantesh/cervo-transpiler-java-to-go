@@ -1,0 +1,17 @@
+{
+  "id": "curated-store-lib",
+  "name": "Curated Store Library",
+  "kind": "local",
+  "category": "curated",
+  "path": "corpus/projects/curated-store-lib",
+  "url": "",
+  "ref": "",
+  "commit": "",
+  "description": "Controlled multi-package Java library designed to demonstrate high-confidence multi-file transpilation.",
+  "sourcePath": "corpus/projects/curated-store-lib",
+  "expectation": {
+    "minGenerated": 5,
+    "maxSkipped": 0,
+    "maxDiagnostics": 0
+  }
+}

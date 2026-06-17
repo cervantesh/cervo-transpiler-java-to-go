@@ -1,14 +1,18 @@
 # Migration Corpus
 
-This directory defines the external Java repositories used as reproducible evidence for Java-to-Go migration runs.
+This directory defines reproducible Java corpus projects for Java-to-Go migration runs.
 
-The checked-in manifest is [`corpus.json`](corpus.json). It pins each repository by URL and exact commit so a run can be reproduced without vendoring third-party source code into this repository.
+The checked-in manifest is [`corpus.json`](corpus.json). It includes:
+
+- Curated local projects that demonstrate high-confidence multi-file transpilation.
+- External Git repositories pinned by URL and exact commit for stress/reporting evidence.
 
 ## Layout
 
 ```text
 corpus/
   corpus.json
+  projects/          # curated local projects
 tools/
   corpus/
     main.go
@@ -28,11 +32,14 @@ Useful options:
 
 ```bash
 go run ./tools/corpus -repo jsemver
+go run ./tools/corpus -repo curated-store-lib
 go run ./tools/corpus -skip-clone
 go run ./tools/corpus -manifest corpus/corpus.json
 ```
 
-The runner clones or updates each repository under `.corpus/`, checks out the pinned commit, then runs:
+For external Git repositories, the runner clones or updates each repository under `.corpus/` and checks out the pinned commit. For curated local projects, it reads the source directly from `corpus/projects/`.
+
+For every corpus project it then runs:
 
 ```bash
 go run ./cmd/j2go scan <repo>
@@ -44,10 +51,18 @@ go run ./cmd/j2go migrate <repo> --out <evidence>/go --report <evidence>/migrati
 Each corpus output directory also receives `source.json`, `scan.txt`, and `migrate.txt` so the evidence can be reviewed without rerunning the tool.
 The runner also executes `go test ./...` inside the generated Go module and saves the transcript as `go-test.txt`.
 
+## Evidence Categories
+
+| Category | Purpose | Expected signal |
+| --- | --- | --- |
+| `curated` | Prove deterministic multi-file transpilation inside the supported subset. | High generated/skipped ratio, ideally 100% generated. |
+| `external` | Stress the scanner, reports, diagnostics, partial migration, and unsupported-feature visibility against real Java libraries. | Partial generation is acceptable; skipped files are expected until Java coverage improves. |
+
 ## Current Corpus
 
-| ID | Repository | Why it is useful |
+| ID | Category | Source | Why it is useful |
 | --- | --- | --- |
-| `jsemver` | <https://github.com/zafarkhaja/jsemver> | Small Maven library with domain objects, parsing, comparison, and tests. |
-| `commons-csv` | <https://github.com/apache/commons-csv> | Real Apache library with a compact API and CSV-oriented object model. |
-| `java-diff-utils` | <https://github.com/java-diff-utils/java-diff-utils> | Medium-sized library with algorithms, patches, modules, and package structure. |
+| `curated-store-lib` | `curated` | `corpus/projects/curated-store-lib` | Controlled multi-package library with internal imports, object model, static methods, fields, and a generated Go test. |
+| `jsemver` | `external` | <https://github.com/zafarkhaja/jsemver> | Small Maven library with domain objects, parsing, comparison, and tests. |
+| `commons-csv` | `external` | <https://github.com/apache/commons-csv> | Real Apache library with a compact API and CSV-oriented object model. |
+| `java-diff-utils` | `external` | <https://github.com/java-diff-utils/java-diff-utils> | Medium-sized library with algorithms, patches, modules, and package structure. |

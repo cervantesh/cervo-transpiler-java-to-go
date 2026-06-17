@@ -1,0 +1,1 @@
+$ go run ./cmd/j2go report corpus/projects/curated-store-lib --format json --out evidence/corpus/curated/curated-store-lib/report.json
